@@ -1,0 +1,190 @@
+﻿.log-in-page,
+.log-in-page * {
+    box-sizing: border-box;
+}
+
+.log-in-page {
+    background: #a9cbc9;
+    width: 1440px;
+    height: 1024px;
+    position: relative;
+    overflow: hidden;
+}
+
+.rectangle-1 {
+    background: #f0e7cf;
+    border-radius: 35px;
+    width: 823px;
+    height: 605px;
+    position: absolute;
+    left: 556px;
+    top: 194px;
+}
+
+.rectangle-2 {
+    background: #f8f4ee;
+    border-radius: 25px;
+    width: 1344px;
+    height: 42px;
+    position: absolute;
+    left: 48px;
+    top: 48px;
+}
+
+.rectangle-3 {
+    background: #cea778;
+    width: 1506px;
+    height: 100px;
+    position: absolute;
+    left: -45px;
+    top: 960px;
+}
+
+.gray-paper-1 {
+    opacity: 0.3499999940395355;
+    width: 1440px;
+    height: 1024px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.create-your-forms-seamlessly {
+    color: #44585f;
+    text-align: left;
+    font: 400 50px "Dela Gothic One", sans-serif;
+    position: absolute;
+    left: 58px;
+    top: 333px;
+    width: 485px;
+    height: 179px;
+}
+
+.empower-your-survey-data-with-sentiment-analysis {
+    color: #44585f;
+    text-align: left;
+    font: 400 25px "Cabin Condensed", sans-serif;
+    text-decoration: underline;
+    position: absolute;
+    left: 58px;
+    top: 563px;
+    width: 485px;
+}
+
+.text {
+    color: #000000;
+    text-align: left;
+    font: 400 25px "Cabin", sans-serif;
+    position: absolute;
+    left: 894px;
+    top: 329px;
+}
+
+.log-in-to-try-insert-web-app-name {
+    color: #61492e;
+    text-align: left;
+    font: 400 25px "Cabin", sans-serif;
+    position: absolute;
+    left: 775px;
+    top: 253px;
+}
+
+.rectangle-5 {
+    background: #e4d2bd;
+    width: 618px;
+    height: 89px;
+    position: absolute;
+    left: 659px;
+    top: 333px;
+}
+
+._2767188-1 {
+    width: 51px;
+    height: 51px;
+    position: absolute;
+    left: 669px;
+    top: 353px;
+}
+
+.forgot-password {
+    color: #61492e;
+    text-align: left;
+    font: 400 25px "Cabin", sans-serif;
+    text-decoration: underline;
+    position: absolute;
+    left: 1092px;
+    top: 539px;
+}
+
+.don-t-have-an-account {
+    color: #61492e;
+    text-align: left;
+    font: 400 28px "Cabin", sans-serif;
+    position: absolute;
+    left: 775px;
+    top: 726px;
+}
+
+.email {
+    color: #61492e;
+    text-align: left;
+    font: 400 33px "Cabin", sans-serif;
+    position: absolute;
+    left: 736px;
+    top: 358px;
+}
+
+.rectangle-7 {
+    background: rgba(206, 167, 120, 0.79);
+    border-radius: 35px;
+    width: 288px;
+    height: 77px;
+    position: absolute;
+    left: 824px;
+    top: 604px;
+}
+
+.log-in {
+    color: #61492e;
+    text-align: left;
+    font: 400 39px "Cabin", sans-serif;
+    position: absolute;
+    left: 914px;
+    top: 619px;
+}
+
+.sign-up {
+    color: #61492e;
+    text-align: left;
+    font: 400 28px "Cabin", sans-serif;
+    text-decoration: underline;
+    position: absolute;
+    left: 1061px;
+    top: 726px;
+}
+
+.rectangle-8 {
+    background: #e4d2bd;
+    width: 618px;
+    height: 89px;
+    position: absolute;
+    left: 659px;
+    top: 436px;
+}
+
+.password {
+    color: #61492e;
+    text-align: left;
+    font: 400 33px "Cabin", sans-serif;
+    position: absolute;
+    left: 736px;
+    top: 464px;
+}
+
+.password-23-1 {
+    width: 79px;
+    height: 56px;
+    position: absolute;
+    left: 661px;
+    top: 456px;
+}
