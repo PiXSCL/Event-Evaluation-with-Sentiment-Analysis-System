@@ -48,15 +48,6 @@ body {
     bottom: 0;
 }
 
-.gray-paper-1 {
-    opacity: 0.35;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-
 .create-your-forms-seamlessly {
     color: #44585f;
     text-align: left;
@@ -122,9 +113,14 @@ body {
     font: 400 1.47vw "Cabin", sans-serif;
     text-decoration: underline;
     position: absolute;
-    left: 75.56%;
-    top: 43.87%;
+    left: 77%;
+    top: 52%;
+    z-index: 1;
 }
+
+    .forgot-password:hover {
+        color: #E8BA84;
+    }
 
 .don-t-have-an-account {
     color: #61492e;
@@ -132,7 +128,7 @@ body {
     font: 400 1.68vw "Cabin", sans-serif;
     position: absolute;
     left: 54.03%;
-    top: 75%;
+    top: 78%;
 }
 
 .email {
@@ -153,7 +149,7 @@ body {
     height: 7.62%; /* Keep the height */
     position: absolute;
     left: 57.22%;
-    top: 58.59%;
+    top: 62%;
     cursor: pointer;
     text-align: center; /* Center the text horizontally */
     display: flex;
@@ -182,7 +178,7 @@ body {
     text-decoration: underline;
     position: absolute;
     left: 73%;
-    top: 75%;
+    top: 78%;
 }
 
     .sign-up:hover {
