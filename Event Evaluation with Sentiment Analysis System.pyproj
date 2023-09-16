@@ -33,10 +33,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Event_Evaluation_with_Sentiment_Analysis_System\" />
+    <Folder Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\" />
     <Folder Include="Event_Evaluation_with_Sentiment_Analysis_System\static\" />
     <Folder Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\email.svg" />
+    <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\password.svg" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\style.css" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\index.html" />
     <Content Include="requirements.txt" />
