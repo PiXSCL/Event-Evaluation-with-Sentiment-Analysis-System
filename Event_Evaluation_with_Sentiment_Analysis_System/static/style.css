@@ -1,5 +1,4 @@
-﻿
-body {
+﻿body {
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -32,11 +31,11 @@ body {
 .rectangle-2 {
     background: #f8f4ee;
     border-radius: 25px;
-    width: 93.33%; /* 1344px in percentage */
-    height: 5%; /* 42px in percentage */
+    width: 93.33%;
+    height: 5%; 
     position: absolute;
-    left: 3.33%; /* 48px in percentage */
-    top: 2.33%; /* 48px in percentage */
+    left: 3.33%;
+    top: 2.33%; 
 }
 
 .rectangle-3 {
@@ -89,7 +88,7 @@ body {
     top: 18%;
 }
 
-.rectangle-5 {
+.email-container {
     background: #e4d2bd;
     width: 42.92%;
     height: 8.71%;
@@ -98,14 +97,86 @@ body {
     top: 28.44%;
 }
 
-.ImgEmail {
-    width: 3.54%;
-    height: auto;
-    position: absolute;
-    left: 46.68%;
-    top: 29%;
-    fill: #61492E;
+.email-content {
+    display: flex; 
+    align-items: center; 
 }
+
+.email-container .ImgEmail {
+    width: 50px; 
+    height: 50px; 
+    fill: #61492E;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.email-container label {
+    color: #61492e;
+    text-align: left;
+    font: 400 1.92vw "Cabin", sans-serif;
+    cursor: pointer; 
+}
+
+.email-container .email-input {
+    display: none;
+    width: 100%; 
+    height: 100%; 
+    font-size: 16px; 
+    padding: 16px; 
+    border: 0px solid #ccc; 
+    border-radius: 5px; 
+    margin-top: -3px;
+}
+
+    .email-container .email-input:focus {
+        border: 1px solid #007bff;
+    }
+
+.password-container {
+    background: #e4d2bd;
+    width: 42.92%;
+    height: 8.71%;
+    position: absolute;
+    left: 45.76%;
+    top: 43%;
+}
+
+.password-content {
+    display: flex; 
+    align-items: center; 
+}
+
+.password-container .ImgPassword {
+    width: 70px; 
+    height: 70px; 
+    fill: #61492E;
+    margin-right: 1px;
+    margin-left: 1px;
+    margin-top: -10px;
+}
+
+.password-container label {
+    color: #61492e;
+    text-align: left;
+    font: 400 1.92vw "Cabin", sans-serif;
+    cursor: pointer;
+    margin-top: -6px;
+}
+
+.password-container .password-input {
+    display: none;
+    width: 100%; 
+    height: 100%;
+    font-size: 16px; 
+    padding: 16px;
+    border: 0px solid #ccc; 
+    border-radius: 5px; 
+    margin-top: -8px;
+}
+
+    .password .password-input:focus {
+        border: 1px solid #007bff;
+    }
 
 .forgot-password {
     color: #61492e;
@@ -131,34 +202,25 @@ body {
     top: 78%;
 }
 
-.email {
-    color: #61492e;
-    text-align: left;
-    font: 400 1.92vw "Cabin", sans-serif;
-    position: absolute;
-    left: 50.83%;
-    top: 30.5%;
-}
-
 .rectangle-7 {
-    background-color: #CEA778; /* Change to your desired background color */
-    color: white; /* Text color */
+    background-color: #CEA778; 
+    color: white; 
     border: none;
-    border-radius: 35px; /* Keep the border-radius */
-    width: 20%; /* Keep the width */
-    height: 7.62%; /* Keep the height */
+    border-radius: 35px; 
+    width: 20%;
+    height: 7.62%; 
     position: absolute;
     left: 57.22%;
     top: 62%;
     cursor: pointer;
-    text-align: center; /* Center the text horizontally */
+    text-align: center; 
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
     .rectangle-7:hover {
-        background-color: #E8BA84; /* Change to your desired hover background color */
+        background-color: #E8BA84; 
     }
 
 
@@ -185,49 +247,4 @@ body {
         color: #E8BA84;
     }
 
-.rectangle-8 {
-    background: #e4d2bd;
-    width: 42.92%;
-    height: 8.71%;
-    position: absolute;
-    left: 45.76%;
-    top: 42.58%;
-}
-
-.password {
-    color: #61492e;
-    text-align: left;
-    font: 400 1.92vw "Cabin", sans-serif;
-    position: absolute;
-    left: 50.83%;
-    top: 45%;
-}
-
-.ImgPassword {
-    width: 5.49%;
-    height: auto;
-    position: absolute;
-    left: 45.5%;
-    top: 41%;
-}
-
-/* Style the input boxes */
-.email input,
-.password input {
-    display: none;
-    width: 230%; /* Adjust the width as needed */
-    height: 50px; /* Adjust the height as needed */
-    font-size: 16px; /* Adjust the font size as needed */
-    padding: 5px; /* Adjust padding as needed */
-    border: 1px solid #ccc; /* Add border styling as needed */
-    border-radius: 5px; /* Add border-radius as needed */
-    margin-top:-12px;
-}
-
-    /* Style for when the input is focused */
-    .email input:focus,
-    .password input:focus {
-        border: 1px solid #007bff; /* Change border color when focused */
-        /* Add other styling for focused state if desired */
-    }
 

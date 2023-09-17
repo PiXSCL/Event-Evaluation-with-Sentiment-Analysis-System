@@ -24,7 +24,7 @@
             background: none;
         }
     </style>
-    <title>Login</title>
+    <title>SignUp</title>
 </head>
 <body>
     <div class="log-in-page">
@@ -39,7 +39,7 @@
         </div>
         <div class="text"></div>
         <div class="log-in-to-try-insert-web-app-name">
-            Log-in to create and access Forms
+            Sign-up to create and access Forms
         </div>
         <div class="email-container">
             <div class="email-content">
@@ -51,9 +51,9 @@
         <button class="forgot-password">Forgot Password?</button>
         <div class="don-t-have-an-account">Don’t have an account?</div>
         <div class="rectangle-7" onclick="loginClicked()">
-            <div class="log-in">Log-in</div>
+            <div class="log-in">Sign-up</div>
         </div>
-        <button type="submit" class="sign-up" onclick="window.location.href = '{{ url_for('signup')}}'">Register</button>
+        <button type="submit" class="sign-up" onclick="window.location.href = '{{ url_for('signup')}}'">Sign Up</button>
         <div class="password-container">
             <div class="password-content">
                 <img class="ImgPassword" src="{{ url_for('static', filename='images/password.svg') }}" alt="Password" />
@@ -75,12 +75,9 @@
             }
 
             function loginClicked() {
-                alert('Login button clicked!'); // Replace this with your actual login code
+                alert('Signup button clicked!'); // Replace this with your actual login code
             }
         </script>
     </div>
 </body>
 </html>
-
-
-
