@@ -1,7 +1,3 @@
-"""
-This script runs the Event_Evaluation_with_Sentiment_Analysis_System application using a development server.
-"""
-
 from os import environ
 from Event_Evaluation_with_Sentiment_Analysis_System import app
 

@@ -38,44 +38,44 @@
             Empower your survey data with sentiment analysis.
         </div>
         <div class="text"></div>
-        <div class="log-in-to-try-insert-web-app-name">
+        <div class="sign-up-to-create">
             Sign-up to create and access Forms
         </div>
-        <div class="email-container">
-            <div class="email-content">
-                <img class="ImgEmail" src="{{ url_for('static', filename='images/email.svg') }}" alt="Email" />
-                <label for="email" onclick="activateInput('email')">Email</label>
-                <input type="text" id="email" name="email" class="email-input" style="display: none;" />
+        <form method="POST" action="/signup">
+            <div class="name-container">
+                <div class="name-content">
+                    <img class="ImgUser" src="{{ url_for('static', filename='images/user.svg') }}" alt="User" />
+                    <label for="name" onclick="activateInput('name')">Name</label>
+                    <input type="text" id="name" name="name" class="name-input" style="display: none;" required>
+                </div>
             </div>
-        </div>
-        <button class="forgot-password">Forgot Password?</button>
-        <div class="don-t-have-an-account">Don’t have an account?</div>
-        <div class="rectangle-7" onclick="loginClicked()">
-            <div class="log-in">Sign-up</div>
-        </div>
-        <button type="submit" class="sign-up" onclick="window.location.href = '{{ url_for('signup')}}'">Sign Up</button>
-        <div class="password-container">
-            <div class="password-content">
-                <img class="ImgPassword" src="{{ url_for('static', filename='images/password.svg') }}" alt="Password" />
-                <label for="password" onclick="activateInput('password')">Password</label>
-                <input type="password" id="password" name="password" class="password-input" style="display: none;" />
+            <div class="email-container2">
+                <div class="email-content2">
+                    <img class="ImgEmail2" src="{{ url_for('static', filename='images/email.svg') }}" alt="Email" />
+                    <label for="email" onclick="activateInput('email')">Email</label>
+                    <input type="email" id="email" name="email" class="email-input2" style="display: none;" required>
+                </div>
             </div>
-        </div>
+            <div class="password-container2">
+                <div class="password-content2">
+                    <img class="ImgPassword2" src="{{ url_for('static', filename='images/password.svg') }}" alt="Password" />
+                    <label for="password" onclick="activateInput('password')">Password</label>
+                    <input type="password" id="password" name="password" class="password-input2" style="display: none;" required>
+                </div>
+            </div>
+            <button type="submit" class="signup">Sign-up</button>
+        </form>
+        <div class="already-have-an-account">Already Have an Account?</div>
+        <button type="submit" class="login" onclick="window.location.href = '{{ url_for('login')}}'">Login</button>
         <script>
             function activateInput(inputId) {
                 const inputElement = document.getElementById(inputId);
                 const labelElement = inputElement.previousElementSibling;
 
-                // Hide the label
                 labelElement.style.display = 'none';
 
-                // Show the input box
                 inputElement.style.display = 'block';
                 inputElement.focus();
-            }
-
-            function loginClicked() {
-                alert('Signup button clicked!'); // Replace this with your actual login code
             }
         </script>
     </div>

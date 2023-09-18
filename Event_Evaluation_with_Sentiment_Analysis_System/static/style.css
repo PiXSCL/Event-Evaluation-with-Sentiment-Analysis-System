@@ -1,10 +1,4 @@
-﻿body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
-.log-in-page,
+﻿.log-in-page,
 .log-in-page * {
     box-sizing: border-box;
 }
@@ -129,7 +123,7 @@
 }
 
     .email-container .email-input:focus {
-        border: 1px solid #007bff;
+        border: 1px solid #61492e;
     }
 
 .password-container {
@@ -175,7 +169,7 @@
 }
 
     .password .password-input:focus {
-        border: 1px solid #007bff;
+        border: 1px solid #61492e;
     }
 
 .forgot-password {
@@ -202,7 +196,7 @@
     top: 78%;
 }
 
-.rectangle-7 {
+.loginbutton {
     background-color: #CEA778; 
     color: white; 
     border: none;
@@ -219,7 +213,7 @@
     justify-content: center;
 }
 
-    .rectangle-7:hover {
+    .loginbutton:hover {
         background-color: #E8BA84; 
     }
 
@@ -247,4 +241,190 @@
         color: #E8BA84;
     }
 
+.name-container {
+    background: #e4d2bd;
+    width: 42.92%;
+    height: 8.71%;
+    position: absolute;
+    left: 45.76%;
+    top: 20%;
+}
 
+.name-content {
+    display: flex;
+    align-items: center;
+}
+
+.name-container .ImgUser {
+    width: 56px;
+    height: 56px;
+    fill: #61492E;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.name-container label {
+    color: #61492e;
+    text-align: left;
+    font: 400 1.92vw "Cabin", sans-serif;
+    cursor: pointer;
+}
+
+.name-container .name-input {
+    display: none;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    padding: 16px;
+    border: 0px solid #ccc;
+    border-radius: 5px;
+    margin-top: -3px;
+}
+
+    .name-container .name-input:focus {
+        border: 1px solid #61492e;
+    }
+
+.email-container2 {
+    background: #e4d2bd;
+    width: 42.92%;
+    height: 8.71%;
+    position: absolute;
+    left: 45.76%;
+    top: 36%;
+}
+
+.email-content2 {
+    display: flex;
+    align-items: center;
+}
+
+.email-container2 .ImgEmail2 {
+    width: 50px;
+    height: 50px;
+    fill: #61492E;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.email-container2 label {
+    color: #61492e;
+    text-align: left;
+    font: 400 1.92vw "Cabin", sans-serif;
+    cursor: pointer;
+}
+
+.email-container2 .email-input2 {
+    display: none;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    padding: 16px;
+    border: 0px solid #ccc;
+    border-radius: 5px;
+    margin-top: -3px;
+}
+
+    .email-container2 .email-input2:focus {
+        border: 1px solid #61492e;
+    }
+
+.password-container2 {
+    background: #e4d2bd;
+    width: 42.92%;
+    height: 8.71%;
+    position: absolute;
+    left: 45.76%;
+    top: 52%;
+}
+
+.password-content2 {
+    display: flex;
+    align-items: center;
+}
+
+.password-container2 .ImgPassword2 {
+    width: 70px;
+    height: 70px;
+    fill: #61492E;
+    margin-right: 1px;
+    margin-left: 1px;
+    margin-top: -10px;
+}
+
+.password-container2 label {
+    color: #61492e;
+    text-align: left;
+    font: 400 1.92vw "Cabin", sans-serif;
+    cursor: pointer;
+    margin-top: -6px;
+}
+
+.password-container2 .password-input2 {
+    display: none;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    padding: 16px;
+    border: 0px solid #ccc;
+    border-radius: 5px;
+    margin-top: -8px;
+}
+
+.password-container2 .password-input2:focus {
+    border: 1px solid #61492e;
+}
+
+.sign-up-to-create {
+    color: #61492e;
+    text-align: left;
+    font: 400 1.47vw "Cabin", sans-serif;
+    position: absolute;
+    left: 54.03%;
+    top: 13%;
+}
+
+.signup {
+    background-color: #CEA778;
+    color: #61492e;
+    border: none;
+    border-radius: 35px;
+    width: 20%;
+    height: 7.62%;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 400 2.12vw "Cabin", sans-serif;
+    position: absolute;
+    left: 57%;
+    top: 68%;
+}
+
+    .signup:hover {
+        background-color: #E8BA84;
+    }
+
+.already-have-an-account {
+    color: #61492e;
+    text-align: left;
+    font: 400 1.68vw "Cabin", sans-serif;
+    position: absolute;
+    left: 54.03%;
+    top: 81%;
+}
+
+.login {
+    color: #61492e;
+    text-align: left;
+    font: 400 1.68vw "Cabin", sans-serif;
+    text-decoration: underline;
+    position: absolute;
+    left: 75%;
+    top: 81%;
+}
+
+    .login:hover {
+        color: #E8BA84;
+    }
