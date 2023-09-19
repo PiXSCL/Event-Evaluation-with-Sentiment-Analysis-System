@@ -1,0 +1,362 @@
+body {
+    background-color: #A9CBC9;
+}
+
+.box {
+    position: absolute;
+    width: 1250px;
+    height: 42px;
+    left: 50px;
+    top: 30px;
+    background: #F8F4EE;
+    border-radius: 25px;
+}
+
+.title1 {
+    position: absolute;
+    width: 485px;
+    height: 179px;
+    left: 58px;
+    top: 160px;
+
+    font-family: 'Dela Gothic One';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 50px;
+    line-height: 72px;
+
+    color: #44585F;
+}
+
+.title2 {
+    position: absolute;
+    width: 485px;
+    height: 30px;
+    left: 58px;
+    top: 410px;
+
+    font-family: 'Cabin Condensed';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 25px;
+    line-height: 30px;
+    text-decoration-line: underline;
+
+    color: #44585F;
+}
+
+.login-container {
+    position: absolute;
+    width: 730px;
+    height: 400px;
+    left: 556px;
+    top: 125px;
+
+    background: #F0E7CF;
+    border-radius: 35px;
+}
+
+.text1 {
+    position: absolute;
+    width: 385px;
+    height: 30px;
+    left: 170px;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 30px;
+
+    color: #61492E;
+}
+
+.email {
+    position: absolute;
+    width: 520px;
+    left: 120px;
+    top: 100px;
+}
+
+.email input[type="text"] {
+    width: 100%;
+    padding: 20px;
+    border: none; 
+    outline: none; 
+    background-color: #E4D2BD;
+    font-size: 20px;
+}
+
+.email input[type="text"]::placeholder {
+    color: #61492E; 
+    font-style: 'Cabin';
+}
+
+.password {
+    position: absolute;
+    width: 520px;
+    left: 120px;
+    top: 180px;
+}
+
+.password input[type="password"] {
+    width: 100%;
+    padding: 20px;
+    border: none; 
+    outline: none; 
+    background-color: #E4D2BD;
+    font-size: 20px;
+}
+
+.password input[type="password"]::placeholder {
+    color: #61492E; 
+    font-style: 'Cabin';
+}
+
+.login-link {
+    position: absolute;
+    width: 185px;
+    height: 30px;
+    left: 510px;
+    top: 250px;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 30px;
+}
+
+.login-link a {
+    color: #61492E;
+}
+
+.button-container {
+    position: absolute;
+    top: 300px;
+    left: 300px;
+}
+
+.button-container button {
+    background-color: rgba(232, 186, 132, 0.79); 
+    border: none; 
+    border-radius: 35px; 
+    padding: 10px 50px; 
+    font-size: 20px; 
+    color: #61492E;
+    cursor: pointer; 
+}
+
+.text2 {
+    position: absolute;
+    left: 270px;
+    top: 320px;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 34px;
+
+    color: #61492E;
+}
+
+.login-link1 {
+    position: absolute;
+    width: 185px;
+    height: 30px;
+    left: 445px;
+    top: 337px;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 30px;
+}
+
+.login-link1 a {
+    color: #61492E;
+}
+
+.box1 {
+    position: absolute;
+    width: 100%;
+    left: 0px;
+    bottom: 0px;
+    height: 35px;
+    background: #CEA778;
+}
+
+.email-icon {
+    position: absolute;
+    padding-top: 5px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    top: 100px;
+    left: 49px;
+    background-color: #E4D2BD;
+}
+
+.pass-icon {
+    position: absolute;
+    padding-top: 2px;
+    padding-bottom: 1px;
+    left: 49px;
+    top: 180px;
+    background-color: #E4D2BD;
+}
+
+.signup-container {
+    position: absolute;
+    width: 730px;
+    height: 450px;
+    left: 556px;
+    top: 105px;
+
+    background: #F0E7CF;
+    border-radius: 35px;
+}
+
+.name {
+    position: absolute;
+    width: 520px;
+    left: 120px;
+    top: 100px;
+}
+
+.name input[type="text"] {
+    width: 100%;
+    padding: 20px;
+    border: none; 
+    outline: none; 
+    background-color: #E4D2BD;
+    font-size: 20px;
+}
+
+.name input[type="text"]::placeholder {
+    color: #61492E; 
+    font-style: 'Cabin';
+}
+
+.signup-email {
+    position: absolute;
+    width: 520px;
+    left: 120px;
+    top: 180px;
+}
+
+.signup-email input[type="text"] {
+    width: 100%;
+    padding: 20px;
+    border: none; 
+    outline: none; 
+    background-color: #E4D2BD;
+    font-size: 20px;
+}
+
+.signup-email input[type="text"]::placeholder {
+    color: #61492E; 
+    font-style: 'Cabin';
+}
+
+.signup-password {
+    position: absolute;
+    width: 520px;
+    left: 120px;
+    top: 260px;
+}
+
+.signup-password input[type="password"] {
+    width: 100%;
+    padding: 20px;
+    border: none; 
+    outline: none; 
+    background-color: #E4D2BD;
+    font-size: 20px;
+}
+
+.signup-password input[type="password"]::placeholder {
+    color: #61492E; 
+    font-style: 'Cabin';
+}
+
+.signup-button-container {
+    position: absolute;
+    top: 350px;
+    left: 300px;
+}
+
+.signup-button-container button {
+    background-color: rgba(232, 186, 132, 0.79); 
+    border: none; 
+    border-radius: 35px; 
+    padding: 10px 50px; 
+    font-size: 20px; 
+    color: #61492E;
+    cursor: pointer; 
+}
+
+.signup-text2 {
+    position: absolute;
+    left: 280px;
+    top: 380px;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 34px;
+
+    color: #61492E;
+}
+
+.signup-link1 {
+    position: absolute;
+    width: 185px;
+    height: 30px;
+    left: 445px;
+    top: 397px;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 30px;
+}
+
+.signup-link1 a {
+    color: #61492E;
+}
+
+.signup-email-icon {
+    position: absolute;
+    padding-top: 5px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    top: 180px;
+    left: 49px;
+    background-color: #E4D2BD;
+}
+
+.signup-user-icon {
+    position: absolute;
+    padding-top: 4px;
+    padding-bottom: 1px;
+    padding-left: 10px;
+    padding-right: 10px;
+    top: 100px;
+    left: 49px;
+    background-color: #E4D2BD;
+}
+
+.signup-pass-icon {
+    position: absolute;
+    padding-top: 2px;
+    padding-bottom: 1px;
+    left: 49px;
+    top: 260px;
+    background-color: #E4D2BD;
+}
