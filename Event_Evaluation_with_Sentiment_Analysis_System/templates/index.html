@@ -41,26 +41,26 @@
         <div class="log-in-to-try-insert-web-app-name">
             Log-in to create and access Forms
         </div>
-        <div class="email-container">
-            <div class="email-content">
-                <img class="ImgEmail" src="{{ url_for('static', filename='images/email.svg') }}" alt="Email" />
-                <label for="email" onclick="activateInput('email')">Email</label>
-                <input type="text" id="email" name="email" class="email-input" style="display: none;" />
+        <form method="POST" action="/login">
+            <div class="email-container">
+                <div class="email-content">
+                    <img class="ImgEmail" src="{{ url_for('static', filename='images/email.svg') }}" alt="Email" />
+                    <label for="email" onclick="activateInput('email')">Email</label>
+                    <input type="text" id="email" name="email" class="email-input" style="display: none;" required/>
+                </div>
             </div>
-        </div>
+            <div class="password-container">
+                <div class="password-content">
+                    <img class="ImgPassword" src="{{ url_for('static', filename='images/password.svg') }}" alt="Password" />
+                    <label for="password" onclick="activateInput('password')">Password</label>
+                    <input type="password" id="password" name="password" class="password-input" style="display: none;" required/>
+                </div>
+            </div>
+            <button type="submit" class="loginbutton">Log-in</button>
+        </form>
         <button class="forgot-password">Forgot Password?</button>
         <div class="don-t-have-an-account">Don’t have an account?</div>
-        <div class="loginbutton" onclick="loginClicked()">
-            <div class="log-in">Log-in</div>
-        </div>
         <button type="submit" class="sign-up" onclick="window.location.href = '{{ url_for('signup')}}'">Register</button>
-        <div class="password-container">
-            <div class="password-content">
-                <img class="ImgPassword" src="{{ url_for('static', filename='images/password.svg') }}" alt="Password" />
-                <label for="password" onclick="activateInput('password')">Password</label>
-                <input type="password" id="password" name="password" class="password-input" style="display: none;" />
-            </div>
-        </div>
         <script>
             function activateInput(inputId) {
                 const inputElement = document.getElementById(inputId);
@@ -73,7 +73,7 @@
             }
 
             function loginClicked() {
-                alert('Login button clicked!'); 
+                alert('Login button clicked!');
             }
         </script>
     </div>

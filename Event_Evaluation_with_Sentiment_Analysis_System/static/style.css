@@ -197,17 +197,18 @@
 }
 
 .loginbutton {
-    background-color: #CEA778; 
-    color: white; 
+    background-color: #CEA778;
+    color: #61492e;
     border: none;
-    border-radius: 35px; 
+    border-radius: 35px;
     width: 20%;
-    height: 7.62%; 
+    height: 7.62%;
     position: absolute;
     left: 57.22%;
     top: 62%;
     cursor: pointer;
-    text-align: center; 
+    text-align: center;
+    font: 400 2.12vw "Cabin", sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -216,16 +217,6 @@
     .loginbutton:hover {
         background-color: #E8BA84; 
     }
-
-
-.log-in {
-    color: #61492e;
-    text-align: left;
-    font: 400 2.12vw "Cabin", sans-serif;
-    position: absolute;
-    left: 35%;
-    top: 20%;
-}
 
 .sign-up {
     color: #61492e;

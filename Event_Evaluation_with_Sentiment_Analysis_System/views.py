@@ -18,6 +18,18 @@ class User(db.Model):
 def login():
     return render_template('index.html')
 
+@app.route('/login', methods=['POST'])
+def login_post():
+    email = request.form['email']
+    password = request.form['password']
+
+    user = User.query.filter_by(email=email, password=password).first()
+
+    if user:
+        return '<script>alert("Login successful!"); window.location.href="/";</script>'
+    else:
+        return '<script>alert("Invalid account. Please check the email and password you entered."); window.location.href="/login";</script>'
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -27,13 +39,12 @@ def signup():
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            flash('Email already exists. Please use a different email.', 'danger')
+           return '<script>alert("Email already exists. Please use a different email."); window.location.href="/signup";</script>'
         else:
             new_user = User(name=name, email=email, password=password)
             db.session.add(new_user)
             db.session.commit()
-            flash('Signup successful!', 'success')
-            return redirect(url_for('login'))
+            return '<script>alert("Signup successful!"); window.location.href="/login";</script>'
 
     return render_template('signup.html')
 
