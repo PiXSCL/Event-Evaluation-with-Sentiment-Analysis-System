@@ -360,3 +360,70 @@ body {
     top: 260px;
     background-color: #E4D2BD;
 }
+
+.home-navbar{
+    position: absolute;
+    width: 1364px;
+    height: 133px;
+    left: 0px;
+    top: 32px;
+
+    background: #F8F4EE;
+    border: 1px solid #020101;
+}
+
+.user-profile img {
+    position: absolute;
+    border-radius: 50%;
+    width: 103px;
+    height: 95px;
+    left: 20px;
+    top: 18px;
+}
+
+.home-email {
+    position: absolute;
+    width: 261px;
+    height: 43px;
+    left: 152px;
+    top: 45px;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 35px;
+    line-height: 43px;
+    text-align: center;
+
+    color: #44585F;
+}
+
+.home-buttons {
+    position: absolute;
+    top: 45px;
+    right: 25px;
+}
+
+.home-buttons button {
+    background-color: #546D75; 
+    border: none; 
+    border-radius: 35px; 
+    padding-left: 55px;
+    padding-right: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 25px; 
+    color: #D4D4D4;
+    cursor: pointer; 
+}
+
+.add {
+    position: absolute;
+    right: 165px;
+    top: 55px;
+}
+
+.add img {
+    width: 40px;
+    height: 40px;
+}
