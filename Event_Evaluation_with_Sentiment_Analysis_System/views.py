@@ -26,7 +26,7 @@ def login_post():
     user = User.query.filter_by(email=email, password=password).first()
 
     if user:
-        return '<script>alert("Login successful!"); window.location.href="/";</script>'
+        return '<script>alert("Login successful!"); window.location.href="/home";</script>'
     else:
         return '<script>alert("Invalid account. Please check the email and password you entered."); window.location.href="/login";</script>'
 
@@ -51,5 +51,9 @@ def signup():
 if __name__ == '__main__':
     db.create_all()
     app.run(debug=True)
+
+@app.route('/home')
+def home():
+    return render_template('home.html')
 
 

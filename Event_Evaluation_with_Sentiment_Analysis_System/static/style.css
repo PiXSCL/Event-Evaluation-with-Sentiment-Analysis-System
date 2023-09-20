@@ -78,7 +78,7 @@
     text-align: left;
     font: 400 1.47vw "Cabin", sans-serif;
     position: absolute;
-    left: 54.03%;
+    left: 56%;
     top: 18%;
 }
 
@@ -88,7 +88,7 @@
     height: 8.71%;
     position: absolute;
     left: 45.76%;
-    top: 28.44%;
+    top: 26.44%;
 }
 
 .email-content {
@@ -104,15 +104,8 @@
     margin-left: 10px;
 }
 
-.email-container label {
-    color: #61492e;
-    text-align: left;
-    font: 400 1.92vw "Cabin", sans-serif;
-    cursor: pointer; 
-}
-
 .email-container .email-input {
-    display: none;
+    display: block;
     width: 100%; 
     height: 100%; 
     font-size: 16px; 
@@ -121,6 +114,11 @@
     border-radius: 5px; 
     margin-top: -3px;
 }
+
+    .email-container .email-input::placeholder {
+        color: #61492E;
+        font-style: 'Cabin';
+    }
 
     .email-container .email-input:focus {
         border: 1px solid #61492e;
@@ -149,16 +147,8 @@
     margin-top: -10px;
 }
 
-.password-container label {
-    color: #61492e;
-    text-align: left;
-    font: 400 1.92vw "Cabin", sans-serif;
-    cursor: pointer;
-    margin-top: -6px;
-}
-
 .password-container .password-input {
-    display: none;
+    display: block;
     width: 100%; 
     height: 100%;
     font-size: 16px; 
@@ -167,6 +157,11 @@
     border-radius: 5px; 
     margin-top: -8px;
 }
+
+    .password-container .password-input::placeholder {
+        color: #61492E;
+        font-style: 'Cabin';
+    }
 
     .password .password-input:focus {
         border: 1px solid #61492e;
@@ -192,8 +187,8 @@
     text-align: left;
     font: 400 1.68vw "Cabin", sans-serif;
     position: absolute;
-    left: 54.03%;
-    top: 78%;
+    left: 55.03%;
+    top: 76%;
 }
 
 .loginbutton {
@@ -224,8 +219,8 @@
     font: 400 1.68vw "Cabin", sans-serif;
     text-decoration: underline;
     position: absolute;
-    left: 73%;
-    top: 78%;
+    left: 72%;
+    top: 76%;
 }
 
     .sign-up:hover {
@@ -254,13 +249,6 @@
     margin-left: 5px;
 }
 
-.name-container label {
-    color: #61492e;
-    text-align: left;
-    font: 400 1.92vw "Cabin", sans-serif;
-    cursor: pointer;
-}
-
 .name-container .name-input {
     display: none;
     width: 100%;
@@ -271,6 +259,11 @@
     border-radius: 5px;
     margin-top: -3px;
 }
+
+    .name-container .name-input::placeholder {
+        color: #61492E;
+        font-style: 'Cabin';
+    }
 
     .name-container .name-input:focus {
         border: 1px solid #61492e;
@@ -298,13 +291,6 @@
     margin-left: 10px;
 }
 
-.email-container2 label {
-    color: #61492e;
-    text-align: left;
-    font: 400 1.92vw "Cabin", sans-serif;
-    cursor: pointer;
-}
-
 .email-container2 .email-input2 {
     display: none;
     width: 100%;
@@ -315,6 +301,11 @@
     border-radius: 5px;
     margin-top: -3px;
 }
+
+    .email-container2 .email-input2::placeholder {
+        color: #61492E;
+        font-style: 'Cabin';
+    }
 
     .email-container2 .email-input2:focus {
         border: 1px solid #61492e;
@@ -343,14 +334,6 @@
     margin-top: -10px;
 }
 
-.password-container2 label {
-    color: #61492e;
-    text-align: left;
-    font: 400 1.92vw "Cabin", sans-serif;
-    cursor: pointer;
-    margin-top: -6px;
-}
-
 .password-container2 .password-input2 {
     display: none;
     width: 100%;
@@ -362,16 +345,21 @@
     margin-top: -8px;
 }
 
-.password-container2 .password-input2:focus {
-    border: 1px solid #61492e;
-}
+    .password-container2 .password-input2::placeholder {
+        color: #61492E;
+        font-style: 'Cabin';
+    }
+
+    .password-container2 .password-input2:focus {
+        border: 1px solid #61492e;
+    }
 
 .sign-up-to-create {
     color: #61492e;
     text-align: left;
     font: 400 1.47vw "Cabin", sans-serif;
     position: absolute;
-    left: 54.03%;
+    left: 56%;
     top: 13%;
 }
 
@@ -402,8 +390,8 @@
     text-align: left;
     font: 400 1.68vw "Cabin", sans-serif;
     position: absolute;
-    left: 54.03%;
-    top: 81%;
+    left: 55.03%;
+    top: 79%;
 }
 
 .login {
@@ -412,10 +400,74 @@
     font: 400 1.68vw "Cabin", sans-serif;
     text-decoration: underline;
     position: absolute;
-    left: 75%;
-    top: 81%;
+    left: 74%;
+    top: 79%;
 }
 
     .login:hover {
         color: #E8BA84;
+    }
+
+.home-navbar {
+    position: absolute;
+    width: 1364px;
+    height: 133px;
+    left: 0px;
+    top: 32px;
+    background: #F8F4EE;
+    border: 1px solid #020101;
+}
+
+.user-profile img {
+    position: absolute;
+    border-radius: 50%;
+    width: 103px;
+    height: 95px;
+    left: 20px;
+    top: 18px;
+}
+
+.home-email {
+    position: absolute;
+    width: 261px;
+    height: 43px;
+    left: 152px;
+    top: 45px;
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 35px;
+    line-height: 43px;
+    text-align: center;
+    color: #44585F;
+}
+
+.home-buttons {
+    position: absolute;
+    top: 45px;
+    right: 25px;
+}
+
+    .home-buttons button {
+        background-color: #546D75;
+        border: none;
+        border-radius: 35px;
+        padding-left: 55px;
+        padding-right: 20px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        font-size: 25px;
+        color: #D4D4D4;
+        cursor: pointer;
+    }
+
+.add {
+    position: absolute;
+    right: 165px;
+    top: 55px;
+}
+
+    .add img {
+        width: 40px;
+        height: 40px;
     }
