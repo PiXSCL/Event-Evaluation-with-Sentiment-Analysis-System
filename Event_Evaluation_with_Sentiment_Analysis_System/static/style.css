@@ -631,6 +631,7 @@
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis; 
+    z-index: 1;
 }
 
     .option {
@@ -638,6 +639,7 @@
     bottom: 4px;
     right: 15px;
     height:20px;
+    z-index: 1;
 }
 
     .option:hover{
