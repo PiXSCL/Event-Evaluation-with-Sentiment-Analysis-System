@@ -13,6 +13,12 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
 
+class Form(db.Model):  
+    formid = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))  
+    description = db.Column(db.String(255)) 
+    date_created = db.Column(db.DateTime)
+
 @app.route('/')
 @app.route('/login')
 def login():
@@ -29,6 +35,10 @@ def login_post():
         return '<script>alert("Login successful!"); window.location.href="/home";</script>'
     else:
         return '<script>alert("Invalid account. Please check the email and password you entered."); window.location.href="/login";</script>'
+
+def fetch_form_data():
+    form_data = Form.query.with_entities(Form.formid, Form.title).all()
+    return form_data
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -54,6 +64,7 @@ if __name__ == '__main__':
 
 @app.route('/home')
 def home():
-    return render_template('home.html')
+    form_data = fetch_form_data()
+    return render_template('home.html', form_data=form_data)
 
 

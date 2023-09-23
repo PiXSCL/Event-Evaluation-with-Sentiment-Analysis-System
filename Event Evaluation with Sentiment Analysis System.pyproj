@@ -45,6 +45,7 @@
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\user.svg" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\email.svg" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\password.svg" />
+    <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\option.png" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\style.css" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\home.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\index.html" />

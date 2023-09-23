@@ -411,9 +411,9 @@
 .home-navbar {
     position: absolute;
     width: 100%;
-    height: 20%;
+    height: 10%;
     left: 0px;
-    top: 32px;
+    top: 20px;
     background: #F8F4EE;
     border: 1px solid #020101;
 }
@@ -421,22 +421,22 @@
 .user-profile img {
     position: absolute;
     border-radius: 50%;
-    width: 103px;
-    height: 95px;
+    width: 70px;
+    height: 50px;
     left: 20px;
-    top: 18px;
+    top: 5px;
 }
 
 .home-email {
     position: absolute;
     width: 261px;
     height: 43px;
-    left: 152px;
-    top: 35px;
+    left: 50px;
+    top: 5px;
     font-family: 'Cabin';
     font-style: normal;
     font-weight: 400;
-    font-size: 35px;
+    font-size: 20px;
     line-height: 43px;
     text-align: center;
     color: #44585F;
@@ -444,11 +444,13 @@
 
 .home-buttons {
     position: absolute;
-    top: 30px;
+    top: 5px;
     right: 25px;
 }
 
     .home-buttons button {
+        width:170px;
+        height:49px;
         background-color: #546D75;
         border: none;
         border-radius: 35px;
@@ -456,29 +458,44 @@
         padding-right: 20px;
         padding-top: 15px;
         padding-bottom: 15px;
-        font-size: 25px;
+        font-size: 20px;
         color: #D4D4D4;
         cursor: pointer;
     }
 
 .add {
     position: absolute;
-    right: 165px;
-    top: 40px;
+    right: 150px;
+    top: 13px;
 }
 
     .add img {
-        width: 40px;
-        height: 40px;
+        width: 35px;
+        height: 35px;
     }
 
     .add img:hover {
         cursor: pointer;
     }
 
+.sort {
+    position: absolute;
+    width: 261px;
+    height: 43px;
+    left: 20px;
+    top: 120px;
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 43px;
+    text-align: left;
+    color: #44585F;
+}
+
 .search-container {
     right: 170px;
-    top: 130px;
+    top: 100px;
     position: absolute;
     width: 250px;
     height: 50px;
@@ -501,6 +518,10 @@
         font-size: 16px; /* Text font size */
     }
 
+        .search-container input[type="text"]::placeholder {
+            color: #fff;
+        }
+
     .search-container i.fa-search {
         margin-right: 10px;
         position: absolute;
@@ -513,8 +534,8 @@
     }
 
 .custom-dropdown {
-    left: 1170px;
-    top: 140px;
+    left: 1100px;
+    top: 95px;
     position: relative;
     display: inline-block;
 }
@@ -522,23 +543,24 @@
 .dropdown-header {
     cursor: pointer;
     padding: 5px;
-    background-color: #f1f1f1;
-    border: 1px solid #ccc;
+    background-color: #a9cbc9;
+    border: 1px solid #a9cbc9;
     border-radius: 4px;
     display: flex;
     align-items: center;
 }
 
     .dropdown-header img {
-        width: 20px;
-        height: 20px;
+        width: 50px;
+        height: 50px;
         margin-right: 5px;
     }
 
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #fff;
+    width: 148px;
+    background-color: #63828C;
     border: 1px solid #ccc;
     border-radius: 4px;
     z-index: 1;
@@ -555,3 +577,69 @@
             background-color: #f1f1f1;
         }
 
+.data-grid-container {
+    display: flex;
+    overflow-x: auto; /* Horizontal scroll */
+    width: 100%; /* Full width of the viewport */
+    position:absolute;
+    top: 160px;
+    left: 20px;
+}
+
+.data-grid {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping to next line */
+    margin-right: 40px; /* Space between items */
+}
+
+.data-grid-item {
+    width: 150px;
+    height: 160px;
+    margin-right: 50px;
+    padding: 10px;
+    border-radius: 35px;
+    background: #FFF3E4;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: center;
+    position: relative;
+    justify-content: flex-end;
+}
+
+    .data-grid-item::after {
+        content: "";
+        width: 100%;
+        height: 30px;
+        border-radius: 0px 0px 35px 35px;
+        background: rgba(206, 167, 120, 0.68);
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+
+.title-label {
+    position:absolute;
+    bottom: 5px;
+    left: 10px;
+    color: #61492E;
+    font-family: Cabin, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    max-width: 150px;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+    .option {
+    position:absolute;
+    bottom: 4px;
+    right: 15px;
+    height:20px;
+}
+
+    .option:hover{
+        cursor:pointer
+    }
