@@ -6,7 +6,7 @@
 .background {
     background: #a9cbc9;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     position: absolute;
     overflow: hidden;
 }
@@ -570,41 +570,50 @@
         display: block;
         padding: 10px;
         text-decoration: none;
-        color: #333;
+        color: #ccc;
     }
 
         .dropdown-content a:hover {
-            background-color: #f1f1f1;
+            background-color: #ccc;
+            color: #63828C;
         }
 
 .data-grid-container {
+    max-height: 350px; 
+    overflow-y: auto; 
+    overflow-x: hidden;
     display: flex;
-    overflow-x: auto; /* Horizontal scroll */
-    width: 100%; /* Full width of the viewport */
-    position:absolute;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: 100%;
+    position: absolute;
     top: 160px;
     left: 20px;
 }
 
 .data-grid {
     display: flex;
-    flex-wrap: nowrap; /* Prevent wrapping to next line */
-    margin-right: 40px; /* Space between items */
+    flex-wrap: wrap; 
+    width: 100%;
+    margin-right: -10px;
+    margin-left:20px;
+    
 }
 
 .data-grid-item {
     width: 150px;
-    height: 160px;
-    margin-right: 50px;
+    height: 150px;
+    margin: 10px;
     padding: 10px;
     border-radius: 35px;
     background: #FFF3E4;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     text-align: center;
     position: relative;
     justify-content: flex-end;
+    box-sizing: border-box;
 }
 
     .data-grid-item::after {
@@ -627,21 +636,82 @@
     font-size: 20px;
     font-style: normal;
     font-weight: 700;
-    max-width: 150px;
+    max-width: 100px;
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis; 
     z-index: 1;
 }
 
-    .option {
-    position:absolute;
-    bottom: 4px;
-    right: 15px;
-    height:20px;
+    .title-label:hover::before {
+        content: attr(data-title); 
+        position: absolute;
+        bottom: 100%; 
+        left: 10px;
+        background: #FFF3E4;
+        padding: 5px;
+        border-radius: 5px;
+        white-space: normal; 
+        max-width: none; 
+        visibility: visible; 
+        opacity: 1; 
+        z-index: 2; 
+        transition: opacity 0.3s, visibility 0.3s; 
+    }
+
+    .title-label:hover {
+        max-width: none;
+        background: #FFF3E4;
+        z-index: 2;
+    }
+
+.option {
+    position: absolute;
+    bottom: -4px;
+    left: 50px;
+    height: 20px;
     z-index: 1;
 }
 
-    .option:hover{
-        cursor:pointer
+    .option:hover {
+        cursor: pointer;
     }
+
+.option-container {
+    position: relative;
+    display: inline-block;
+}
+
+.option-menu {
+    display: none;
+    position: absolute;
+    width: 100px;
+    background-color: #63828C;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    z-index: 1;
+}
+
+    .option-menu a {
+        display: block;
+        padding: 10px;
+        text-decoration: none;
+        color: #ccc;
+    }
+
+        .option-menu a:hover {
+            background-color: #ccc;
+            color: #63828C;
+        
+
+
+
+
+
+
+
+
+
+
+
+

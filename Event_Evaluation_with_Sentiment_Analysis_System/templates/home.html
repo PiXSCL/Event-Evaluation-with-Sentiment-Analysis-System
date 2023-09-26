@@ -60,9 +60,17 @@
     <div class="data-grid-container">
         <div class="data-grid">
             {% for form_id, form_title in form_data %}
-                <div class="data-grid-item">
-                    <div class="title-label">{{ form_title }}</div>
-                    <img class="option" id="option_{{ form_id }}" src="{{ url_for('static', filename='images/option.png') }}" alt="Options Icon">
+               <div class="data-grid-item">
+                    <div class="item-content">
+                        <div class="title-label">{{ form_title }}</div>
+                        <div class="option-container" onclick="toggleOptionMenu(this)">
+                            <img class="option" id="option_{{ form_id }}" src="{{ url_for('static', filename='images/option.png') }}" alt="Options Icon">
+                            <div class="option-menu" id="dropdown-content" style="display: none;">
+                                <a href="#">Edit</a>
+                                <a href="#">Delete</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             {% endfor %}
         </div>
@@ -95,5 +103,55 @@
             dropdownContent.style.display = 'none';
         }
     }
+
+    // Add an event listener to each option container to toggle the menu
+    document.querySelectorAll('.option-container').forEach(function (container) {
+        container.addEventListener('click', function (event) {
+            const optionMenu = container.querySelector('.option-menu');
+            optionMenu.style.display = (optionMenu.style.display === 'block') ? 'none' : 'block';
+            event.stopPropagation(); // Prevent body click event from firing
+        });
+
+        // Add an event listener to each option menu to prevent menu clicks from closing it
+        container.querySelector('.option-menu').addEventListener('click', function (event) {
+            event.stopPropagation(); // Prevent the click from reaching the body click event
+        });
+    });
+
+    // Add an event listener to the document body to handle clicks outside the menu
+    document.body.addEventListener('click', function (event) {
+        document.querySelectorAll('.option-menu').forEach(function (menu) {
+            menu.style.display = 'none';
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Add click event listeners to all option buttons
+        const optionButtons = document.querySelectorAll(".option");
+        optionButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                const optionMenu = button.nextElementSibling; // Get the sibling option menu
+                optionMenu.classList.toggle("hidden"); // Toggle the 'hidden' class
+            });
+        });
+
+        // Add a click event listener to the entire document
+        document.addEventListener("click", function (event) {
+            const clickedElement = event.target;
+
+            // Check if the clicked element is an option button or inside an option container
+            const isOptionButton = clickedElement.classList.contains("option");
+            const isOptionMenu = clickedElement.classList.contains("option-menu");
+
+            // If the click is outside an option button or menu, hide all option menus
+            if (!isOptionButton && !isOptionMenu) {
+                const allOptionMenus = document.querySelectorAll(".option-menu");
+                allOptionMenus.forEach(function (menu) {
+                    menu.classList.add("hidden");
+                });
+            }
+        });
+    });
+
 </script>
 </html>
