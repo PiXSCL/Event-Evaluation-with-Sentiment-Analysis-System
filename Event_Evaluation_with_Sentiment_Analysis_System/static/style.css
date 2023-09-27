@@ -667,7 +667,7 @@
 
 .option {
     position: absolute;
-    bottom: -4px;
+    bottom: -7px;
     left: 50px;
     height: 20px;
     z-index: 1;
@@ -702,6 +702,26 @@
         .option-menu a:hover {
             background-color: #ccc;
             color: #63828C;
+        }
+
+.no-forms-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    margin-left: 280px;
+    color: #44585F;
+    text-align: center;
+    font-family: Cabin, sans-serif;
+    font-size: 45px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+
+
+
         
 
 
