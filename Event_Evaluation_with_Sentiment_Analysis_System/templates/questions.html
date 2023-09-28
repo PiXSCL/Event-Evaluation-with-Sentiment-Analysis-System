@@ -33,8 +33,8 @@
                 <ul class="menu">
                     <li><a href="{{ url_for('home') }}" class="home-link"><i class="fas fa-home"></i> Home</a></li>
                     <li><a href="{{ url_for('questions') }}">Questions</a></li>
-                    <li><a href="{{ url_for('questions') }}">Data Analytics</a></li>
                     <li><a href="">Settings</a></li>
+                    <li><a href="{{ url_for('questions') }}">Data Analytics</a></li>
                 </ul>
             </nav>
         </header>
@@ -52,6 +52,7 @@
                     </div>
 
                     <div class="quadrant upper-right">
+                        <img src="{{ url_for('static', filename='images/dropdown.png') }}" alt="Dropdown Icon" class="dropdownimg">
                         <select id="dropdown" class="dropdown">
                             <option value="Open-Ended Response">Open-Ended Response</option>
                             <option value="Multiple Choices">Multiple Choices</option>
@@ -66,8 +67,9 @@
                     <div class="quadrant lower-right">
                         <label class="switch-label">
                             <span class="switch-text">Required</span>
-                            <input type="radio" name="required" value="yes" class="switch-input">
+                            <input type="checkbox" name="required" value="yes" class="switch-input">
                             <span class="switch-slider"></span>
+                            <span class="switch-slider2"></span>
                         </label>
                     </div>
                 </div>
@@ -158,6 +160,7 @@
                     <input type="text" class="question-input" placeholder="Question">
                 </div>
                 <div class="quadrant upper-right">
+                    <img src="{{ url_for('static', filename='images/dropdown.png') }}" alt="Dropdown Icon" class="dropdownimg">
                     <select class="dropdown">
                         <option value="Open-Ended Response">Open-Ended Response</option>
                         <option value="Multiple Choices">Multiple Choices</option>
@@ -171,7 +174,7 @@
                 <div class="quadrant lower-right">
                     <label class="switch-label">
                         <span class="switch-text">Required</span>
-                        <input type="radio" name="required" value="yes" class="switch-input">
+                        <input type="checkbox" name="required" value="yes" class="switch-input">
                         <span class="switch-slider"></span>
                     </label>
                 </div>

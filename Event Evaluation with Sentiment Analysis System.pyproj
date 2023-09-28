@@ -38,6 +38,7 @@
     <Folder Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\dropdown.png" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\add.png" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\filter.png" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\search.svg" />

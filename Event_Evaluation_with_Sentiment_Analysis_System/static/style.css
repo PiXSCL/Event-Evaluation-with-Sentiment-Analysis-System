@@ -937,6 +937,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    transform: translateY(-30px);
 }
 
 .lower-left {
@@ -953,25 +954,54 @@
 }
 
 .question-input {
-    background-color: #A6BE9B;
+    background-color: #E4D2BD;
+    color: #61492E;
     font-size: 20px;
     padding: 15px;
     width: 100%;
-    border: 1px solid #ccc;
     border-radius: 4px;
+    outline: none;
+}
+
+    .question-input:focus {
+        border: 3px solid #61492E;
+    }
+
+    .question-input::placeholder {
+        color: #61492E;
+        font-family: Cabin;
+        font-size: 33px;
+        font-style: normal;
+        font-weight: 400;
+    }
+
+.dropdownimg {
+    width: 30px;
+    height: 30px;
+    fill: #61492E;
+    margin-right: 1px;
+    margin-left: 1px;
+    margin-top: 0px;
+    transform: translate(-10px,42px);
 }
 
 .dropdown {
-    font-size: 20px;
-    padding: 15px;
-    width: 60%;
-    border: 2px solid #3ED608;
-    border-radius: 4px;
+color: #61492E;
+font-size: 20px;
+padding: 15px;
+width: 60%;
+outline: none;
+border: 2px solid #61492E;
+border-radius: 15px;
 }
 
 .selected-option {
-    font-family: Arial, sans-serif;
-    font-size: 20px;
+    color: #61492E;
+    font-family: Cabin;
+    font-size: 30px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: normal;
     position: relative;
 }
 
@@ -981,8 +1011,12 @@
         bottom: -5px;
         left: 0;
         width: 120%;
-        border-bottom: 2px solid #3ED608;
+        border-bottom: 2px solid #61492E;
     }
+
+.switch-input {
+    display: none;
+}
 
 .switch-label {
     display: flex;
@@ -990,19 +1024,17 @@
     position: relative;
     width: 100px;
     height: 40px;
-    background-color: #74d650;
+    color: #61492E;
     border-radius: 28px;
     cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    background-color: #AAA588;
 }
 
 .switch-text {
     margin-right: 8px;
     margin-left: -90px;
     font-size: 20px;
-}
-
-.switch-input {
-    display: none;
 }
 
 .switch-slider {
@@ -1028,13 +1060,14 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    background-color: #D8FFC5;
-    border: 1px solid #ccc;
+    background-color: #F0E7CF;
+    border: 0px solid #ccc;
+    height:40px;
     max-width: 200px;
     margin-right: auto;
-    margin-left: 1081px;
-    margin-top: 5px;
-    border-radius: 10px;
+    margin-left: 1004.5px;
+    margin-top: -8px;
+    border-radius: 0 0 10px 10px;
 }
 
     .icon-box i {
@@ -1058,15 +1091,17 @@
 .save-button {
     display: flex;
     justify-content: flex-start;
-    margin-left: 63px;
+    margin-left: 15px;
+    transform: translateY(-25px);
 }
 
 #save-button {
+    width: 150px;
     padding: 10px 20px;
-    background-color: #3ED608;
+    background-color: #667F87;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 20px;
     transition: background-color 0.3s ease-in-out;
