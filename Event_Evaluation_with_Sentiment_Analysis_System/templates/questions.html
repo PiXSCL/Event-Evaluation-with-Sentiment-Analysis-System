@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Details</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<style>
+        a,
+        button,
+        input,
+        select,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+            text-decoration: none;
+            appearance: none;
+            background: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <header class="header">
+            <nav class="navbar">
+                <ul class="menu">
+                    <li><a href="{{ url_for('home') }}" class="home-link"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{{ url_for('questions') }}">Questions</a></li>
+                    <li><a href="{{ url_for('questions') }}">Data Analytics</a></li>
+                    <li><a href="">Settings</a></li>
+                </ul>
+            </nav>
+        </header>
+        <div class="form-container">
+            <form action="">
+                <div class="box">
+                    <input type="text" class="title-input" placeholder="Form Title">
+                    <input type="text" class="desc-input" placeholder="Description">
+                    <div class="line"></div>
+                </div>
+
+                <div class="box2">
+                    <div class="quadrant upper-left">
+                        <input type="text" class="question-input" placeholder="Question">
+                    </div>
+
+                    <div class="quadrant upper-right">
+                        <select id="dropdown" class="dropdown">
+                            <option value="Open-Ended Response">Open-Ended Response</option>
+                            <option value="Multiple Choices">Multiple Choices</option>
+                            <option value="CheckBox">CheckBox</option>
+                        </select>
+                    </div>
+
+                    <div class="quadrant lower-left">
+                        <p class="selected-option">Selected Option: <span id="selectedOption">None</span></p>
+                    </div>
+
+                    <div class="quadrant lower-right">
+                        <label class="switch-label">
+                            <span class="switch-text">Required</span>
+                            <input type="radio" name="required" value="yes" class="switch-input">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="icon-box">
+                    <i class="fas fa-clone duplicate-icon"></i>
+                    <i class="fas fa-trash delete-icon"></i>
+                    <i class="fas fa-plus-circle add-icon"></i>
+                </div>
+
+                <div class="save-button">
+                    <button type="submit" id="save-button">Save</button>
+                </div>
+            </form>
+        </div>
+</body>
+<script>
+    let optionCounter = 1;
+
+    function createOptionElement(inputType) {
+        const newOption = document.createElement("div");
+        newOption.className = "option";
+        newOption.innerHTML = `
+            <input type="${inputType}" class="option-input" name="options${optionCounter}" value="option${optionCounter}">
+            <input type="text" class="option-label" placeholder="Option label">
+            <button class="delete-option"><i class="fas fa-trash"></i></button>
+        `;
+        optionCounter++;
+
+        newOption.querySelector(".delete-option").addEventListener("click", function () {
+            newOption.parentNode.removeChild(newOption);
+        });
+
+        return newOption;
+    }
+
+    function addOption(optionsContainer, inputType) {
+        const newOption = createOptionElement(inputType);
+        optionsContainer.appendChild(newOption);
+    }
+
+    function handleDropdownChange(dropdown, selectedOptionElement, optionsContainer) {
+        const selectedValue = dropdown.value;
+        selectedOptionElement.textContent = selectedValue;
+
+        optionsContainer.innerHTML = '';
+
+        if (selectedValue === "Open-Ended Response") {
+            optionsContainer.innerHTML = '<p class="selected-option">Open-Ended <span id="selectedOption">Response</span></p>';
+        } else if (selectedValue === "Multiple Choices" || selectedValue === "CheckBox") {
+            const optionsContainerDiv = document.createElement("div");
+            optionsContainerDiv.className = "options-container";
+            optionsContainer.appendChild(optionsContainerDiv);
+
+            addOption(optionsContainerDiv, selectedValue === "Multiple Choices" ? "radio" : "checkbox");
+
+            const addOptionButton = document.createElement("button");
+            addOptionButton.className = "add-option";
+            addOptionButton.type = "button";
+            addOptionButton.textContent = "Add Option";
+
+            addOptionButton.addEventListener("click", function () {
+                addOption(optionsContainerDiv, selectedValue === "Multiple Choices" ? "radio" : "checkbox");
+            });
+
+            optionsContainer.appendChild(addOptionButton);
+
+            selectedOptionElement.parentElement.style.display = 'none';
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdown = document.getElementById("dropdown");
+        const selectedOption = document.getElementById("selectedOption");
+        const quadrantLowerLeft = document.querySelector(".quadrant.lower-left");
+        const form = document.querySelector("form");
+        const iconBox = document.querySelector(".icon-box");
+
+        dropdown.addEventListener("change", function () {
+            handleDropdownChange(dropdown, selectedOption, quadrantLowerLeft);
+        });
+
+        iconBox.addEventListener("click", function () {
+            const newBox2 = document.createElement("div");
+            newBox2.className = "box2";
+            newBox2.innerHTML = `
+                <div class="quadrant upper-left">
+                    <input type="text" class="question-input" placeholder="Question">
+                </div>
+                <div class="quadrant upper-right">
+                    <select class="dropdown">
+                        <option value="Open-Ended Response">Open-Ended Response</option>
+                        <option value="Multiple Choices">Multiple Choices</option>
+                        <option value="CheckBox">CheckBox</option>
+                    </select>
+                </div>
+                <div class="quadrant lower-left">
+                    <p class="selected-option">Selected Option: <span>None</span></p>
+                    <div class="options-container"></div>
+                </div>
+                <div class="quadrant lower-right">
+                    <label class="switch-label">
+                        <span class="switch-text">Required</span>
+                        <input type="radio" name="required" value="yes" class="switch-input">
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+            `;
+            form.insertBefore(newBox2, iconBox);
+
+            const newDropdown = newBox2.querySelector(".dropdown");
+            const newSelectedOption = newBox2.querySelector(".selected-option span");
+            const newOptionsContainer = newBox2.querySelector(".options-container");
+
+            newDropdown.addEventListener("change", function () {
+                handleDropdownChange(newDropdown, newSelectedOption, newOptionsContainer);
+            });
+        });
+    });
+</script>
+</html>

@@ -26,6 +26,7 @@ class Form(db.Model):
 @app.route('/')
 @app.route('/login')
 def login():
+    session.clear()
     return render_template('index.html')
 
 @app.route('/login', methods=['POST'])
@@ -82,4 +83,6 @@ def home():
     else:
         return redirect(url_for('login'))
 
-
+@app.route('/questions')
+def questions():
+    return render_template('questions.html')
