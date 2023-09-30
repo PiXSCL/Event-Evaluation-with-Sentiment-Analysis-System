@@ -52,7 +52,7 @@
                     </div>
 
                     <div class="quadrant upper-right">
-                        <img src="{{ url_for('static', filename='images/dropdown.png') }}" alt="Dropdown Icon" class="dropdownimg">
+                        <img id="dropdownImg" src="{{ url_for('static', filename='images/dropdown.png') }}" alt="Dropdown Icon" class="dropdownimg">
                         <select id="dropdown" class="dropdown">
                             <option value="Open-Ended Response">Open-Ended Response</option>
                             <option value="Multiple Choices">Multiple Choices</option>
@@ -65,11 +65,10 @@
                     </div>
 
                     <div class="quadrant lower-right">
-                        <label class="switch-label">
-                            <span class="switch-text">Required</span>
-                            <input type="checkbox" name="required" value="yes" class="switch-input">
-                            <span class="switch-slider"></span>
-                            <span class="switch-slider2"></span>
+                        <span class="switch-text">Required</span>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
                         </label>
                     </div>
                 </div>
@@ -86,6 +85,7 @@
             </form>
         </div>
 </body>
+</html>
 <script>
     let optionCounter = 1;
 
@@ -172,11 +172,11 @@
                     <div class="options-container"></div>
                 </div>
                 <div class="quadrant lower-right">
-                    <label class="switch-label">
-                        <span class="switch-text">Required</span>
-                        <input type="checkbox" name="required" value="yes" class="switch-input">
-                        <span class="switch-slider"></span>
-                    </label>
+                    <span class="switch-text">Required</span>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
                 </div>
             `;
             form.insertBefore(newBox2, iconBox);
@@ -191,4 +191,3 @@
         });
     });
 </script>
-</html>
