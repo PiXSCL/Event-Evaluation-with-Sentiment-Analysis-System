@@ -1020,6 +1020,51 @@ z-index: 2;
         border-bottom: 2px solid #61492E;
     }
 
+.options-container {
+    max-height: 150px; /* Set a maximum height to create a scrollbar when options overflow */
+    overflow-y: auto; /* Add a vertical scrollbar when options exceed the container height */
+    padding: 10px; /* Add padding to create space between the container border and options */
+    position: relative; /* Add position relative to the container */
+}
+
+.option {
+    position: absolute; /* Add position absolute to the options */
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; /* Adjust this value to control the vertical spacing between options */
+    padding: 5px; /* Add padding to create space within each option */
+    background-color: #f9f9f9; /* Background color for options */
+    border: 1px solid #ccc; /* Border for options */
+    border-radius: 5px; /* Border radius for options */
+}
+
+.option-input {
+    /* Style for the input element, e.g., radio or checkbox */
+    margin-right: 10px; /* Adjust this value to control the spacing between the input and label */
+}
+
+.option-label {
+    /* Style for the label of the option */
+}
+
+.delete-option {
+    /* Style for the delete button within each option */
+    cursor: pointer;
+    color: red; /* Change the color to your preferred delete icon color */
+}
+
+.delete-option {
+    /* Style for the delete button within each option */
+    cursor: pointer;
+    color: red; /* Change the color to your preferred delete icon color */
+}
+
+
+.delete-option {
+    cursor: pointer;
+    color: red; /* Change the color to your preferred delete icon color */
+}
+
 .switch-text {
     margin-right: 8px;
     margin-left: -90px;
@@ -1125,6 +1170,25 @@ input:checked + .slider:before {
 }
 
 #save-button {
+    width: 150px;
+    padding: 10px 20px;
+    background-color: #667F87;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.link-button {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 200px;
+    transform: translateY(-70px);
+}
+
+#link-button {
     width: 150px;
     padding: 10px 20px;
     background-color: #667F87;

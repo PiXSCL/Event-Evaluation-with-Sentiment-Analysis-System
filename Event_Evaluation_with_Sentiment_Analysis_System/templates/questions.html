@@ -61,7 +61,8 @@
                     </div>
 
                     <div class="quadrant lower-left">
-                        <p class="selected-option">Selected Option: <span id="selectedOption">None</span></p>
+                        <p class="selected-option"><span id="selectedOption">Open-Ended Response</span></p>
+                        <div class="options-container"></div>
                     </div>
 
                     <div class="quadrant lower-right">
@@ -74,13 +75,17 @@
                 </div>
 
                 <div class="icon-box">
+                    <i class="fas fa-grip-vertical follow-up-icon"></i>
+                    <i class="fas fa-trash delete-icon" id="delete-icon"></i>
                     <i class="fas fa-clone duplicate-icon"></i>
-                    <i class="fas fa-trash delete-icon"></i>
                     <i class="fas fa-plus-circle add-icon"></i>
                 </div>
 
                 <div class="save-button">
                     <button type="submit" id="save-button">Save</button>
+                </div>
+                <div class="link-button">
+                    <button type="submit" id="link-button">Share Link</button>
                 </div>
             </form>
         </div>
@@ -93,14 +98,14 @@
         const newOption = document.createElement("div");
         newOption.className = "option";
         newOption.innerHTML = `
-            <input type="${inputType}" class="option-input" name="options${optionCounter}" value="option${optionCounter}">
-            <input type="text" class="option-label" placeholder="Option label">
-            <button class="delete-option"><i class="fas fa-trash"></i></button>
-        `;
+        <input type="${inputType}" class="option-input" name="options${optionCounter}" value="option${optionCounter}">
+        <input type="text" class="option-label" placeholder="Option label">
+        <button class="delete-option"><i class="fas fa-trash"></i></button>
+    `;
         optionCounter++;
 
         newOption.querySelector(".delete-option").addEventListener("click", function () {
-            newOption.parentNode.removeChild(newOption);
+            newOption.remove();
         });
 
         return newOption;
@@ -115,6 +120,7 @@
         const selectedValue = dropdown.value;
         selectedOptionElement.textContent = selectedValue;
 
+        // Clear the options container
         optionsContainer.innerHTML = '';
 
         if (selectedValue === "Open-Ended Response") {
@@ -142,43 +148,43 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        const dropdown = document.getElementById("dropdown");
-        const selectedOption = document.getElementById("selectedOption");
-        const quadrantLowerLeft = document.querySelector(".quadrant.lower-left");
+        let boxCounter = 0; // Initialize a counter for the boxes
+
+        const addIcon = document.querySelector(".add-icon"); // Select the add-icon element
         const form = document.querySelector("form");
         const iconBox = document.querySelector(".icon-box");
 
-        dropdown.addEventListener("change", function () {
-            handleDropdownChange(dropdown, selectedOption, quadrantLowerLeft);
-        });
+        addIcon.addEventListener("click", function () {
+            // Increment the box counter for each new box
+            boxCounter++;
 
-        iconBox.addEventListener("click", function () {
             const newBox2 = document.createElement("div");
             newBox2.className = "box2";
+            newBox2.id = `box-${boxCounter}`;
             newBox2.innerHTML = `
-                <div class="quadrant upper-left">
-                    <input type="text" class="question-input" placeholder="Question">
-                </div>
-                <div class="quadrant upper-right">
-                    <img src="{{ url_for('static', filename='images/dropdown.png') }}" alt="Dropdown Icon" class="dropdownimg">
-                    <select class="dropdown">
-                        <option value="Open-Ended Response">Open-Ended Response</option>
-                        <option value="Multiple Choices">Multiple Choices</option>
-                        <option value="CheckBox">CheckBox</option>
-                    </select>
-                </div>
-                <div class="quadrant lower-left">
-                    <p class="selected-option">Selected Option: <span>None</span></p>
-                    <div class="options-container"></div>
-                </div>
-                <div class="quadrant lower-right">
-                    <span class="switch-text">Required</span>
-                        <label class="switch">
-                            <input type="checkbox">
-                            <span class="slider round"></span>
-                        </label>
-                </div>
-            `;
+            <div class="quadrant upper-left">
+                <input type="text" class="question-input" placeholder="Question">
+            </div>
+            <div class="quadrant upper-right">
+                <img src="{{ url_for('static', filename='images/dropdown.png') }}" alt="Dropdown Icon" class="dropdownimg">
+                <select class="dropdown">
+                    <option value="Open-Ended Response">Open-Ended Response</option>
+                    <option value="Multiple Choices">Multiple Choices</option>
+                    <option value="CheckBox">CheckBox</option>
+                </select>
+            </div>
+            <div class="quadrant lower-left">
+                <p class="selected-option"><span>Open-Ended Response</span></p>
+                <div class="options-container"></div>
+            </div>
+            <div class="quadrant lower-right">
+                <span class="switch-text">Required</span>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        `;
             form.insertBefore(newBox2, iconBox);
 
             const newDropdown = newBox2.querySelector(".dropdown");
@@ -188,6 +194,26 @@
             newDropdown.addEventListener("change", function () {
                 handleDropdownChange(newDropdown, newSelectedOption, newOptionsContainer);
             });
+        });
+
+        // Find and handle the original box2
+        const originalDropdown = document.getElementById("dropdown");
+        const originalSelectedOption = document.getElementById("selectedOption");
+        const originalOptionsContainer = document.querySelector(".quadrant.lower-left");
+
+        originalDropdown.addEventListener("change", function () {
+            handleDropdownChange(originalDropdown, originalSelectedOption, originalOptionsContainer);
+        });
+
+        iconBox.querySelector(".delete-icon").addEventListener("click", function () {
+            if (boxCounter > 0) {
+                // Find and remove the most recent box
+                const mostRecentBox = form.querySelector(`#box-${boxCounter}`);
+                if (mostRecentBox) {
+                    mostRecentBox.parentNode.removeChild(mostRecentBox);
+                    boxCounter--; // Decrement the box counter
+                }
+            }
         });
     });
 </script>
