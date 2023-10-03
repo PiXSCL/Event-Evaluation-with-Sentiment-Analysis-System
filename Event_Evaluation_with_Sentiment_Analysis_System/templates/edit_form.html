@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+    <div id="saved-form">
+        {{ saved_html_content|safe }}
+    </div>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Retrieve the saved HTML content from the Flask context
+        const savedHTML = '{{ saved_html_content|safe }}'; // Make sure to use the |safe filter
+
+        // Find the "saved-form" div
+        const savedFormDiv = document.getElementById("saved-form");
+
+        // Insert the saved HTML content into the "saved-form" div
+        savedFormDiv.innerHTML = savedHTML;
+    });
+</script>
+</html>

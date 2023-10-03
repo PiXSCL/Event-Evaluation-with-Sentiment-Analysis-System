@@ -708,7 +708,7 @@
         z-index: 2;
     }
 
-.option {
+.select {
     position: absolute;
     bottom: -7px;
     left: 50px;
@@ -716,33 +716,34 @@
     z-index: 1;
 }
 
-    .option:hover {
+    .select:hover {
         cursor: pointer;
     }
 
-.option-container {
+.select-container {
     position: relative;
     display: inline-block;
 }
 
-.option-menu {
+.select-menu {
     display: none;
+    transform: translate(50px,-90px);
     position: absolute;
     width: 100px;
     background-color: #63828C;
     border: 1px solid #ccc;
     border-radius: 4px;
-    z-index: 1;
+    z-index: 3;
 }
 
-    .option-menu a {
+    .select-menu a {
         display: block;
         padding: 10px;
         text-decoration: none;
         color: #ccc;
     }
 
-        .option-menu a:hover {
+        .select-menu a:hover {
             background-color: #ccc;
             color: #63828C;
         }
@@ -1045,7 +1046,7 @@ z-index: 2;
     display: flex;
     align-items: center;
     margin-bottom: 20px; 
-    transform: translateX(-60px);
+    transform: translateX(-10px);
     padding: 5px; 
     background-color: #E4D2BD; 
     border: 1px solid #ccc; 

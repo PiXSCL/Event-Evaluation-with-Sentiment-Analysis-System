@@ -1,3 +1,5 @@
+from datetime import datetime
+from email.policy import default
 from flask import Flask, render_template, request, flash, redirect, url_for, session
 from Event_Evaluation_with_Sentiment_Analysis_System import app
 from flask_sqlalchemy import SQLAlchemy
@@ -19,9 +21,40 @@ class Form(db.Model):
     formid = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255))  
     description = db.Column(db.String(255)) 
-    date_created = db.Column(db.DateTime)
+    date_created = db.Column(db.DateTime,default=datetime.now)
+    form_data = db.Column(db.TEXT)
 
     userid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+class Question(db.Model):
+    questionid = db.Column(db.Integer, primary_key=True)
+    question_text = db.Column(db.String(255))
+    question_type = db.Column(db.String(50))  # E.g., "Open-Ended", "Multiple Choices", "CheckBox"
+    is_required = db.Column(db.Boolean, default=False)
+
+    formid = db.Column(db.Integer, db.ForeignKey('form.formid'), nullable=False)
+
+class Choice(db.Model):
+    choice_id = db.Column(db.Integer, primary_key=True)
+    choice_text = db.Column(db.String(255), nullable=False)
+    question_id = db.Column(db.Integer, db.ForeignKey('question.questionid'), nullable=False)
+
+    def __init__(self, choice_text, question_id):
+        self.choice_text = choice_text
+        self.question_id = question_id
+
+
+def retrieve_saved_html(form_id):
+    try:
+        form = Form.query.get(form_id)
+
+        if form:
+            return form.form_data
+        else:
+            return None
+    except Exception as e:
+        print(str(e))
+        return None
 
 @app.route('/')
 @app.route('/login')
@@ -85,4 +118,47 @@ def home():
 
 @app.route('/questions')
 def questions():
+    user_id = session.get('user_id', None)
+
+    if user_id:
+        return render_template('questions.html', user_id=user_id)
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/save_form', methods=['POST'])
+def save_form():
+    if request.method == 'POST':
+        # Get the HTML content of the page (the entire form)
+        form_data = request.form['html_content']  # Make sure to use the appropriate field name
+
+        # Get the user ID of the currently logged-in user from the session
+        user_id = session.get('user_id')  # Assuming you store user ID in the session
+
+        # Get the title and description from the form
+        title = request.form['title']
+        description = request.form['description']
+
+        # Create a new instance of the Form model with all the data
+        new_form = Form(
+            form_data=form_data,
+            title=title,
+            description=description,
+            userid=user_id
+        )
+        
+        # Save the new_form instance to the database
+        db.session.add(new_form)
+        db.session.commit()
+
+        # Redirect to a success page or any other page you want
+        return redirect(url_for('questions'))
+
+    # Handle other cases or render templates as needed
     return render_template('questions.html')
+
+@app.route('/edit_form/<string:form_id>')
+def edit_form(form_id):
+    # Retrieve the saved HTML content from the database based on form_id
+    saved_html_content = retrieve_saved_html(form_id)  # Replace with your database retrieval logic
+
+    return render_template('edit_form.html', saved_html_content=saved_html_content)

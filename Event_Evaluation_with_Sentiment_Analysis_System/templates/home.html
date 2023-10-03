@@ -69,13 +69,13 @@
         {% if form_data %}
             <div class="data-grid" >
                 {% for form_id, form_title, form_date_created in form_data %}
-                   <div class="data-grid-item" data-date-created="{{ form_date_created }}">
+                   <div class="data-grid-item" data-date-created="{{ form_date_created }}" >
                         <div class="item-content">
                             <div class="title-label">{{ form_title }}</div>
-                            <div class="option-container" onclick="toggleOptionMenu(this)">
-                                <img class="option" id="option_{{ form_id }}" src="{{ url_for('static', filename='images/option.png') }}" alt="Options Icon">
-                                <div class="option-menu" id="dropdown-content" style="display: none;">
-                                    <a href="#">Edit</a>
+                            <div class="select-container">
+                                <img class="select" id="select_{{ form_id }}" src="{{ url_for('static', filename='images/option.png') }}" alt="Select Icon">
+                                <div class="select-menu" id="dropdown-content_{{ form_id }}" style="display: none;">
+                                    <a href="#" onclick="handleEditClick(event, '{{ form_id }}', '{{ form_title }}')">Edit</a>
                                     <a href="#">Delete</a>
                                 </div>
                             </div>
@@ -116,20 +116,20 @@
         }
     }
 
-    document.querySelectorAll('.option-container').forEach(function (container) {
+    document.querySelectorAll('.select-container').forEach(function (container) {
         container.addEventListener('click', function (event) {
-            const optionMenu = container.querySelector('.option-menu');
-            optionMenu.style.display = (optionMenu.style.display === 'block') ? 'none' : 'block';
+            const selectMenu = container.querySelector('.select-menu');
+            selectMenu.style.display = (selectMenu.style.display === 'block') ? 'none' : 'block';
             event.stopPropagation(); 
         });
 
-        container.querySelector('.option-menu').addEventListener('click', function (event) {
+        container.querySelector('.select-menu').addEventListener('click', function (event) {
             event.stopPropagation(); 
         });
     });
 
     document.body.addEventListener('click', function (event) {
-        document.querySelectorAll('.option-menu').forEach(function (menu) {
+        document.querySelectorAll('.select-menu').forEach(function (menu) {
             menu.style.display = 'none';
         });
     });
@@ -217,7 +217,7 @@
 
         // Loop through the visible data grid items and adjust option button positions
         visibleDataGridItems.forEach(function (item) {
-            const optionContainer = item.querySelector('.option-container');
+            const optionContainer = item.querySelector('.optionimg-container');
             const optionMenu = item.querySelector('.option-menu');
 
             // Adjust option button position as needed (e.g., set bottom: 4px; and right: 15px;)
@@ -245,5 +245,17 @@
             e.stopPropagation();
         });
     });
+
+    function handleEditClick(event, formId) {
+        event.preventDefault();
+
+        if (formId) {
+            // Construct the URL for editing the form
+            const url = `/edit_form/${formId}`;
+            window.open(url);
+        } else {
+            console.log('Form ID is null or empty');
+        }
+    }
 </script>
 </html>

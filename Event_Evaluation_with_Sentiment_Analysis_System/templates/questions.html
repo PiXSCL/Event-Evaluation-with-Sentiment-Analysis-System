@@ -39,10 +39,10 @@
             </nav>
         </header>
         <div class="form-container">
-            <form action="">
+            <form action="/save_form" method="post">
                 <div class="box">
-                    <input type="text" class="title-input" placeholder="Form Title">
-                    <input type="text" class="desc-input" placeholder="Description">
+                    <input type="text" class="title-input" name="title" id="title" placeholder="Form Title" required>
+                    <input type="text" class="desc-input" name="description" id="description" placeholder="Description" required>
                     <div class="line"></div>
                 </div>
 
@@ -80,7 +80,7 @@
                     <i class="fas fa-clone duplicate-icon"></i>
                     <i class="fas fa-plus-circle add-icon"></i>
                 </div>
-
+                <input type="hidden" name="html_content" id="html_content">
                 <div class="save-button">
                     <button type="submit" id="save-button">Save</button>
                 </div>
@@ -216,5 +216,10 @@
                 }
             }
         });
+    });
+
+    document.querySelector("#save-button").addEventListener("click", function () {
+        const htmlContent = document.documentElement.outerHTML; // Get the entire HTML content of the page
+        document.querySelector("#html_content").value = htmlContent;
     });
 </script>
