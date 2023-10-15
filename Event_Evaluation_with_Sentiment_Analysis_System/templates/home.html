@@ -206,24 +206,25 @@
             }
 
             // Re-position the option buttons
-            repositionOptionButtons();
+            repositionSelectButtons();
         }
     });
 
     // Function to re-position the option buttons
-    function repositionOptionButtons() {
+    function repositionSelectButtons() {
         // Get all the visible data-grid items
         const visibleDataGridItems = document.querySelectorAll('.data-grid-item[style="display: block;"]');
 
         // Loop through the visible data grid items and adjust option button positions
         visibleDataGridItems.forEach(function (item) {
-            const optionContainer = item.querySelector('.optionimg-container');
-            const optionMenu = item.querySelector('.option-menu');
+            const selectContainer = item.querySelector('.select');
+            const selectMenu = item.querySelector('.select-menu');
 
-            // Adjust option button position as needed (e.g., set bottom: 4px; and right: 15px;)
-            // You may need to adjust these values to match your desired position
-            optionContainer.style.top = '115px';
-            optionContainer.style.right = '2px';
+            selectContainer.style.top = '100px';
+            selectContainer.style.right = '2px';
+
+            selectMenu.style.top = '110px';
+            selectMenu.style.right = '-110px';
         });
     }
 

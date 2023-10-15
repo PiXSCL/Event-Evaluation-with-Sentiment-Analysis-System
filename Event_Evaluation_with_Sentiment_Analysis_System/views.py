@@ -1,11 +1,12 @@
 from datetime import datetime
 from email.policy import default
-from flask import Flask, render_template, request, flash, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session
 from Event_Evaluation_with_Sentiment_Analysis_System import app
 from flask_sqlalchemy import SQLAlchemy
+import json
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:ra05182002@localhost:3306/EventDB'
-app.secret_key = 'your_secret_key'  # Replace with a secret key
+app.secret_key = 'secret_key' 
 
 db = SQLAlchemy(app)
 
@@ -22,39 +23,24 @@ class Form(db.Model):
     title = db.Column(db.String(255))  
     description = db.Column(db.String(255)) 
     date_created = db.Column(db.DateTime,default=datetime.now)
-    form_data = db.Column(db.TEXT)
 
     userid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 class Question(db.Model):
     questionid = db.Column(db.Integer, primary_key=True)
     question_text = db.Column(db.String(255))
-    question_type = db.Column(db.String(50))  # E.g., "Open-Ended", "Multiple Choices", "CheckBox"
+    question_type = db.Column(db.String(50))  
     is_required = db.Column(db.Boolean, default=False)
 
     formid = db.Column(db.Integer, db.ForeignKey('form.formid'), nullable=False)
+    form = db.relationship('Form', backref='questions')
+    choices = db.relationship('Choice', backref='question')
 
 class Choice(db.Model):
     choice_id = db.Column(db.Integer, primary_key=True)
     choice_text = db.Column(db.String(255), nullable=False)
-    question_id = db.Column(db.Integer, db.ForeignKey('question.questionid'), nullable=False)
-
-    def __init__(self, choice_text, question_id):
-        self.choice_text = choice_text
-        self.question_id = question_id
-
-
-def retrieve_saved_html(form_id):
-    try:
-        form = Form.query.get(form_id)
-
-        if form:
-            return form.form_data
-        else:
-            return None
-    except Exception as e:
-        print(str(e))
-        return None
+    question_id = db.Column(db.Integer, db.ForeignKey('question.questionid'))
+    question_rel = db.relationship('Question', back_populates='choices')
 
 @app.route('/')
 @app.route('/login')
@@ -128,30 +114,82 @@ def questions():
 @app.route('/save_form', methods=['POST'])
 def save_form():
     if request.method == 'POST':
-        # Get the HTML content of the page (the entire form)
-        form_data = request.form['html_content']  # Make sure to use the appropriate field name
+        # Get the JSON data from the hidden input field
+        html_content = request.form['html_content']
+        form_data = json.loads(html_content)
+
+        # Extract the form title and description
+        title = form_data['title']
+        description = form_data['description']
+
+        # Create a new instance of the Form model and set its title and description
+        new_form = Form(title=title, description=description)
 
         # Get the user ID of the currently logged-in user from the session
         user_id = session.get('user_id')  # Assuming you store user ID in the session
 
-        # Get the title and description from the form
-        title = request.form['title']
-        description = request.form['description']
+        # Set the user ID for the form
+        new_form.userid = user_id
 
-        # Create a new instance of the Form model with all the data
-        new_form = Form(
-            form_data=form_data,
-            title=title,
-            description=description,
-            userid=user_id
-        )
-        
-        # Save the new_form instance to the database
-        db.session.add(new_form)
-        db.session.commit()
+        # Create a list to store the questions associated with this form
+        questions_data = []
+
+        for key, value in request.form.items():
+            if key.startswith('question_text_'):
+                boxCounter = key.split('_')[2]
+
+                is_required_key = f'is_required_{boxCounter}'
+                is_required = is_required_key in request.form
+
+
+        for question_data in form_data['questions']:
+            question_text = question_data['question_text']
+            question_type = question_data['question_type']
+            is_required = is_required
+
+            try:
+                question = Question(
+                    question_text=question_text,
+                    question_type=question_type,
+                    is_required=is_required,
+                    form=new_form  # Associate the question with the form
+                )
+                questions_data.append(question)
+
+                if question_type in ['Multiple Choices', 'CheckBox']:
+                    # Get the choices from the question_data
+                    choices_data = question_data.get('choices', [])
+                    choices = []
+
+                    for choice_data in choices_data:
+                        choice_text = choice_data['choice_text']
+                        choice = Choice(choice_text=choice_text)
+
+                        # Associate choice with the question
+                        choice.question = question
+                        choices.append(choice)
+
+                    # Add choices to the question
+                    question.choices = choices
+
+            except Exception as e:
+                print(f"Error inserting question: {str(e)}")
+
+        try:
+            # Save the new_form instance to the database
+            db.session.add(new_form)
+            db.session.commit()
+
+            # Add all questions to the session and then commit
+            db.session.add_all(questions_data)
+            db.session.commit()
+
+            print("Form and choices successfully inserted into the database.")
+        except Exception as e:
+            print(f"Error inserting form or choices: {str(e)}")
 
         # Redirect to a success page or any other page you want
-        return redirect(url_for('questions'))
+        return redirect(url_for('home'))
 
     # Handle other cases or render templates as needed
     return render_template('questions.html')

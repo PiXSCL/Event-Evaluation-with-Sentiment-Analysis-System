@@ -474,14 +474,14 @@
     position: absolute;
     width: 261px;
     height: 43px;
-    left: 50px;
+    left: 100px;
     top: 5px;
     font-family: 'Cabin';
     font-style: normal;
     font-weight: 400;
     font-size: 20px;
     line-height: 43px;
-    text-align: center;
+    text-align: left;
     color: #44585F;
 }
 
@@ -1211,6 +1211,7 @@ input:checked + .slider:before {
     cursor: pointer;
     font-size: 20px;
     transition: background-color 0.3s ease-in-out;
+}
 
 
         
