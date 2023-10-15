@@ -3,6 +3,7 @@ from email.policy import default
 from flask import Flask, render_template, request, redirect, url_for, session
 from Event_Evaluation_with_Sentiment_Analysis_System import app
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import joinedload
 import json
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:ra05182002@localhost:3306/EventDB'
@@ -194,9 +195,61 @@ def save_form():
     # Handle other cases or render templates as needed
     return render_template('questions.html')
 
-@app.route('/edit_form/<string:form_id>')
+@app.route('/edit_form/<int:form_id>', methods=['GET', 'POST'])
 def edit_form(form_id):
-    # Retrieve the saved HTML content from the database based on form_id
-    saved_html_content = retrieve_saved_html(form_id)  # Replace with your database retrieval logic
+    if request.method == 'GET':
+        # Retrieve the form and related questions from the database
+        form = Form.query.filter_by(formid=form_id).options(joinedload(Form.questions).joinedload(Question.choices)).first()
 
-    return render_template('edit_form.html', saved_html_content=saved_html_content)
+        if not form:
+            # Handle form not found
+            return "Form not found", 404
+
+        return render_template('edit_form.html', form=form)
+
+    elif request.method == 'POST':
+        # Handle form submission and update here
+        title = request.form.get('title')
+        description = request.form.get('description')
+
+        # Retrieve the form by ID
+        form = Form.query.get(form_id)
+
+        if form:
+            # Update the form details
+            form.title = title
+            form.description = description
+
+            # Clear existing questions and choices
+            form.questions = []
+
+            for i in range(1, 6):  # Adjust this based on the maximum number of questions
+                question_text = request.form.get(f'question_text_{i}')
+                question_type = request.form.get(f'question_type_{i}')
+                is_required = request.form.get(f'is_required_{i}')
+
+                if question_text and question_type:
+                    question = Question(
+                        question_text=question_text,
+                        question_type=question_type,
+                        is_required=is_required
+                    )
+
+                    # Add choices for Multiple Choices and CheckBox questions
+                    if question_type in ('Multiple Choices', 'CheckBox'):
+                        choices = request.form.getlist(f'choices_{i}')
+                        for choice_text in choices:
+                            if choice_text:
+                                choice = Choice(choice_text=choice_text)
+                                question.choices.append(choice)
+
+                    form.questions.append(question)
+
+            # Commit changes to the database
+            db.session.commit()
+
+            # Redirect to a success page or anywhere you like
+            return redirect(url_for('edit_form'))
+
+        # Handle form not found
+        return "Form not found", 404
