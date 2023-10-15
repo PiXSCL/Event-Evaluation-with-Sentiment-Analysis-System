@@ -1213,7 +1213,398 @@ input:checked + .slider:before {
     transition: background-color 0.3s ease-in-out;
 }
 
+/*settings*/
+.settings {
+    position: absolute;
+    width: 499px;
+    height: 690px;
+    left: 21px;
+    top: 149px;
 
+    background: #F8F4EE;
+}
+
+.header {
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+
+    color: #44585F;
+}
+
+.hr1 {
+    width: 499px;
+    height: 0px;
+    border: 1px solid #1D2629;
+    margin-top: -10px;
+}
+
+.form-title {
+    width: 194px;
+    height: 55px;
+    margin-bottom: 10px;
+    border: none;
+
+    background: #A9CBC9;
+    border-radius: 15px;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    text-align: center;
+}
+
+.form-description {
+    width: 194px;
+    height: 105px;
+    margin-bottom: 10px;
+    border: none;
+
+    background: #A9CBC9;
+    border-radius: 15px;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    text-align: center;
+}
+
+.message {
+    width: 194px;
+    height: 55px;
+    margin-bottom: 10px;
+    border: none;
+
+    background: #A9CBC9;
+    border-radius: 15px;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    text-align: center;
+}
+
+.input-box {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+}
+
+/* Style for the select element (dropdown) */
+#dropdown_1 {
+    position: absolute;
+    width: 147px;
+    left: 230px;
+    top: 65px;
+    padding: 10px;
+    background: linear-gradient(0deg, #F8F4EE, #F8F4EE);
+
+    border: 2px solid #44585F;
+    border-radius: 5px;
+}
+
+#dropdown_2 {
+    position: absolute;
+    width: 80px;
+    left: 400px;
+    top: 65px;
+    padding: 10px;
+    background: linear-gradient(0deg, #F8F4EE, #F8F4EE);
+
+    border: 2px solid #44585F;
+    border-radius: 5px;
+}
+
+#dropdown_3 {
+    position: absolute;
+    width: 147px;
+    left: 230px;
+    top: 155px;
+    padding: 10px;
+    background: linear-gradient(0deg, #F8F4EE, #F8F4EE);
+
+    border: 2px solid #44585F;
+    border-radius: 5px;
+}
+
+#dropdown_4 {
+    position: absolute;
+    width: 147px;
+    left: 230px;
+    top: 248px;
+    padding: 10px;
+    background: linear-gradient(0deg, #F8F4EE, #F8F4EE);
+
+    border: 2px solid #44585F;
+    border-radius: 5px;
+}
+
+#dropdown_5 {
+    position: absolute;
+    width: 80px;
+    left: 400px;
+    top: 155px;
+    padding: 10px;
+    background: linear-gradient(0deg, #F8F4EE, #F8F4EE);
+
+    border: 2px solid #44585F;
+    border-radius: 5px;
+}
+
+#dropdown_6 {
+    position: absolute;
+    width: 80px;
+    left: 400px;
+    top: 248px;
+    padding: 10px;
+    background: linear-gradient(0deg, #F8F4EE, #F8F4EE);
+
+    border: 2px solid #44585F;
+    border-radius: 5px;
+}
+
+.hr2 {
+    width: 499px;
+    height: 0px;
+    border: 1px solid #1D2629;
+    margin-top: -80px;
+}
+
+.question {
+    width: 194px;
+    height: 55px;
+    margin-top: 35px;
+    border: none;
+
+    background: #A9CBC9;
+    border-radius: 15px;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    text-align: center;
+}
+
+#dropdown_7 {
+    position: absolute;
+    width: 147px;
+    left: 230px;
+    top: 350px;
+    padding: 10px;
+    background: linear-gradient(0deg, #F8F4EE, #F8F4EE);
+
+    border: 2px solid #44585F;
+    border-radius: 5px;
+}
+
+#dropdown_8 {
+    position: absolute;
+    width: 80px;
+    left: 400px;
+    top: 350px;
+    padding: 10px;
+    background: linear-gradient(0deg, #F8F4EE, #F8F4EE);
+
+    border: 2px solid #44585F;
+    border-radius: 5px;
+}
+
+.hr3 {
+    width: 499px;
+    height: 0px;
+    border: 1px solid #1D2629;
+    margin-top: 100px;
+}
+
+.primary-text {
+    position: absolute;
+    width: 146px;
+    height: 23px;
+    left: 10px;
+    top: 430px;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 25px;
+    line-height: 30px;
+
+    color: #44585F;
+}
+
+.secondary-text {
+    position: absolute;
+    width: 178px;
+    height: 23px;
+    left: 285px;
+    top: 430px;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 25px;
+    line-height: 30px;
+
+    color: #44585F;
+}
+/* Style for the custom icon */
+.color-picker-icon {
+    width: 30px; /* Adjust the width and height as needed */
+    height: 30px;
+    cursor: pointer;
+}
+
+.primary-picker {
+    position: absolute;
+    left: 10px;
+    top: 490px;
+    padding: 10px;
+
+    background: #A9CBC9;
+    border-radius: 15px;
+}
+
+.secondary-picker {
+    position: absolute;
+    top: 480px;
+    left: 320px;
+    padding: 10px;
+
+    background: #A9CBC9;
+    border-radius: 15px;
+}
+
+.text {
+    position: absolute;
+    width: 268px;
+    height: 39px;
+    left: 10px;
+    top: 560px;
+    text-align: center;
+
+    background: #A9CBC9;
+    border-radius: 15px;
+}
+
+.info {
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 27px;
+    margin-top: 4px;
+
+    color: #44585F;
+}
+
+.text-req {
+    position: absolute;
+    width: 101px;
+    height: 25px;
+    left: 300px;
+    top: 545px;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+
+    color: #44585F;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: absolute;
+    display: inline-block;
+    width: 70px;
+    height: 34px;
+    left: 400px;
+    top: 560px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #667F87;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #667F87;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(36px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+.save-settings {
+    position: absolute;
+    width: 194px;
+    height: 55px;
+    left: 155px;
+    top: 620px;
+    border: none;
+    cursor: pointer;
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 29px;
+
+    color: #E7E7E7;
+
+    background: #667F87;
+    border-radius: 35px;
+}
         
 
 
