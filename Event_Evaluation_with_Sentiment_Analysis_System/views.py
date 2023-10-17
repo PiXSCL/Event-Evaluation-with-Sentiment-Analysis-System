@@ -253,3 +253,13 @@ def edit_form(form_id):
 
         # Handle form not found
         return "Form not found", 404
+
+@app.route('/form/<int:form_id>', methods=['GET', 'POST'])
+def submit_form(form_id):
+    if request.method == 'GET':
+        form = Form.query.filter_by(formid=form_id).options(joinedload(Form.questions).joinedload(Question.choices)).first()
+
+        if not form:
+            return "Form not found", 404
+
+        return render_template('form.html', form=form)

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Form</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<style>
+        a,
+        button,
+        input,
+        select,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+            text-decoration: none;
+            appearance: none;
+            background: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="form-container1">
+            <form action="/submit_form/{{ form_id }}" method="post">
+                <div class="fbox">
+                    <h2 class="title">{{ form.title }}</h2>
+                    <div class="vertical-line"></div>
+                    <p class="description">{{ form.description }}</p>
+                </div>
+
+                {% for question in form.questions %}
+                <div class="fbox2">
+                    <div class="question_container">
+                        <p class="question">{{ question.question_text }}</p>
+                    </div>
+
+                    <div class="answer_container">
+                        {% if question.question_type == 'Open-Ended Response' %}
+                            <input type="text" class="open-ended-input" name="question_{{ loop.index0 }}" placeholder="Your Answer">
+                        {% elif question.question_type == 'Multiple Choices' %}
+                            {% for choice in question.choices %}
+                                <label>
+                                    <input type="radio" name="question_{{ loop.index0 }}" value="{{ choice.choice_text }}">
+                                    {{ choice.choice_text }}
+                                </label><br>
+                            {% endfor %}
+                        {% elif question.question_type == 'Checkbox' %}
+                            {% for choice in question.choices %}
+                                <label>
+                                    <input type="checkbox" name="question_{{ loop.index0 }}_{{ loop.index }}" value="{{ choice.choice_text }}">
+                                    {{ choice.choice_text }}
+                                </label><br>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+</body>
+</html>

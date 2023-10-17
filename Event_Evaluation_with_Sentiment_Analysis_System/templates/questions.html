@@ -6,7 +6,7 @@
     <title>Form Details</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-<style>
+    <style>
         a,
         button,
         input,
@@ -179,7 +179,7 @@
             <div class="options-container"></div>
         </div>
         <div class="quadrant lower-right">
-            <span class="switch-text1">Required</span>
+            <span class="switch1-text">Required</span>
             <label class="switch1">
                 <input type="checkbox" name="is_required_${boxCounter}">
                 <span class="slider1 round"></span>
@@ -237,7 +237,7 @@
         document.querySelectorAll(".quadrant.upper-left").forEach(function (questionElement, questionCounter) {
             const questionText = questionElement.querySelector(".question-input").value;
             const questionType = questionElement.parentElement.querySelector(".dropdown").value;
-            const isRequired = questionElement.parentElement.querySelector(".slider").checked;
+            const isRequired = questionElement.parentElement.querySelector(".slider1").checked;
 
             // Create an object for the question
             const questionData = {

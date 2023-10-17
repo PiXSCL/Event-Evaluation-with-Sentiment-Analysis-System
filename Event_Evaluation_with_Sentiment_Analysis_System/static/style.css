@@ -1213,6 +1213,102 @@ input:checked + .slider1:before {
     transition: background-color 0.3s ease-in-out;
 }
 
+/* Form Design */
+
+.form-container1 {
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+.fbox {
+    background-color: #F0E7CF;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    max-width: 1170px;
+    margin: 0 auto;
+    border-radius: 10px;
+    margin-top: 30px;
+    position: relative
+}
+
+.fbox-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 45px;
+    font-weight: 500;
+    border: none;
+    font-family: Arial, sans-serif;
+    color: #61492E;
+    width: 200px; /* Set a fixed width for the title */
+    margin-right: 20px; /* Adjust margin as needed */
+}
+
+.vertical-line {
+    width: 10px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 17%; /* Adjust as needed to position the line where you want it */
+    transform: translateX(-50%);
+    background: #61492e;
+}
+
+.description {
+    font-size: 22px;
+    font-weight: 500;
+    border: none;
+    font-family: Arial, sans-serif;
+    color: #61492E;
+    width: 1000px; /* Set a fixed width for the description */
+    margin-top: 10px; /* Add margin to separate title and description */
+}
+
+.fbox2 {
+    background-color: #F0E7CF;
+    padding: 20px;
+    max-width: 1170px;
+    height: auto;
+    border-radius: 10px;
+    margin: 0 auto;
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.question_container .question {
+    background-color: #E4D2BD;
+    color: #61492E;
+    font-size: 35px;
+    text-align: left;
+    padding: 15px;
+    width: 1000px;
+    height: 25px;
+    border-radius: 4px;
+    outline: none;
+    margin: 0;
+    display: flex; /* Use flexbox */
+    align-items: center; /* Center vertically */
+}
+
+    .question_container .question:focus {
+        border: 3px solid #61492E;
+    }
+
+.answer_container {
+    width: 50%;
+    height: 50%;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    bottom: 0;
+    left: 0;
+}
+
+
 /*settings*/
 .settings {
     position: absolute;
