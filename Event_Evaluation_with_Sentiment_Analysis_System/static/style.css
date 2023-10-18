@@ -1216,7 +1216,7 @@ input:checked + .slider1:before {
 /* Form Design */
 
 .form-container1 {
-    max-height: 700px;
+    max-height: 550px;
     overflow-y: auto;
 }
 
@@ -1243,8 +1243,8 @@ input:checked + .slider1:before {
     border: none;
     font-family: Arial, sans-serif;
     color: #61492E;
-    width: 200px; /* Set a fixed width for the title */
-    margin-right: 20px; /* Adjust margin as needed */
+    width: 200px; 
+    margin-right: 20px; 
 }
 
 .vertical-line {
@@ -1252,7 +1252,7 @@ input:checked + .slider1:before {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 17%; /* Adjust as needed to position the line where you want it */
+    left: 22%;
     transform: translateX(-50%);
     background: #61492e;
 }
@@ -1263,8 +1263,9 @@ input:checked + .slider1:before {
     border: none;
     font-family: Arial, sans-serif;
     color: #61492E;
-    width: 1000px; /* Set a fixed width for the description */
-    margin-top: 10px; /* Add margin to separate title and description */
+    width: 1000px; 
+    margin-top: 10px; 
+    margin-left: 55px;
 }
 
 .fbox2 {
@@ -1286,17 +1287,12 @@ input:checked + .slider1:before {
     text-align: left;
     padding: 15px;
     width: 1000px;
-    height: 25px;
     border-radius: 4px;
     outline: none;
     margin: 0;
-    display: flex; /* Use flexbox */
-    align-items: center; /* Center vertically */
+    display: flex; 
+    align-items: center; 
 }
-
-    .question_container .question:focus {
-        border: 3px solid #61492E;
-    }
 
 .answer_container {
     width: 50%;
@@ -1308,6 +1304,137 @@ input:checked + .slider1:before {
     left: 0;
 }
 
+.open-ended-input {
+    width: 500px;
+    color: #61492E;
+    font-family: Cabin;
+    font-size: 30px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: normal;
+    border-bottom: 2px solid #61492E;
+    outline: none;
+}
+
+    .open-ended-input::placeholder {
+        color: #61492E;
+    }
+
+.custom-radio {
+    display: none;
+}
+
+.custom-label {
+    display: inline-block;
+    position: relative;
+    padding-left: 25px; /* Add space for a custom circle */
+    cursor: pointer;
+}
+
+    /* Create the custom circle */
+    .custom-label::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 2px; /* Adjust vertical alignment as needed */
+        width: 20px; /* Adjust the circle size */
+        height: 20px; /* Adjust the circle size */
+        border: 2px solid #61492E; /* Color of the circle outline */
+        border-radius: 50%; /* Makes it a circle */
+        transition: all 0.2s; /* Smooth hover effect */
+    }
+
+/* Style the custom circle when the radio button is checked */
+.custom-radio:checked + .custom-label::before {
+    background-color: #61492E;
+    border: 2px solid #E8BA84;
+}
+    
+/* Style the custom label text */
+.custom-label::after {
+    top: 2px;
+    width: 200px;
+    content: attr(data-label);
+    position: absolute;
+    left: 50px;
+    color: #61492E;
+    font-family: Cabin;
+    font-size: 21px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.custom-label:hover::before {
+    border-color: #9A7850; 
+}
+
+.custom-checkbox {
+    display: none;
+}
+
+.custom-checkbox-label {
+    display: inline-block;
+    position: relative;
+    padding-left: 25px; /* Add space for a custom circle */
+    cursor: pointer;
+}
+
+    /* Create the custom circle */
+    .custom-checkbox-label::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 2px; /* Adjust vertical alignment as needed */
+        width: 20px; /* Adjust the circle size */
+        height: 20px; /* Adjust the circle size */
+        border: 2px solid #61492E; /* Color of the circle outline */
+        transition: all 0.2s; /* Smooth hover effect */
+    }
+
+/* Style the custom circle when the radio button is checked */
+.custom-checkbox:checked + .custom-checkbox-label::before {
+    background-color: #61492E;
+    border: 2px solid #E8BA84;
+}
+
+/* Style the custom label text */
+.custom-checkbox-label::after {
+    top: 2px;
+    width: 200px;
+    content: attr(data-label);
+    position: absolute;
+    left: 50px;
+    color: #61492E;
+    font-family: Cabin;
+    font-size: 21px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.custom-checkbox-label:hover::before {
+    border-color: #9A7850;
+}
+
+.submit-button {
+    text-align: center;
+    margin-top: 20px; /* Add some top margin for spacing */
+}
+
+#submit-button {
+    background-color: #667F87;
+    color: white;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    #submit-button:hover {
+        background-color: #9A7850;
+    }
 
 /*settings*/
 .settings {

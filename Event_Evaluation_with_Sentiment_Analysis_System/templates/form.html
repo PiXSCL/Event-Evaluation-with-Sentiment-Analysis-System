@@ -35,7 +35,6 @@
                     <div class="vertical-line"></div>
                     <p class="description">{{ form.description }}</p>
                 </div>
-
                 {% for question in form.questions %}
                 <div class="fbox2">
                     <div class="question_container">
@@ -47,23 +46,23 @@
                             <input type="text" class="open-ended-input" name="question_{{ loop.index0 }}" placeholder="Your Answer">
                         {% elif question.question_type == 'Multiple Choices' %}
                             {% for choice in question.choices %}
-                                <label>
-                                    <input type="radio" name="question_{{ loop.index0 }}" value="{{ choice.choice_text }}">
-                                    {{ choice.choice_text }}
-                                </label><br>
+                                    <input type="radio" name="question_{{ question.question_text }}" value="{{ choice.choice_text }}" id="choice{{ choice.choice_text }}_{{ question.question_text }}" class="custom-radio">
+                                    <label for="choice{{ choice.choice_text }}_{{ question.question_text }}" class="custom-label" data-label="{{ choice.choice_text }}"></label><br><br>
                             {% endfor %}
-                        {% elif question.question_type == 'Checkbox' %}
+                        {% elif question.question_type == 'CheckBox' %}
                             {% for choice in question.choices %}
-                                <label>
-                                    <input type="checkbox" name="question_{{ loop.index0 }}_{{ loop.index }}" value="{{ choice.choice_text }}">
-                                    {{ choice.choice_text }}
-                                </label><br>
+                                <input type="checkbox" name="question_{{ choice.choice_text }}_{{ loop.index }}" value="{{ choice.choice_text }}" id="choice{{ choice.choice_text }}" class="custom-checkbox">
+                                <label for="choice{{ choice.choice_text }}" class="custom-checkbox-label" data-label="{{ choice.choice_text }}"</label><br><br>
                             {% endfor %}
-                        {% endif %}
+                        {% endif %} 
                     </div>
                 </div>
                 {% endfor %}
+                <div class="submit-button">
+                    <button type="submit" id="submit-button">Submit</button>
+                </div>
             </form>
+            <div class="rectangle-3"></div>
         </div>
     </div>
 </body>
