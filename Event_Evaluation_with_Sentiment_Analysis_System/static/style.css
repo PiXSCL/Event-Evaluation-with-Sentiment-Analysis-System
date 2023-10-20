@@ -1834,14 +1834,14 @@ input:checked + .slider1:before {
 .sidebar {
     background-color: #ffffff; /* White background */
     width: 145px; /* Fixed width for the sidebar */
-    height: 60%%; /* Full height of the viewport */
+    height: 60%; /* Full height of the viewport */
     position: fixed; /* Fixed position */
     top: 20%; /* Stick to the top */
     left: 0; /* Stick to the left */
     text-align: center; /* Center-align text */
     display: flex; /* Enable flexbox layout */
     flex-direction: column; /* Stack items vertically */
-    justify-content: center; /* Center content vertically */
+    justify-content: center;
 }
 
 /* Sidebar menu items */
@@ -1871,16 +1871,143 @@ input:checked + .slider1:before {
         .sidebar-menu li:active {
             background-color: #E8E5E0;
         }
-        
+
+.data-container {
+    width: 90%;
+    margin-left: 12%;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.qbox {
+    color: #f0e7cf;
+    text-align: left;
+    font: 700 18px "Cabin", sans-serif;
+    position: relative;
+    background: #ab9b87;
+    width: 150px;
+    height: 20px;
+    position: relative;
+    margin-top: 10px;
+    margin-left: 35px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.response-container {
+    margin-left: 15px;
+    background: #f0e7cf;
+    border-radius: 25px;
+    width: 95%;
+    height: 180px;
+    position: relative;
+}
 
 
+/*summary*/
 
+.general {
+    position: absolute;
+    left: 220px;
+    top: 100px;
 
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 43px;
+    /* identical to box height */
+    text-align: center;
 
+    color: #44585F;
+}
 
+.summary-box {
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    left: 220px;
+    top: 140px;
 
+    background: #F0E7CF;
+    border-radius: 25px;
+}
 
+.line {
+    position: absolute;
+    width: 581px;
+    height: 0px;
+    left: -120px;
+    top: 55px;
 
+    border: 1px solid #61492E;
+}
 
+.rec-question1 {
+    position: absolute;
+    width: 140px;
+    height: 35px;
+    left: 30px;
+    top: 20px;
 
+    background: #E4D2BD;
+}
 
+.question1 { 
+text-align: center;
+
+font-family: 'Cabin';
+font-style: normal;
+font-weight: 700;
+font-size: 20px;
+line-height: 33px;
+
+color: #61492E;
+}
+
+.piechart {
+    position: absolute;
+    top: 50px;
+    left: -40px;
+
+    width: 800px;
+    height: 400px;
+}
+
+.line1 {
+    position: absolute;
+    width: 300px;
+    height: 0px;
+    left: 400px;
+    top: 250px;
+
+    border: 1px solid #61492E;
+    transform: rotate(90deg);
+}
+
+.positive-img {
+    position: absolute;
+    width: 50px;
+    height: 56px;
+}
+
+.neutral-img {
+    position: absolute;
+    width: 50px;
+    height: 56px;
+}
+
+.negative-img {
+    position: absolute;
+    width: 50px;
+    height: 56px;
+}
+
+.respondent-img {
+    position: absolute;
+    top: 100px;
+    left: 650px;
+
+    width: 50px;
+    height: 56px;
+}

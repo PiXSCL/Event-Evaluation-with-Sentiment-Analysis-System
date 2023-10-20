@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -25,6 +25,30 @@
             background: none;
         }
     </style>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Sentiment', 'Score'],
+          ['Positive', 11],
+          ['Neutral', 2],
+          ['Negative', 3]
+        ]);
+
+        var options = {
+          title: 'Sentiment Analysis Results',
+          backgroundColor: 'transparent',
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+        chart.draw(data, options);
+      }
+    </script>
 </head>
 <body>
     <div class="background">
@@ -45,19 +69,30 @@
                     <li><a href="">Answers Per Question</a></li>
                     <li><a href="">Individual Responses</a></li>
                 </ul>
-
             </nav>
         </header>
-        <div class="rectangle-3"></div>
+
+        <h1 class="general">General</h1>
         <div class="data-container">
-            <div class="qbox"><span>Overall Summary</span></div>
-            <div class="response-container">
-                <div class="response-count"></div>
-                <div class="response-data"></div>
+        <div class="summary-box">
+            <div class="box-question1">
+                <div class="rec-question1">
+                    <h2 class="question1">Question 1</h2>
+                </div>
+                
+                <div class="line"></div>
+                <div id="piechart" class="piechart"></div>
+
+                <div class="line1"></div>
+
+                <div class="info">
+                    <img class="respondent-img" src="{{ url_for('static', filename='images/user-icon.svg') }}" alt="User">
+                    <img class="positive-img" src="{{ url_for('static', filename='images/smiley.svg') }}" alt="Positive">
+                    <img class="neutral-img" src="{{ url_for('static', filename='images/neutral.svg') }}" alt="Neutral">
+                    <img class="negative-img" src="{{ url_for('static', filename='images/sad.svg') }}" alt="Negative">
+                </div>
             </div>
         </div>
     </div>
-
-    
 </body>
 </html>

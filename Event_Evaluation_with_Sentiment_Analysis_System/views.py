@@ -43,6 +43,18 @@ class Choice(db.Model):
     question_id = db.Column(db.Integer, db.ForeignKey('question.questionid'))
     question_rel = db.relationship('Question', back_populates='choices')
 
+class Response(db.Model):
+    response_id = db.Column(db.Integer, primary_key=True)
+    form_id = db.Column(db.Integer, db.ForeignKey('form.formid'), nullable=False)
+    question_id = db.Column(db.Integer, db.ForeignKey('question.questionid'), nullable=False)
+    response = db.Column(db.String(255))
+    sentiment_score = db.Column(db.Integer)
+    sentiment = db.Column(db.String(50))
+    date = db.Column(db.DateTime, default=datetime.now)
+
+    form = db.relationship('Form', backref='responses')
+    question = db.relationship('Question', backref='responses')
+
 @app.route('/')
 @app.route('/login')
 def login():
@@ -268,3 +280,7 @@ def submit_form(form_id):
 @app.route('/data')
 def data():
     return render_template('data.html')
+
+@app.route('/data_summary')
+def data_summary():
+    return render_template('data_summary.html')
