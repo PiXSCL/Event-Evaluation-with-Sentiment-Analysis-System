@@ -48,6 +48,7 @@
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\password.svg" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\option.png" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\style.css" />
+    <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\data.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\edit_form.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\form.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\home.html" />

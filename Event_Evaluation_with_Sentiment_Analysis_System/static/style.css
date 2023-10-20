@@ -1828,6 +1828,49 @@ input:checked + .slider1:before {
     background: #667F87;
     border-radius: 35px;
 }
+
+/*Data Analytics*/
+
+.sidebar {
+    background-color: #ffffff; /* White background */
+    width: 145px; /* Fixed width for the sidebar */
+    height: 60%%; /* Full height of the viewport */
+    position: fixed; /* Fixed position */
+    top: 20%; /* Stick to the top */
+    left: 0; /* Stick to the left */
+    text-align: center; /* Center-align text */
+    display: flex; /* Enable flexbox layout */
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center content vertically */
+}
+
+/* Sidebar menu items */
+.sidebar-menu {
+    list-style: none; /* Remove list bullet points */
+    padding: 0; /* Remove default padding */
+}
+
+    .sidebar-menu li {
+        margin: 20px 0; /* Adjust the vertical spacing between items */
+    }
+
+    .sidebar-menu a {
+        color: #44585F; /* Text color */
+        font-family: Cabin;
+        font-size: 21px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        text-decoration: none; /* Remove underlines from links */
+    }
+
+        .sidebar-menu li:hover {
+            background-color: #E8BA84;
+        }
+
+        .sidebar-menu li:active {
+            background-color: #E8E5E0;
+        }
         
 
 

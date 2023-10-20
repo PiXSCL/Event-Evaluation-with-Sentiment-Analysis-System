@@ -263,3 +263,8 @@ def submit_form(form_id):
             return "Form not found", 404
 
         return render_template('form.html', form=form)
+
+
+@app.route('/data')
+def data():
+    return render_template('data.html')
