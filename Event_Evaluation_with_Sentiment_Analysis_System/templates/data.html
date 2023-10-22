@@ -6,6 +6,7 @@
     <title>Data Analytics</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <style>
         a,
         button,
@@ -48,16 +49,89 @@
 
             </nav>
         </header>
-        <div class="rectangle-3"></div>
         <div class="data-container">
             <div class="qbox"><span>Overall Summary</span></div>
             <div class="response-container">
-                <div class="response-count"></div>
-                <div class="response-data"></div>
+                <h2>Open Ended Summary</h2>
+                <div id="piechart" class="overall-piechart"></div>
+                <div class="response-count">
+                    <img class="respondent1-img" src="{{ url_for('static', filename='images/user-icon.svg') }}" alt="User">
+                    <span>Respondents: {{ total_respondents }}</span> 
+                </div>
+                <div class="summary">
+                    <span>{{ summary }}</span>
+                </div>
+                <button class="details-button">Details</button>
+                <div class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Questions with Responses:</h2>
+                        <ul>
+                            {% for response, question in responses_with_questions %}
+                                <li>Question: {{ question.question_text }}</li>
+                                <li>Response: {{ response.response }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    
+<div class="rectangle-3"></div> 
 </body>
 </html>
+<script>
+    // Get all "Details" buttons and modal elements
+    var buttons = document.querySelectorAll('.details-button');
+    var modals = document.querySelectorAll('.modal');
+
+    // Add a click event listener to each "Details" button
+    buttons.forEach(function (button, index) {
+        button.addEventListener('click', function () {
+            modals[index].style.display = 'block';
+        });
+    });
+
+    // Add a click event listener to each close button (the "x" icon)
+    var closeButtons = document.querySelectorAll('.close');
+    closeButtons.forEach(function (closeButton) {
+        closeButton.addEventListener('click', function () {
+            closeButton.parentElement.parentElement.style.display = 'none';
+        });
+    });
+
+    // When the user clicks anywhere outside the modal, close it
+    window.addEventListener('click', function (event) {
+        modals.forEach(function (modal) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+
+    // Close the modal when the user presses the Esc key
+    window.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            modals.forEach(function (modal) {
+                modal.style.display = 'none';
+            });
+        }
+    });
+
+    google.charts.load('current', { packages: ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        // Define the chart data (chartData variable is passed from Flask)
+        var data = google.visualization.arrayToDataTable({{ chart_data | safe }});
+
+    var options = {
+        title: 'Sentiment Analysis Results',
+        backgroundColor: 'transparent',
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+    chart.draw(data, options);
+    }
+</script>

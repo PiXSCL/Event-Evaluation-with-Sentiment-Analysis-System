@@ -4,7 +4,11 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from Event_Evaluation_with_Sentiment_Analysis_System import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import joinedload
+from transformers import pipeline
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import json
+import re
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:ra05182002@localhost:3306/EventDB'
 app.secret_key = 'secret_key' 
@@ -279,7 +283,74 @@ def submit_form(form_id):
 
 @app.route('/data')
 def data():
-    return render_template('data.html')
+
+    responses_with_questions = db.session.query(Response, Question).join(Question).all()
+    # Query only responses for Open-Ended questions
+    open_ended_responses = db.session.query(Response, Question).join(Question).filter(Question.question_type == 'Open-Ended Response').all()
+
+    total_respondents = len(open_ended_responses)
+
+    sentiment_counts = {
+        'Positive': 0,
+        'Neutral': 0,
+        'Negative': 0
+    }
+
+    # Initialize an empty list to store responses and questions
+    responses_and_questions = []
+
+    for response, question in open_ended_responses:
+        response_sentiment = response.sentiment
+        sentiment_counts[response_sentiment] += 1
+
+        responses_and_questions.append((response.response, question.question_text))
+
+    # Find the sentiment with the most counts
+    most_common_sentiment = max(sentiment_counts, key=sentiment_counts.get)
+
+    # Process all responses to generate a single summary
+    combined_responses = [response for response, _ in responses_and_questions]
+    combined_questions = [question for _, question in responses_and_questions]
+
+    # Combine all responses and questions
+    all_responses = " ".join(combined_responses)
+    all_questions = " ".join(combined_questions)
+
+    # Generate a summary for all responses and questions
+    summary = generate_summary(all_responses, all_questions, most_common_sentiment, total_respondents)
+
+    # Prepare the data for the pie chart
+    chart_data = [['Sentiment', 'Count']]
+    for sentiment, count in sentiment_counts.items():
+        chart_data.append([sentiment, count])
+
+    print(f"Chart Data: {chart_data}")
+    print(f"Summary: {summary}")
+
+    return render_template('data.html', chart_data=chart_data, total_respondents=total_respondents, responses_with_questions=responses_with_questions, summary=summary)
+
+def generate_summary(feedback, question, sentiment, total_respondents):
+    # Define your custom summary template
+    if sentiment == "positive":
+        template = f"The questions received a total of {total_respondents} responses, with most of them being positive. They include: {feedback}"
+    elif sentiment == "negative":
+        template = f"The questions received a total of {total_respondents} responses, and most of them were negative. They include: {feedback}"
+    else:
+        template = f"The questions received a total of {total_respondents} responses, with mixed sentiments. They include: {feedback}"
+
+    # Initialize the text generation pipeline
+    text_generator = pipeline("text-generation", model="gpt2")
+
+    # Generate the summary
+    generated_summary = text_generator(template, max_length=150, num_return_sequences=1)
+
+    generated_text = generated_summary[0]['generated_text']
+    
+    sentences = re.split(r'(?<=[.!?])\s', generated_text)
+
+    # Keep only the first 7 sentences
+    final_summary = ' '.join(sentences[:7])
+    return final_summary
 
 @app.route('/data_summary')
 def data_summary():

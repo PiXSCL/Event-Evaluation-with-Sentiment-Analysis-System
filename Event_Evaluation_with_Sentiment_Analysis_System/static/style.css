@@ -34,10 +34,9 @@
 
 .rectangle-3 {
     background: #cea778;
-    width: 120%;
+    width: 100%;
     height: 6%;
     position: absolute;
-    left: -3%;
     bottom: 0;
 }
 
@@ -1875,7 +1874,7 @@ input:checked + .slider1:before {
 .data-container {
     width: 90%;
     margin-left: 12%;
-    max-height: 500px;
+    max-height: 450px;
     overflow-y: auto;
 }
 
@@ -1899,10 +1898,116 @@ input:checked + .slider1:before {
     background: #f0e7cf;
     border-radius: 25px;
     width: 95%;
-    height: 180px;
+    min-height: 0; /* Allow it to shrink */
+    display: grid;
+    grid-template-rows: auto auto auto; /* Define two rows */
+    grid-template-columns: 1fr auto; /* Define two columns */
+    grid-gap: 10px; /* Adjust the gap as needed */
     position: relative;
+    overflow: hidden;
+    height: auto;
 }
 
+    .response-container h2 {
+        grid-row: 1; 
+        grid-column: 1 / span 2; 
+        text-align: center; 
+    }
+
+.overall-piechart {
+    width: 800px;
+    height: 400px;
+    grid-row: 2 / span 3; 
+    grid-column: 1; 
+}
+
+.response-count {
+    transform: translateX(-200px);
+    grid-row: 2;
+    grid-column: 2;
+    display: flex;
+    flex-direction: row;
+}
+
+.respondent1-img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px;
+}
+
+.response-count span {
+    margin-top: 50px;
+    font-size: 25px; 
+    color: #44585f;
+}
+
+.summary {
+    text-align: justify;
+    border-radius: 10px;
+    transform: translateX(-200px);
+    width: 170%;
+    grid-row: 3;
+    grid-column: 2;
+    background-color: #9A7850;
+    color: #f8f4ee;
+    padding: 10px; /* Add padding directly to the summary container */
+    box-sizing: border-box;
+    margin-bottom: 50px;
+}
+
+summary span {
+    display: block;
+}
+
+.details-button {
+    width: 150px;
+    padding: 10px 20px;
+    background-color: #667F87;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 70%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
 
 /*summary*/
 
@@ -1933,7 +2038,7 @@ input:checked + .slider1:before {
     border-radius: 25px;
 }
 
-.line {
+.1line {
     position: absolute;
     width: 581px;
     height: 0px;
@@ -1980,34 +2085,36 @@ color: #61492E;
     height: 0px;
     left: 400px;
     top: 250px;
-
     border: 1px solid #61492E;
     transform: rotate(90deg);
 }
 
+.info {
+    margin-top: 100px;
+    margin-left: 300px;
+    height: 100px;
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+}
+
 .positive-img {
-    position: absolute;
     width: 50px;
     height: 56px;
 }
 
 .neutral-img {
-    position: absolute;
-    width: 50px;
-    height: 56px;
+    width: 60px;
+    height: 66px;
 }
 
 .negative-img {
-    position: absolute;
     width: 50px;
     height: 56px;
 }
 
 .respondent-img {
-    position: absolute;
-    top: 100px;
-    left: 650px;
-
-    width: 50px;
-    height: 56px;
+    width: 40px;
+    height: 46px;
+    margin-bottom: 10px;
 }
