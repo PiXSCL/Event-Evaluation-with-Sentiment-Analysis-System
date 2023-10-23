@@ -1397,7 +1397,6 @@ input:checked + .slider1:before {
     border: 2px solid #E8BA84;
 }
 
-/* Style the custom label text */
 .custom-checkbox-label::after {
     top: 2px;
     width: 200px;
@@ -1827,6 +1826,52 @@ input:checked + .slider1:before {
     background: #667F87;
     border-radius: 35px;
 }
+
+/*Success Page*/
+.success-container {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    background-color: #e4d2bd;
+    border-radius: 10px;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+    .success-container h2 {
+        color: #129a10;
+        font-size: 30px;
+        margin-bottom: 10px;
+    }
+
+    .success-container span {
+        font-size: 26px;
+        color: #61492e;
+    }
+
+    .success-container p {
+        font-size: 27px;
+        color: #0056b3;
+    }
+
+    .success-container button {
+        margin-top: 20px;
+        background-color: #007BFF;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .success-container button:hover {
+            background-color: #0056b3;
+        }
 
 /*Data Analytics*/
 

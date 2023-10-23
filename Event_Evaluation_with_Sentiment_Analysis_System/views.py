@@ -15,6 +15,8 @@ app.secret_key = 'secret_key'
 
 db = SQLAlchemy(app)
 
+sia = SentimentIntensityAnalyzer()
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -278,8 +280,103 @@ def submit_form(form_id):
         if not form:
             return "Form not found", 404
 
-        return render_template('form.html', form=form)
+        return render_template('form.html', form=form, form_id=form_id)
 
+    elif request.method == 'POST':
+        # Get the form object based on form_id
+        form = Form.query.get(form_id)
+
+        if not form:
+            return "Form not found", 404
+
+        # Iterate through the form questions to collect responses
+        for question in form.questions:
+            field_name = f'question_{question.questionid}'
+
+            # Check if the question is of type 'Open-Ended Response'
+            if question.question_type == 'Open-Ended Response' and field_name in request.form:
+                response_text = request.form[field_name]
+
+                # Perform sentiment analysis using NLTK's VADER
+                sentiment_scores = sia.polarity_scores(response_text)
+                sentiment_score = sentiment_scores['compound']
+                sentiment = 'positive' if sentiment_score > 0 else 'negative' if sentiment_score < 0 else 'neutral'
+
+                # Create a new Response record
+                response = Response(
+                    form_id=form_id,
+                    question_id=question.questionid,
+                    response=response_text,
+                    sentiment_score=sentiment_score,
+                    sentiment=sentiment
+                )
+
+                # Add and commit the response record to the database
+                db.session.add(response)
+            
+            elif question.question_type in ('Multiple Choices'):
+                # For Multiple Choices and CheckBox, collect the selected choices
+                selected_choices = request.form.getlist(field_name)
+
+                if selected_choices:
+                    # Insert each selected choice as a separate response
+                    for choice in selected_choices:
+                        response = Response(
+                            form_id=form_id,
+                            question_id=question.questionid,
+                            response=choice,
+                            sentiment_score=None,
+                            sentiment=None
+                        )
+
+                        # Add and commit the response record to the database
+                        db.session.add(response)
+            
+            elif question.question_type == 'CheckBox':
+                selected_choices = []
+
+                for choice in question.choices:
+                    field_name = f'question_{question.questionid}_{choice.choice_id}'
+                    if field_name in request.form:
+                        selected_choices.append(choice.choice_text)
+
+                if selected_choices:
+                    for choice_text in selected_choices:
+                        response = Response(
+                            form_id=form_id,
+                            question_id=question.questionid,
+                            response=choice_text,
+                            sentiment_score=None,
+                            sentiment=None
+                        )
+
+                        # Add and commit the response record to the database
+                        db.session.add(response)
+        
+        db.session.commit()
+
+        # Display a JavaScript alert indicating a successful submission
+        return redirect(url_for('success', form_id=form_id))
+    else:
+        return "Invalid request method", 400
+
+@app.route('/success/<int:form_id>')
+def success(form_id):
+    # Query the Form object based on form_id
+    form = Form.query.get(form_id)
+
+    if not form:
+        return "Form not found", 404
+
+    # Retrieve the associated user for the form
+    user = form.user
+
+    if not user:
+        return "User not found", 404
+
+    name = user.name  # Assuming "name" is the field in the User model
+
+    return render_template('response_success.html', name=name, form=form)
 
 @app.route('/data')
 def data():
@@ -291,9 +388,9 @@ def data():
     total_respondents = len(open_ended_responses)
 
     sentiment_counts = {
-        'Positive': 0,
-        'Neutral': 0,
-        'Negative': 0
+        'positive': 0,
+        'neutral': 0,
+        'negative': 0
     }
 
     # Initialize an empty list to store responses and questions

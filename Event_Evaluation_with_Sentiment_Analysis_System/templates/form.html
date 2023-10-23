@@ -29,7 +29,7 @@
 <body>
     <div class="background">
         <div class="form-container1">
-            <form action="/submit_form/{{ form_id }}" method="post">
+            <form action="{{ url_for('submit_form', form_id=form_id) }}" method="post">
                 <div class="fbox">
                     <h2 class="title">{{ form.title }}</h2>
                     <div class="vertical-line"></div>
@@ -43,16 +43,16 @@
 
                     <div class="answer_container">
                         {% if question.question_type == 'Open-Ended Response' %}
-                            <input type="text" class="open-ended-input" name="question_{{ loop.index0 }}" placeholder="Your Answer">
+                            <input type="text" class="open-ended-input" name="question_{{ question. questionid }}" placeholder="Your Answer">
                         {% elif question.question_type == 'Multiple Choices' %}
                             {% for choice in question.choices %}
-                                    <input type="radio" name="question_{{ question.question_text }}" value="{{ choice.choice_text }}" id="choice{{ choice.choice_text }}_{{ question.question_text }}" class="custom-radio">
-                                    <label for="choice{{ choice.choice_text }}_{{ question.question_text }}" class="custom-label" data-label="{{ choice.choice_text }}"></label><br><br>
+                                    <input type="radio" name="question_{{ choice.question_id }}" value="{{ choice.choice_text }}" id="choice{{ choice.choice_id }}_{{ choice.question_id }}" class="custom-radio">
+                                    <label for="choice{{ choice.choice_id }}_{{ choice.question_id }}" class="custom-label" data-label="{{ choice.choice_text }}"></label><br><br>
                             {% endfor %}
                         {% elif question.question_type == 'CheckBox' %}
                             {% for choice in question.choices %}
-                                <input type="checkbox" name="question_{{ choice.choice_text }}_{{ loop.index }}" value="{{ choice.choice_text }}" id="choice{{ choice.choice_text }}" class="custom-checkbox">
-                                <label for="choice{{ choice.choice_text }}" class="custom-checkbox-label" data-label="{{ choice.choice_text }}"</label><br><br>
+                                <input type="checkbox" name="question_{{ question.questionid }}_{{ choice.choice_id }}" value="{{ choice.choice_text }}" id="choice{{ choice.choice_id }}" class="custom-checkbox">
+                                <label for="choice{{ choice.choice_id }}" class="custom-checkbox-label" data-label="{{ choice.choice_text }}"></label><br><br>
                             {% endfor %}
                         {% endif %} 
                     </div>
