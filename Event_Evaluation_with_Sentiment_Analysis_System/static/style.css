@@ -2073,17 +2073,20 @@ summary span {
 }
 
 .summary-box {
-    position: absolute;
-    width: 80%;
-    height: 80%;
-    left: 220px;
-    top: 140px;
-
+    width: 95%;
     background: #F0E7CF;
     border-radius: 25px;
+    margin-top: 30px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    max-height: 500px;
 }
 
-.1line {
+.line-2 {
     position: absolute;
     width: 581px;
     height: 0px;
@@ -2116,15 +2119,12 @@ color: #61492E;
 }
 
 .piechart {
-    position: absolute;
-    top: 50px;
-    left: -40px;
-
+    transform:translate(-20px,50px);
     width: 800px;
     height: 400px;
 }
 
-.line1 {
+.line-1 {
     position: absolute;
     width: 300px;
     height: 0px;
@@ -2135,8 +2135,9 @@ color: #61492E;
 }
 
 .info {
-    margin-top: 100px;
-    margin-left: 300px;
+    transform:translateY(-300px);
+    position:relative;
+    margin-left: 600px;
     height: 100px;
     display: flex;
     flex-direction: column; 
@@ -2163,3 +2164,52 @@ color: #61492E;
     height: 46px;
     margin-bottom: 10px;
 }
+
+.summary-box1 {
+    width: 95%;
+    background: #F0E7CF;
+    border-radius: 25px;
+    margin-top: 30px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    max-height: 500px;
+}
+
+.columnchart_values {
+    width: 800px;
+    height: 400px;
+    margin: 0 auto; /* Center horizontally */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.text-data {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: auto;
+    margin: 0;
+    padding: 0;
+    row-gap: 20px;
+    
+
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 34px;
+
+    color: #61492E;
+
+    position: relative;
+    top: -400px;
+    right: -100px;
+}
+
+
+

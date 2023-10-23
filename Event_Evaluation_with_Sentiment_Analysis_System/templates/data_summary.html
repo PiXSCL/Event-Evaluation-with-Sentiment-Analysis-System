@@ -49,6 +49,36 @@
         chart.draw(data, options);
       }
     </script>
+
+    <script type="text/javascript">
+  google.charts.load("current", {packages:['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+      ["Element", "Density", { role: "style" } ],
+      ["Male", 945, "#CEA778"],
+      ["Female", 800, "#CEA778"],
+    ]);
+
+    var view = new google.visualization.DataView(data);
+    view.setColumns([0, 1,
+                     { calc: "stringify",
+                       sourceColumn: 1,
+                       type: "string",
+                       role: "annotation" },
+                     2]);
+
+    var options = {
+      width: 600,
+      height: 400,
+      bar: {groupWidth: "95%"},
+      legend: { position: "none" },
+      backgroundColor: 'transparent',
+    };
+    var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+    chart.draw(view, options);
+}
+</script>
 </head>
 <body>
     <div class="background">
@@ -72,8 +102,9 @@
             </nav>
         </header>
 
-        <h1 class="general">General</h1>
-        <div class="data-container">
+    <h1 class="general">General</h1>
+
+    <div class="data-container">
         <div class="summary-box">
             <div class="box-question1">
                 <div class="rec-question1">
@@ -83,7 +114,7 @@
                 <div class="1line"></div>
                 <div id="piechart" class="piechart"></div>
 
-                <div class="line1"></div>
+                <div class="line-1"></div>
 
                 <div class="info">
                     <img class="respondent-img" src="{{ url_for('static', filename='images/user-icon.svg') }}" alt="User">
@@ -91,7 +122,26 @@
                     <img class="neutral-img" src="{{ url_for('static', filename='images/neutral.svg') }}" alt="Neutral">
                     <img class="negative-img" src="{{ url_for('static', filename='images/sad.svg') }}" alt="Negative">
                 </div>
+
+                <div class="text-data">
+                    <p class="response-no"> responses</p>
+                    <p class="positive-no">Positive - </p>
+                    <p class="neutral-no">Neutral - </p>
+                    <p class="negative-no">Negative - </p>
+                </div>
             </div>
+        </div>
+        
+        <div class="summary-box1">
+            
+            <div class="text-bar">
+                <p>Total Responses Per Gender</p>
+                <p> responses</p>
+            </div>
+
+            <div id="columnchart_values" class="columnchart_values"></div>
+
+            
         </div>
     </div>
 </body>
