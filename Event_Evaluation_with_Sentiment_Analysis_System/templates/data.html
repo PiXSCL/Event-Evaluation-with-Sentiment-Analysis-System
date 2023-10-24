@@ -104,18 +104,49 @@
             </div>
             <div class="response-container">
                 <h2>Multiple Choices Summary</h2>
-                <div id="piechart" class="overall-piechart"></div>
+                <div id="barchart" class="overall-barchart"></div>
                 <div class="response-count">
                     <img class="respondent1-img" src="{{ url_for('static', filename='images/user-icon.svg') }}" alt="User">
                     <span>Respondents: {{ total_respondents }}</span> 
                 </div>
                 <div class="summary">
+                    <p>
+                        {% for choice_summary in choice_summaries %}
+                            {{ choice_summary }}<br><br>
+                        {% endfor %}
+                    </p>
                 </div>
                 <button class="details-button">Details</button>
                 <div class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
                         <h2>Questions with Responses:</h2>
+                        {% set question_responses = {} %}
+                        {% for response, question in responses_with_questions %}
+                            {% if question.question_type == 'Multiple Choices' %}
+                                {% set question_text = question.question_text %}
+                                {% set response_text = response.response %}
+                                {% if question_text not in question_responses %}
+                                    {% set _ = question_responses.update({question_text: {}}) %}
+                                {% endif %}
+                                {% if response_text not in question_responses[question_text] %}
+                                    {% set _ = question_responses[question_text].update({response_text: 0}) %}
+                                {% endif %}
+                                {% set _ = question_responses[question_text].update({response_text: question_responses[question_text][response_text] + 1}) %}
+                            {% endif %}
+                        {% endfor %}
+                        <ul>
+                            {% for question_text, responses in question_responses.items() %}
+                                <li>
+                                    <strong>Question: {{ question_text }}</strong>
+                                    <ul>
+                                        {% for response_text, count in responses.items() %}
+                                            <li>{{ response_text }} (Count: {{ count }})</li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -183,16 +214,26 @@
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
-        // Define the chart data (chartData variable is passed from Flask)
-        var data = google.visualization.arrayToDataTable({{ chart_data | safe }});
-
-    var options = {
+        // Define the pie chart data (chartData variable is passed from Flask)
+        var pieData = google.visualization.arrayToDataTable({{ chart_data | safe }});
+    var pieOptions = {
         title: 'Sentiment Analysis Results',
         backgroundColor: 'transparent',
     };
+    var pieChart = new google.visualization.PieChart(document.getElementById('piechart'));
+    pieChart.draw(pieData, pieOptions);
 
-    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+    // Define the bar chart data (choice_chart_data variable is passed from Flask)
+    var barData = google.visualization.arrayToDataTable({{ choice_chart_data | safe }});
+    var barOptions = {
+        title: 'Response Counts',
+        backgroundColor: 'transparent',
+        legend: { position: "none" },
+    };
 
-    chart.draw(data, options);
+    var barChart = new google.visualization.ColumnChart(document.getElementById('barchart'));
+    barChart.draw(barData, barOptions);
+
     }
 </script>
+

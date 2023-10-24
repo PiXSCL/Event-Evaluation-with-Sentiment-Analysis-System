@@ -1967,6 +1967,13 @@ input:checked + .slider1:before {
     grid-column: 1; 
 }
 
+.overall-barchart {
+    width: 700px;
+    height: 400px;
+    grid-row: 2 / span 3;
+    grid-column: 1;
+}
+
 .response-count {
     transform: translateX(-200px);
     grid-row: 2;
@@ -1988,10 +1995,12 @@ input:checked + .slider1:before {
 }
 
 .summary {
+    position:absolute;
     text-align: justify;
     border-radius: 10px;
     transform: translateX(-200px);
-    width: 170%;
+    width: 400px;
+    height: 200px;
     grid-row: 3;
     grid-column: 2;
     background-color: #9A7850;

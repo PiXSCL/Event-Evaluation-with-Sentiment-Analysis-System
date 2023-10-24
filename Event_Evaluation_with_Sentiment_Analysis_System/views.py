@@ -382,6 +382,7 @@ def success(form_id):
 def data():
     responses_with_questions = db.session.query(Response, Question).join(Question).all()
     open_ended_responses = db.session.query(Response, Question).join(Question).filter(Question.question_type == 'Open-Ended Response').all()
+    multiple_choice_responses = db.session.query(Response, Question).join(Question).filter(Question.question_type == 'Multiple Choices').all()
 
     total_respondents = len(open_ended_responses)
 
@@ -419,7 +420,28 @@ def data():
     for sentiment, count in sentiment_counts.items():
         chart_data.append([sentiment, count])
 
-    # Group responses by question text
+    # Collect data for the bar graph
+    choice_counts = {}  # Initialize a dictionary to count multiple-choice responses
+
+    for response, question in multiple_choice_responses:
+        response_choice = response.response
+        question_text = question.question_text
+
+        if question_text not in choice_counts:
+            choice_counts[question_text] = {}
+
+        if response_choice not in choice_counts[question_text]:
+            choice_counts[question_text][response_choice] = 0
+
+        choice_counts[question_text][response_choice] += 1
+
+    # Prepare the data for the bar chart
+    choice_chart_data = [['Choice', 'Count', { 'role': 'style' }]]
+    for question_text, choices in choice_counts.items():
+        for choice, count in choices.items():
+            choice_chart_data.append([f'{choice}', count, "#CEA778"])
+
+    # Group responses by question text for open-ended responses
     question_responses = {}
 
     for response, question in open_ended_responses:
@@ -434,7 +456,28 @@ def data():
 
         question_responses[question_text][response_sentiment].append(response.response)
 
-    return render_template('data.html', chart_data=chart_data, total_respondents=total_respondents, responses_with_questions=responses_with_questions, summary=summary, question_responses=question_responses)
+    # Initialize an empty list to store choice summaries
+    choice_summaries = []
+
+    # Process multiple-choice responses and count the choices
+    for question_text, choices in choice_counts.items():
+        # Calculate the total count for the question
+        total_count = sum(choices.values())
+
+        # Find the choice with the highest count
+        max_choice = max(choices, key=choices.get)
+        max_count = choices[max_choice]
+
+        # Calculate the percentage for the most popular choice
+        percentage = (max_count / total_count) * 100
+
+        # Construct the summary for the question
+        question_summary = f"In response to the question, '{question_text}', survey participants provided insights into the question. "
+        question_summary += f"The majority, constituting {percentage:.2f}% of respondents, selected {max_choice}, with a total count of {max_count}. "
+        choice_summaries.append(question_summary)
+
+    return render_template('data.html', chart_data=chart_data, choice_chart_data=choice_chart_data, total_respondents=total_respondents, responses_with_questions=responses_with_questions, summary=summary, question_responses=question_responses, choice_summaries=choice_summaries)
+
 
 def generate_summary(feedback, question, sentiment, total_respondents):
     # Define your custom summary template
