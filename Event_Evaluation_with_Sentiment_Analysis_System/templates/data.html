@@ -50,7 +50,7 @@
             </nav>
         </header>
         <div class="data-container">
-            <div class="qbox"><span>Overall Summary</span></div>
+        <div class="qbox"><span>Overall Summary</span></div>
             <div class="response-container">
                 <h2>Open Ended Summary</h2>
                 <div id="piechart" class="overall-piechart"></div>
@@ -67,11 +67,72 @@
                         <span class="close">&times;</span>
                         <h2>Questions with Responses:</h2>
                         <ul>
-                            {% for response, question in responses_with_questions %}
-                                <li>Question: {{ question.question_text }}</li>
-                                <li>Response: {{ response.response }}</li>
+                            {% for question_text, responses in question_responses.items() %}
+                                <li>
+                                    <strong>Question: {{ question_text }}</strong>
+                                    <ul class="sentiment-columns">
+                                        <li class="positive">
+                                            <strong>Positive</strong>
+                                            <ul>
+                                                {% for response in responses.Positive %}
+                                                    <li>{{ response }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                        <li class="neutral">
+                                            <strong>Neutral</strong>
+                                            <ul>
+                                                {% for response in responses.Neutral %}
+                                                    <li>{{ response }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                        <li class="negative">
+                                            <strong>Negative</strong>
+                                            <ul>
+                                                {% for response in responses.Negative %}
+                                                    <li>{{ response }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
                             {% endfor %}
                         </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="response-container">
+                <h2>Multiple Choices Summary</h2>
+                <div id="piechart" class="overall-piechart"></div>
+                <div class="response-count">
+                    <img class="respondent1-img" src="{{ url_for('static', filename='images/user-icon.svg') }}" alt="User">
+                    <span>Respondents: {{ total_respondents }}</span> 
+                </div>
+                <div class="summary">
+                </div>
+                <button class="details-button">Details</button>
+                <div class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Questions with Responses:</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="response-container">
+                <h2>Checkbox Summary</h2>
+                <div id="piechart" class="overall-piechart"></div>
+                <div class="response-count">
+                    <img class="respondent1-img" src="{{ url_for('static', filename='images/user-icon.svg') }}" alt="User">
+                    <span>Respondents: {{ total_respondents }}</span> 
+                </div>
+                <div class="summary">
+                </div>
+                <button class="details-button">Details</button>
+                <div class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Questions with Responses:</h2>
                     </div>
                 </div>
             </div>

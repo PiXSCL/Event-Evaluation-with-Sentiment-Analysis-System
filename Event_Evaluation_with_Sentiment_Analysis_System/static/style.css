@@ -1951,6 +1951,7 @@ input:checked + .slider1:before {
     position: relative;
     overflow: hidden;
     height: auto;
+    margin-bottom: 20px;
 }
 
     .response-container h2 {
@@ -2053,6 +2054,31 @@ summary span {
         text-decoration: none;
         cursor: pointer;
     }
+
+.sentiment-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 20px; 
+}
+
+    .sentiment-columns li {
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+.positive {
+    border-color: #2ECC71; 
+}
+
+.neutral {
+    border-color: #F1C40F;
+}
+
+.negative {
+    border-color: #E74C3C;
+}
+
 
 /*summary*/
 

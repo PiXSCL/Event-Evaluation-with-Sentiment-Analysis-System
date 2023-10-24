@@ -300,7 +300,7 @@ def submit_form(form_id):
                 # Perform sentiment analysis using NLTK's VADER
                 sentiment_scores = sia.polarity_scores(response_text)
                 sentiment_score = sentiment_scores['compound']
-                sentiment = 'positive' if sentiment_score > 0 else 'negative' if sentiment_score < 0 else 'neutral'
+                sentiment = 'Positive' if sentiment_score > 0 else 'Negative' if sentiment_score < 0 else 'Neutral'
 
                 # Create a new Response record
                 response = Response(
@@ -380,17 +380,15 @@ def success(form_id):
 
 @app.route('/data')
 def data():
-
     responses_with_questions = db.session.query(Response, Question).join(Question).all()
-    # Query only responses for Open-Ended questions
     open_ended_responses = db.session.query(Response, Question).join(Question).filter(Question.question_type == 'Open-Ended Response').all()
 
     total_respondents = len(open_ended_responses)
 
     sentiment_counts = {
-        'positive': 0,
-        'neutral': 0,
-        'negative': 0
+        'Positive': 0,
+        'Neutral': 0,
+        'Negative': 0
     }
 
     # Initialize an empty list to store responses and questions
@@ -421,10 +419,22 @@ def data():
     for sentiment, count in sentiment_counts.items():
         chart_data.append([sentiment, count])
 
-    print(f"Chart Data: {chart_data}")
-    print(f"Summary: {summary}")
+    # Group responses by question text
+    question_responses = {}
 
-    return render_template('data.html', chart_data=chart_data, total_respondents=total_respondents, responses_with_questions=responses_with_questions, summary=summary)
+    for response, question in open_ended_responses:
+        question_text = question.question_text
+        response_sentiment = response.sentiment
+
+        if question_text not in question_responses:
+            question_responses[question_text] = {}
+
+        if response_sentiment not in question_responses[question_text]:
+            question_responses[question_text][response_sentiment] = []
+
+        question_responses[question_text][response_sentiment].append(response.response)
+
+    return render_template('data.html', chart_data=chart_data, total_respondents=total_respondents, responses_with_questions=responses_with_questions, summary=summary, question_responses=question_responses)
 
 def generate_summary(feedback, question, sentiment, total_respondents):
     # Define your custom summary template
