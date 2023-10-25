@@ -1878,7 +1878,7 @@ input:checked + .slider1:before {
 .sidebar {
     background-color: #ffffff; /* White background */
     width: 145px; /* Fixed width for the sidebar */
-    height: 60%; /* Full height of the viewport */
+    height: 380px; /* Full height of the viewport */
     position: fixed; /* Fixed position */
     top: 20%; /* Stick to the top */
     left: 0; /* Stick to the left */
@@ -1919,7 +1919,7 @@ input:checked + .slider1:before {
 .data-container {
     width: 90%;
     margin-left: 12%;
-    max-height: 450px;
+    max-height: 490px;
     overflow-y: auto;
 }
 
@@ -1929,13 +1929,15 @@ input:checked + .slider1:before {
     font: 700 18px "Cabin", sans-serif;
     position: relative;
     background: #ab9b87;
-    width: 150px;
-    height: 20px;
+    width: 160px;
+    height: 30px;
     position: relative;
     margin-top: 10px;
     margin-left: 35px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+    padding: 10px;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 .response-container {
@@ -1952,6 +1954,7 @@ input:checked + .slider1:before {
     overflow: hidden;
     height: auto;
     margin-bottom: 20px;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
     .response-container h2 {
@@ -1975,11 +1978,12 @@ input:checked + .slider1:before {
 }
 
 .response-count {
-    transform: translateX(-200px);
+    transform: translateX(-450px);
     grid-row: 2;
     grid-column: 2;
     display: flex;
     flex-direction: row;
+    position:absolute
 }
 
 .respondent1-img {
@@ -1989,26 +1993,42 @@ input:checked + .slider1:before {
 }
 
 .response-count span {
-    margin-top: 50px;
-    font-size: 25px; 
+    margin-top: 20px;
+    font-size: 50px;
     color: #44585f;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.response-count p {
+    margin-top: 35px;
+    margin-left: 5px;
+    font-size: 30px;
+    color: #44585f;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
 }
 
 .summary {
-    position:absolute;
+    position: absolute;
     text-align: justify;
     border-radius: 10px;
-    transform: translateX(-200px);
+    transform: translate(-450px, -50px);
     width: 400px;
     height: 200px;
     grid-row: 3;
     grid-column: 2;
     background-color: #9A7850;
     color: #f8f4ee;
-    padding: 10px; /* Add padding directly to the summary container */
+    padding: 10px; 
     box-sizing: border-box;
     margin-bottom: 50px;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
 }
+
+    .summary:hover {
+        overflow: auto;
+        height: auto;
+    }
 
 summary span {
     display: block;
@@ -2026,6 +2046,7 @@ summary span {
     position: absolute;
     bottom: 10px;
     right: 10px;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 .modal {

@@ -5,9 +5,12 @@ from Event_Evaluation_with_Sentiment_Analysis_System import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import joinedload
 from transformers import pipeline
+import gensim
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import json
+from gensim.summarization import summarize
+from googletrans import Translator
 import re
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:ra05182002@localhost:3306/EventDB'
@@ -16,6 +19,8 @@ app.secret_key = 'secret_key'
 db = SQLAlchemy(app)
 
 sia = SentimentIntensityAnalyzer()
+
+translator = Translator()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -383,6 +388,7 @@ def data():
     responses_with_questions = db.session.query(Response, Question).join(Question).all()
     open_ended_responses = db.session.query(Response, Question).join(Question).filter(Question.question_type == 'Open-Ended Response').all()
     multiple_choice_responses = db.session.query(Response, Question).join(Question).filter(Question.question_type == 'Multiple Choices').all()
+    checkbox_responses = db.session.query(Response, Question).join(Question).filter(Question.question_type == 'CheckBox').all()
 
     total_respondents = len(open_ended_responses)
 
@@ -394,12 +400,21 @@ def data():
 
     # Initialize an empty list to store responses and questions
     responses_and_questions = []
+    positive_responses = []
+    negative_responses = []
 
     for response, question in open_ended_responses:
         response_sentiment = response.sentiment
         sentiment_counts[response_sentiment] += 1
 
-        responses_and_questions.append((response.response, question.question_text))
+        # Translate the response to English here
+        translated_response = translator.translate(response.response, src='tl', dest='en').text
+        responses_and_questions.append((translated_response, question.question_text))
+
+        if response_sentiment == "Positive":
+            positive_responses.append((translated_response, question.question_text))
+        elif response_sentiment == "Negative":
+            negative_responses.append((translated_response, question.question_text))
 
     # Find the sentiment with the most counts
     most_common_sentiment = max(sentiment_counts, key=sentiment_counts.get)
@@ -407,13 +422,17 @@ def data():
     # Process all responses to generate a single summary
     combined_responses = [response for response, _ in responses_and_questions]
     combined_questions = [question for _, question in responses_and_questions]
+    combined_positive_responses = [response for response, _ in positive_responses]
+    combined_negative_responses = [response for response, _ in negative_responses]
 
     # Combine all responses and questions
+    all_positive = " ".join(combined_positive_responses)
+    all_negative = " ".join(combined_negative_responses)
     all_responses = " ".join(combined_responses)
     all_questions = " ".join(combined_questions)
 
     # Generate a summary for all responses and questions
-    summary = generate_summary(all_responses, all_questions, most_common_sentiment, total_respondents)
+    summary = generate_summary(all_responses, all_questions, most_common_sentiment, total_respondents, all_positive, all_negative)
 
     # Prepare the data for the pie chart
     chart_data = [['Sentiment', 'Count']]
@@ -476,30 +495,82 @@ def data():
         question_summary += f"The majority, constituting {percentage:.2f}% of respondents, selected {max_choice}, with a total count of {max_count}. "
         choice_summaries.append(question_summary)
 
-    return render_template('data.html', chart_data=chart_data, choice_chart_data=choice_chart_data, total_respondents=total_respondents, responses_with_questions=responses_with_questions, summary=summary, question_responses=question_responses, choice_summaries=choice_summaries)
+    # Fetch data for CheckBox type responses
+    checkbox_responses = db.session.query(Response, Question).join(Question).filter(Question.question_type == 'CheckBox').all()
 
+    # Calculate the total number of respondents for CheckBox questions
+    total_checkbox_respondents = len(checkbox_responses)
 
-def generate_summary(feedback, question, sentiment, total_respondents):
-    # Define your custom summary template
-    if sentiment == "positive":
-        template = f"The questions received a total of {total_respondents} responses, with most of them being positive. They include: {feedback}"
-    elif sentiment == "negative":
-        template = f"The questions received a total of {total_respondents} responses, and most of them were negative. They include: {feedback}"
-    else:
-        template = f"The questions received a total of {total_respondents} responses, with mixed sentiments. They include: {feedback}"
+    # Process and count the CheckBox responses
+    checkbox_counts = {}
+    for response, question in checkbox_responses:
+        response_text = response.response
+        question_text = question.question_text
 
-    # Initialize the text generation pipeline
-    text_generator = pipeline("text-generation", model="gpt2")
+        if question_text not in checkbox_counts:
+            checkbox_counts[question_text] = {}
 
-    # Generate the summary
-    generated_summary = text_generator(template, max_length=150, num_return_sequences=1)
+        if response_text not in checkbox_counts[question_text]:
+            checkbox_counts[question_text][response_text] = 0
 
-    generated_text = generated_summary[0]['generated_text']
+        checkbox_counts[question_text][response_text] += 1
+
+    # Prepare the data for the CheckBox bar chart
+    checkbox_chart_data = [['Choice', 'Count', { 'role': 'style' }]]
+    for question_text, choices in checkbox_counts.items():
+        for choice, count in choices.items():
+            checkbox_chart_data.append([f'{choice}', count, "#CEA778"])
+
+    # Initialize an empty list to store choice summaries
+    checkbox_choice_summaries = []
+
+    # Process multiple-choice responses and count the choices
+    for question_text, choices in checkbox_counts.items():
+        # Calculate the total count for the question
+        total_count = sum(choices.values())
+
+        # Find the maximum count among all choices
+        max_count = max(choices.values())
+
+        # Find all choices with the maximum count
+        max_choices = [choice for choice, count in choices.items() if count == max_count]
+
+        # Calculate the percentage for the most popular choices
+        percentage = (max_count / total_count) * 100
+
+        # Construct the summary for the CheckBox question
+        question_summary = f"In response to the question, '{question_text}', survey participants provided insights into the question. "
     
-    sentences = re.split(r'(?<=[.!?])\s', generated_text)
+        if len(max_choices) == 1:
+            question_summary += f"The majority, constituting {percentage:.2f}% of respondents, selected '{max_choices[0]}', with a total count of {max_count}. "
+        else:
+            # If there are multiple choices with the same highest count
+            choices_text = ", ".join(f"'{choice}'" for choice in max_choices)
+            question_summary += f"The majority, constituting {percentage:.2f}% of respondents, selected {choices_text}, each with a total count of {max_count}. "
 
-    # Keep only the first 7 sentences
-    final_summary = ' '.join(sentences[:7])
+        checkbox_choice_summaries.append(question_summary)
+
+    # Join the summaries for multiple-choice questions
+    checkbox_choice_summary_text = "\n".join(checkbox_choice_summaries)
+
+    return render_template('data.html', chart_data=chart_data, choice_chart_data=choice_chart_data, total_respondents=total_respondents, responses_with_questions=responses_with_questions, summary=summary, question_responses=question_responses, choice_summaries=choice_summaries, checkbox_chart_data=checkbox_chart_data, total_checkbox_respondents=total_checkbox_respondents, checkbox_choice_summary_text=checkbox_choice_summary_text)
+
+
+def generate_summary(feedback, question, sentiment, total_respondents, positive, negative):
+    # Define your custom summary template
+    if sentiment == "Positive":
+        template = f"The questions received a total of {total_respondents} responses, with most of them being positive. They include: {positive}."
+    elif sentiment == "Negative":
+        template = f"The questions received a total of {total_respondents} responses, and most of them were negative. They include: {negative}."
+    else:
+        template = f"The questions received a total of {total_respondents} responses, with mixed sentiments. They include: {feedback}."
+
+    # Use Gensim to perform extractive summarization
+    summary = summarize(template, word_count=200, split=True)
+
+    # Combine the selected sentences into the final summary
+    final_summary = ' '.join(summary)
+
     return final_summary
 
 @app.route('/data_summary')
