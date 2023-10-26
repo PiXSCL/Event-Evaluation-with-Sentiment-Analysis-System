@@ -55,7 +55,7 @@
   google.charts.setOnLoadCallback(drawChart);
   function drawChart() {
     var data = google.visualization.arrayToDataTable([
-      ["Element", "Density", { role: "style" } ],
+      ["Gender", "Count", { role: "style" } ],
       ["Male", 945, "#CEA778"],
       ["Female", 800, "#CEA778"],
     ]);
@@ -71,7 +71,7 @@
     var options = {
       width: 600,
       height: 400,
-      bar: {groupWidth: "95%"},
+      bar: {groupWidth: "60%"},
       legend: { position: "none" },
       backgroundColor: 'transparent',
     };
@@ -97,12 +97,12 @@
                     <li><a href="{{ url_for('data_summary') }}">Summary Per Question</a></li>
                     <li><a href="">Responses per Sentiment</a></li>
                     <li><a href="">Answers Per Question</a></li>
-                    <li><a href="">Individual Responses</a></li>
+                    <li><a href="{{ url_for('individual_data') }}">Individual Responses</a></li>
                 </ul>
             </nav>
         </header>
 
-    <h1 class="general">General</h1>
+    <h1 class="general"></h1>
 
     <div class="data-container">
         <div class="summary-box">
@@ -134,14 +134,25 @@
         
         <div class="summary-box1">
             
-            <div class="text-bar">
+            <div class="total-text">
                 <p>Total Responses Per Gender</p>
-                <p> responses</p>
+            </div>
+            <div class="text-responses">
+                <p>1745 responses</p>
             </div>
 
             <div id="columnchart_values" class="columnchart_values"></div>
 
-            
+        </div>
+
+        <div class="summary-box2">
+            <div class="total-text">
+                <p>Total Responses Per Gender</p>
+            </div>
+            <div class="text-responses">
+                <p>1745 responses</p>
+            </div>
+            <div id="" class=""></div>
         </div>
     </div>
 </body>

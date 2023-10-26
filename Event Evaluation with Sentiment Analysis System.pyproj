@@ -57,6 +57,7 @@
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\form.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\home.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\index.html" />
+    <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\individual_data.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\questions.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\response_success.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\signup.html" />

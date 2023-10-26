@@ -2133,6 +2133,7 @@ summary span {
     background: #F0E7CF;
     border-radius: 25px;
     margin-top: 30px;
+    margin-left: 15px;
     padding: 10px;
     box-sizing: border-box;
     display: flex;
@@ -2140,6 +2141,7 @@ summary span {
     align-items: flex-start;
     position: relative;
     max-height: 500px;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 .line-2 {
@@ -2226,6 +2228,8 @@ color: #61492E;
     background: #F0E7CF;
     border-radius: 25px;
     margin-top: 30px;
+    margin-left: 15px;
+    margin-bottom: 15px;
     padding: 10px;
     box-sizing: border-box;
     display: flex;
@@ -2233,6 +2237,7 @@ color: #61492E;
     align-items: flex-start;
     position: relative;
     max-height: 500px;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 .columnchart_values {
@@ -2267,5 +2272,86 @@ color: #61492E;
     right: -100px;
 }
 
+.info-text {
+    
+}
 
+.total-text {
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 27px;
+    line-height: 33px;
 
+    color: #61492E;
+}
+
+.text-responses {
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 36px;
+
+    color: #61492E;
+}
+
+.summary-box2 {
+    width: 95%;
+    background: #F0E7CF;
+    border-radius: 25px;
+    margin-top: 30px;
+    margin-left: 15px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    max-height: 500px;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Individual Responses*/
+.navigation {
+    text-align: center;
+    color: #44585F;
+    font-family: Cabin;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+    .navigation button {
+        background: none;
+        border: none;
+        font-size: 25px;
+        cursor: pointer;
+        color: #44585F;
+    }
+
+        .navigation button:hover {
+            color: #000; /* Change color on hover if needed */
+        }
+
+.indiv_question {
+    margin-left: 10px;
+    margin-top: 10px;
+    grid-column: 1;
+    grid-row: 1;
+    text-align: left;
+    color: #44585F; /* Text color */
+    font-weight: 700; /* Bold */
+    font-size: 18px; /* Font size */
+}
+
+.indiv_response {
+    margin-left: 10px;
+    grid-column: 1;
+    grid-row: 2;
+    text-align: left;
+    color: #000000; /* Text color */
+    font-size: 16px; /* Font size */
+    margin-bottom: 10px; /* Spacing between responses */
+}

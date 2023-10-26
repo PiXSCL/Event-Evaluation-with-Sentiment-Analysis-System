@@ -4,14 +4,13 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from Event_Evaluation_with_Sentiment_Analysis_System import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import joinedload
+from sqlalchemy import func
 from transformers import pipeline
-import gensim
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import json
 from gensim.summarization import summarize
 from googletrans import Translator
-import re
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:ra05182002@localhost:3306/EventDB'
 app.secret_key = 'secret_key' 
@@ -62,6 +61,7 @@ class Response(db.Model):
     sentiment_score = db.Column(db.Integer)
     sentiment = db.Column(db.String(50))
     date = db.Column(db.DateTime, default=datetime.now)
+    respondent = db.Column(db.Integer, nullable=False)
 
     form = db.relationship('Form', backref='responses')
     question = db.relationship('Question', backref='responses')
@@ -293,6 +293,11 @@ def submit_form(form_id):
 
         if not form:
             return "Form not found", 404
+        # Get the highest respondent identifier from the database
+        highest_respondent = db.session.query(func.max(Response.respondent)).scalar()
+
+        # Increment the highest respondent identifier by 1
+        respondent_id = highest_respondent + 1 if highest_respondent is not None else 1
 
         # Iterate through the form questions to collect responses
         for question in form.questions:
@@ -301,9 +306,10 @@ def submit_form(form_id):
             # Check if the question is of type 'Open-Ended Response'
             if question.question_type == 'Open-Ended Response' and field_name in request.form:
                 response_text = request.form[field_name]
+                translated_response = translator.translate(response_text, src='tl', dest='en').text
 
                 # Perform sentiment analysis using NLTK's VADER
-                sentiment_scores = sia.polarity_scores(response_text)
+                sentiment_scores = sia.polarity_scores(translated_response)
                 sentiment_score = sentiment_scores['compound']
                 sentiment = 'Positive' if sentiment_score > 0 else 'Negative' if sentiment_score < 0 else 'Neutral'
 
@@ -313,7 +319,8 @@ def submit_form(form_id):
                     question_id=question.questionid,
                     response=response_text,
                     sentiment_score=sentiment_score,
-                    sentiment=sentiment
+                    sentiment=sentiment,
+                    respondent=respondent_id
                 )
 
                 # Add and commit the response record to the database
@@ -331,7 +338,8 @@ def submit_form(form_id):
                             question_id=question.questionid,
                             response=choice,
                             sentiment_score=None,
-                            sentiment=None
+                            sentiment=None,
+                            respondent=respondent_id
                         )
 
                         # Add and commit the response record to the database
@@ -352,7 +360,8 @@ def submit_form(form_id):
                             question_id=question.questionid,
                             response=choice_text,
                             sentiment_score=None,
-                            sentiment=None
+                            sentiment=None,
+                            respondent=respondent_id
                         )
 
                         # Add and commit the response record to the database
@@ -424,17 +433,14 @@ def data():
     combined_questions = [question for _, question in responses_and_questions]
     combined_positive_responses = [response for response, _ in positive_responses]
     combined_negative_responses = [response for response, _ in negative_responses]
+ 
+    if most_common_sentiment == "Positive":
+        summary = f"The questions received a total of {total_respondents} responses, with most of them being positive. They include: {combined_positive_responses}."
+    elif most_common_sentiment == "Negative":
+        summary = f"The questions received a total of {total_respondents} responses, and most of them were negative. They include: {combined_negative_responses}."
+    else:
+        summary = f"The questions received a total of {total_respondents} responses, with mixed sentiments. They include: {combined_responses}."
 
-    # Combine all responses and questions
-    all_positive = " ".join(combined_positive_responses)
-    all_negative = " ".join(combined_negative_responses)
-    all_responses = " ".join(combined_responses)
-    all_questions = " ".join(combined_questions)
-
-    # Generate a summary for all responses and questions
-    summary = generate_summary(all_responses, all_questions, most_common_sentiment, total_respondents, all_positive, all_negative)
-
-    # Prepare the data for the pie chart
     chart_data = [['Sentiment', 'Count']]
     for sentiment, count in sentiment_counts.items():
         chart_data.append([sentiment, count])
@@ -555,24 +561,23 @@ def data():
 
     return render_template('data.html', chart_data=chart_data, choice_chart_data=choice_chart_data, total_respondents=total_respondents, responses_with_questions=responses_with_questions, summary=summary, question_responses=question_responses, choice_summaries=choice_summaries, checkbox_chart_data=checkbox_chart_data, total_checkbox_respondents=total_checkbox_respondents, checkbox_choice_summary_text=checkbox_choice_summary_text)
 
-
-def generate_summary(feedback, question, sentiment, total_respondents, positive, negative):
-    # Define your custom summary template
-    if sentiment == "Positive":
-        template = f"The questions received a total of {total_respondents} responses, with most of them being positive. They include: {positive}."
-    elif sentiment == "Negative":
-        template = f"The questions received a total of {total_respondents} responses, and most of them were negative. They include: {negative}."
-    else:
-        template = f"The questions received a total of {total_respondents} responses, with mixed sentiments. They include: {feedback}."
-
-    # Use Gensim to perform extractive summarization
-    summary = summarize(template, word_count=200, split=True)
-
-    # Combine the selected sentences into the final summary
-    final_summary = ' '.join(summary)
-
-    return final_summary
-
 @app.route('/data_summary')
 def data_summary():
     return render_template('data_summary.html')
+
+@app.route('/individual_data')
+def individual_data():
+
+    responses_with_questions = db.session.query(Response, Question).join(Question).all()
+
+    grouped_responses = {}
+
+    for response, question in responses_with_questions:
+        respondent = response.respondent
+        if respondent not in grouped_responses:
+            grouped_responses[respondent] = []
+        grouped_responses[respondent].append((question.question_text, response.response))
+
+    unique_respondents = len(grouped_responses)
+
+    return render_template('individual_data.html', grouped_responses=grouped_responses, unique_respondents=unique_respondents)
