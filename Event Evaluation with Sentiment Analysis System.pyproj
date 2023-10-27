@@ -40,8 +40,10 @@
   <ItemGroup>
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\dropdown.png" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\add.png" />
+    <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\excel.png" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\filter.png" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\neutral.svg" />
+    <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\pdf.png" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\sad.svg" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\search.svg" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\profile.svg" />
@@ -55,10 +57,12 @@
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\data.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\edit_form.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\form.html" />
+    <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\form_preview.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\home.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\index.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\individual_data.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\questions.html" />
+    <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\report.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\response_success.html" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\templates\signup.html" />
     <Content Include="requirements.txt" />

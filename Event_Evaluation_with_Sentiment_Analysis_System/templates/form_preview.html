@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<style>
+        a,
+        button,
+        input,
+        select,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+            text-decoration: none;
+            appearance: none;
+            background: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <header class="header">
+            <nav class="navbar">
+                <ul class="menu">
+                    <li><a href="{{ url_for('home') }}" class="home-link"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{{ url_for('form_preview', form_id=form_id) }}">Form</a></li>
+                    <li><a href="{{ url_for('data', form_id=form_id) }}">Data Analytics</a></li>
+                </ul>
+            </nav>
+        </header>
+        <div class="form-container1">
+            <form action="{{ url_for('submit_form', form_id=form_id) }}" method="post">
+                <div class="fbox">
+                    <h2 class="title">{{ form.title }}</h2>
+                    <div class="vertical-line"></div>
+                    <p class="description">{{ form.description }}</p>
+                </div>
+                {% for question in form.questions %}
+                <div class="fbox2">
+                    <div class="question_container">
+                        <p class="question">{{ question.question_text }}</p>
+                    </div>
+
+                    <div class="answer_container">
+                        {% if question.question_type == 'Open-Ended Response' %}
+                            <input type="text" class="open-ended-input" name="question_{{ question. questionid }}" placeholder="Your Answer">
+                        {% elif question.question_type == 'Multiple Choices' %}
+                            {% for choice in question.choices %}
+                                    <input type="radio" name="question_{{ choice.question_id }}" value="{{ choice.choice_text }}" id="choice{{ choice.choice_id }}_{{ choice.question_id }}" class="custom-radio">
+                                    <label for="choice{{ choice.choice_id }}_{{ choice.question_id }}" class="custom-label" data-label="{{ choice.choice_text }}"></label><br><br>
+                            {% endfor %}
+                        {% elif question.question_type == 'CheckBox' %}
+                            {% for choice in question.choices %}
+                                <input type="checkbox" name="question_{{ question.questionid }}_{{ choice.choice_id }}" value="{{ choice.choice_text }}" id="choice{{ choice.choice_id }}" class="custom-checkbox">
+                                <label for="choice{{ choice.choice_id }}" class="custom-checkbox-label" data-label="{{ choice.choice_text }}"></label><br><br>
+                            {% endfor %}
+                        {% endif %} 
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="submit-button">
+                    <button type="submit" id="submit-button">Submit</button>
+                </div>
+            </form>
+            <div class="rectangle-3"></div>
+        </div>
+    </div>
+</body>
+</html>

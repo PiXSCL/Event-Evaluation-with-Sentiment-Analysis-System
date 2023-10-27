@@ -1,6 +1,6 @@
 from datetime import datetime
 from email.policy import default
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, send_file
 from Event_Evaluation_with_Sentiment_Analysis_System import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import joinedload
@@ -11,6 +11,8 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import json
 from gensim.summarization import summarize
 from googletrans import Translator
+import pandas as pd
+import tempfile
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:ra05182002@localhost:3306/EventDB'
 app.secret_key = 'secret_key' 
@@ -373,6 +375,15 @@ def submit_form(form_id):
         return redirect(url_for('success', form_id=form_id))
     else:
         return "Invalid request method", 400
+@app.route('/preview-form/<int:form_id>', methods=['GET', 'POST'])
+def form_preview(form_id):
+    if request.method == 'GET':
+        form = Form.query.filter_by(formid=form_id).options(joinedload(Form.questions).joinedload(Question.choices)).first()
+
+        if not form:
+            return "Form not found", 404
+
+        return render_template('form_preview.html', form=form, form_id=form_id)
 
 @app.route('/success/<int:form_id>')
 def success(form_id):
@@ -392,12 +403,12 @@ def success(form_id):
 
     return render_template('response_success.html', name=name, form=form)
 
-@app.route('/data')
-def data():
-    responses_with_questions = db.session.query(Response, Question).join(Question).all()
-    open_ended_responses = db.session.query(Response, Question).join(Question).filter(Question.question_type == 'Open-Ended Response').all()
-    multiple_choice_responses = db.session.query(Response, Question).join(Question).filter(Question.question_type == 'Multiple Choices').all()
-    checkbox_responses = db.session.query(Response, Question).join(Question).filter(Question.question_type == 'CheckBox').all()
+@app.route('/data/<int:form_id>')
+def data(form_id):
+    responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
+    open_ended_responses = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id, Question.question_type == 'Open-Ended Response').all()
+    multiple_choice_responses = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id, Question.question_type == 'Multiple Choices').all()
+    checkbox_responses = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id, Question.question_type == 'CheckBox').all()
 
     total_respondents = len(open_ended_responses)
 
@@ -559,16 +570,16 @@ def data():
     # Join the summaries for multiple-choice questions
     checkbox_choice_summary_text = "\n".join(checkbox_choice_summaries)
 
-    return render_template('data.html', chart_data=chart_data, choice_chart_data=choice_chart_data, total_respondents=total_respondents, responses_with_questions=responses_with_questions, summary=summary, question_responses=question_responses, choice_summaries=choice_summaries, checkbox_chart_data=checkbox_chart_data, total_checkbox_respondents=total_checkbox_respondents, checkbox_choice_summary_text=checkbox_choice_summary_text)
+    return render_template('data.html', form_id=form_id , chart_data=chart_data, choice_chart_data=choice_chart_data, total_respondents=total_respondents, responses_with_questions=responses_with_questions, summary=summary, question_responses=question_responses, choice_summaries=choice_summaries, checkbox_chart_data=checkbox_chart_data, total_checkbox_respondents=total_checkbox_respondents, checkbox_choice_summary_text=checkbox_choice_summary_text)
 
-@app.route('/data_summary')
-def data_summary():
-    return render_template('data_summary.html')
+@app.route('/data_summary/<int:form_id>')
+def data_summary(form_id):
+    return render_template('data_summary.html', form_id=form_id)
 
-@app.route('/individual_data')
-def individual_data():
+@app.route('/individual_data/<int:form_id>')
+def individual_data(form_id):
 
-    responses_with_questions = db.session.query(Response, Question).join(Question).all()
+    responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
 
     grouped_responses = {}
 
@@ -580,4 +591,54 @@ def individual_data():
 
     unique_respondents = len(grouped_responses)
 
-    return render_template('individual_data.html', grouped_responses=grouped_responses, unique_respondents=unique_respondents)
+    return render_template('individual_data.html', grouped_responses=grouped_responses, unique_respondents=unique_respondents, form_id=form_id)
+
+@app.route('/generate_report/<int:form_id>')
+def generate_report(form_id):
+    return render_template('report.html', form_id=form_id)
+
+@app.route('/download_report/<int:form_id>')
+def download_report(form_id):
+    responses_with_questions = db.session.query(Response, Question, Form.title).\
+    join(Question, Response.question_id == Question.questionid).\
+    join(Form, Response.form_id == Form.formid).\
+    filter(Response.form_id == form_id).all()
+
+    # Create a temporary directory and get the path
+    temp_dir = tempfile.mkdtemp()
+
+    # Specify the full path for the temporary file
+    file_name = f'{temp_dir}/Form_{form_id}_Report.xlsx'
+    print(f"File will be saved as: {file_name}")  # Add this line to log the file name
+
+    # Create a Pandas DataFrame from the query results
+    df = pd.DataFrame([(response.response, question.question_text, question.question_type, response.sentiment, response.sentiment_score, response.respondent, title) for response, question, title in responses_with_questions], columns=['response', 'question_text', 'question_type', 'sentiment', 'sentiment_score', 'respondent', 'form_title'])
+
+    # Create an Excel writer object
+    writer = pd.ExcelWriter(file_name, engine='xlsxwriter')
+    df.to_excel(writer, sheet_name='Responses', index=False)
+
+    # Get the xlsxwriter workbook and worksheet objects
+    workbook = writer.book
+    worksheet = writer.sheets['Responses']
+
+    # Add formatting to the worksheet
+    header_format = workbook.add_format({'bold': True, 'text_wrap': True, 'valign': 'top'})
+    worksheet.set_column(0, len(df.columns) - 1, 20, header_format)
+
+    try:
+        # Save the Excel file using Pandas ExcelWriter's save method
+        writer.save()
+        print("File saved successfully")
+        writer.close()
+    except Exception as e:
+        print(f"Error while saving the file: {str(e)}")
+
+    # Serve the file for download
+    response = send_file(file_name, as_attachment=True)
+
+    return response
+
+
+
+

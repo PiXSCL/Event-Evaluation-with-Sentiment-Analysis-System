@@ -20,6 +20,7 @@
     position: fixed;
     left: 41%;
     top: 10%;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 .rectangle-2 {
@@ -206,6 +207,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
     .loginbutton:hover {
@@ -378,6 +380,7 @@
     position: absolute;
     left: 57%;
     top: 68%;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
     .signup:hover {
@@ -491,8 +494,8 @@
 }
 
     .home-buttons button {
-        width:170px;
-        height:49px;
+        width: 170px;
+        height: 49px;
         background-color: #546D75;
         border: none;
         border-radius: 35px;
@@ -503,6 +506,7 @@
         font-size: 20px;
         color: #D4D4D4;
         cursor: pointer;
+        box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
     }
 
 .add {
@@ -543,6 +547,7 @@
     height: 50px;
     border-radius: 35px;
     background: #63828C;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
     .search-container input[type="text"] {
@@ -656,6 +661,7 @@
     position: relative;
     justify-content: flex-end;
     box-sizing: border-box;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
     .data-grid-item::after {
@@ -855,6 +861,7 @@
     border-radius: 10px;
     margin-top: 30px;
     height: 70px;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 .box2 {
@@ -867,6 +874,7 @@
     margin-top: 30px;
     display: flex;
     flex-wrap: wrap;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 
@@ -1147,15 +1155,14 @@ input:checked + .slider1:before {
     align-items: center;
     padding: 10px;
     background-color: #F0E7CF;
-    border: 0px solid #ccc;
-    height:40px;
-    max-width: 200px;
+    border: none;
+    height: 40px;
+    max-width: 150px;
     margin-right: auto;
-    margin-left: 1004.5px;
+    margin-left: 1054.5px;
     margin-top: -8px;
     border-radius: 0 0 10px 10px;
 }
-
     .icon-box i {
         font-size: 24px;
         cursor: pointer;
@@ -1191,13 +1198,14 @@ input:checked + .slider1:before {
     cursor: pointer;
     font-size: 20px;
     transition: background-color 0.3s ease-in-out;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 .link-button {
     display: flex;
     justify-content: flex-start;
     margin-left: 200px;
-    transform: translateY(-70px);
+    transform: translateY(-68px);
 }
 
 #link-button {
@@ -1210,6 +1218,7 @@ input:checked + .slider1:before {
     cursor: pointer;
     font-size: 20px;
     transition: background-color 0.3s ease-in-out;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Form Design */
@@ -1839,7 +1848,7 @@ input:checked + .slider1:before {
     border-radius: 10px;
     text-align: center;
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
     .success-container h2 {
@@ -2155,11 +2164,8 @@ summary span {
 }
 
 .rec-question1 {
-    position: absolute;
     width: 140px;
     height: 35px;
-    left: 30px;
-    top: 20px;
 
     background: #E4D2BD;
 }
@@ -2223,6 +2229,11 @@ color: #61492E;
     margin-bottom: 10px;
 }
 
+.material-usrimg {
+    width: 40px;
+    height: 46px;
+}
+
 .summary-box1 {
     width: 95%;
     background: #F0E7CF;
@@ -2232,10 +2243,7 @@ color: #61492E;
     margin-bottom: 15px;
     padding: 10px;
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    position: relative;
+    
     max-height: 500px;
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
@@ -2247,6 +2255,18 @@ color: #61492E;
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
+}
+
+.columnchart_material {
+    width: 600px;
+    height: 300px;
+}
+
+.columnchart-age {
+    margin: 0 auto; /* Center horizontally */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;
 }
 
 .text-data {
@@ -2273,7 +2293,8 @@ color: #61492E;
 }
 
 .info-text {
-    
+    display: flex;
+    justify-content: space-between;
 }
 
 .total-text {
@@ -2284,9 +2305,21 @@ color: #61492E;
     line-height: 33px;
 
     color: #61492E;
+    flex: 1;
 }
 
 .text-responses {
+    font-family: 'Cabin';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 36px;
+
+    color: #61492E;
+    flex: -1;
+}
+
+.material-text {
     font-family: 'Cabin';
     font-style: normal;
     font-weight: 400;
@@ -2304,13 +2337,28 @@ color: #61492E;
     margin-left: 15px;
     padding: 10px;
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    position: relative;
     max-height: 500px;
+
+    /*display: flex;
+    justify-content: center; 
+    align-items: center;*/
+
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
+
+.summary-box3 {
+    width: 95%;
+    background: #F0E7CF;
+    border-radius: 25px;
+    margin-top: 30px;
+    margin-left: 15px;
+    padding: 10px;
+    box-sizing: border-box;
+    max-height: 500px;
+
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
 
 /* Individual Responses*/
 .navigation {
@@ -2355,3 +2403,90 @@ color: #61492E;
     font-size: 16px; /* Font size */
     margin-bottom: 10px; /* Spacing between responses */
 }
+
+.report-container {
+    margin-top: 15px;
+    margin-left: 50px;
+    background: #f0e7cf;
+    border-radius: 25px;
+    width: 1000px;
+    height: 400px;
+    display: grid;
+    grid-template-rows: auto auto auto;
+    grid-template-columns: auto auto;
+    grid-gap: 10px;
+    position: relative;
+    margin-bottom: 20px;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+    .report-container h2 {
+        margin-top: 5px;
+        grid-row: 1;
+        grid-column: 1 / span 2;
+        text-align: center;
+        font-size: 30px;
+        color: #44585f;
+    }
+
+.download_excel {
+    grid-row: 2;
+    grid-column: 1;
+    text-align: center;
+    font-size: 20px;
+    color: #44585f;
+}
+
+.download_pdf {
+    grid-row: 2;
+    grid-column: 2;
+    text-align: center;
+    font-size: 20px;
+    color: #44585f;
+}
+
+.excel-file-download-container {
+    grid-row: 3;
+    grid-column: 1;
+    text-align: center;
+    margin-left: 25%;
+    background: #f0e7cf;
+    border-radius: 25px;
+    width: 250px;
+    height: 250px;
+    position: center;
+    margin-bottom: 20px;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+    .excel-file-download-container:hover {
+        box-shadow: -10px 10px 20px rgba(0, 0, 0, 0.3), 0px 10px 20px rgba(0, 0, 0, 0.3), 10px 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .excel-file-download-container img {
+        height: 200px;
+        width: 250px;
+    }
+
+.pdf-file-download-container {
+    grid-row: 3;
+    grid-column: 2;
+    text-align: center;
+    margin-left: 25%;
+    background: #f0e7cf;
+    border-radius: 25px;
+    width: 250px;
+    height: 250px;
+    position: center;
+    margin-bottom: 20px;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+    .pdf-file-download-container:hover {
+        box-shadow: -10px 10px 20px rgba(0, 0, 0, 0.3), 0px 10px 20px rgba(0, 0, 0, 0.3), 10px 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .pdf-file-download-container img {
+        height: 200px;
+        width: 200px;
+    }

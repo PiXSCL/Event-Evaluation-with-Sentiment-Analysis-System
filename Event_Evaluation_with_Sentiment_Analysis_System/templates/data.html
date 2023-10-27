@@ -33,20 +33,18 @@
             <nav class="navbar">
                 <ul class="menu">
                     <li><a href="{{ url_for('home') }}" class="home-link"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="{{ url_for('questions') }}">Questions</a></li>
-                    <li><a href="">Settings</a></li>
-                    <li><a href="{{ url_for('data') }}">Data Analytics</a></li>
+                    <li><a href="{{ url_for('form_preview', form_id=form_id) }}">Form</a></li>
+                    <li><a href="{{ url_for('data', form_id=form_id) }}">Data Analytics</a></li>
                 </ul>
             </nav>
             <nav class="sidebar">
                 <ul class="sidebar-menu">
-                    <li><a href="{{ url_for('data') }}">Overall Summary</a></li>
-                    <li><a href="{{ url_for('data_summary') }}">Summary Per Question</a></li>
-                    <li><a href="">Responses per Sentiment</a></li>
+                    <li><a href="{{ url_for('data', form_id=form_id) }}">Overall Summary</a></li>
+                    <li><a href="{{ url_for('individual_data', form_id=form_id) }}">Individual Responses</a></li>
+                    <li><a href="{{ url_for('data_summary', form_id=form_id) }}">Summary Per Question</a></li>
                     <li><a href="">Answers Per Question</a></li>
-                    <li><a href="{{ url_for('individual_data') }}">Individual Responses</a></li>
+                    <li><a href="">Generate Reports</a></li>
                 </ul>
-
             </nav>
         </header>
         <div class="data-container">
