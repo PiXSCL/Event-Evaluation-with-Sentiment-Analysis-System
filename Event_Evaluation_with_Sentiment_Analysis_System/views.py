@@ -600,31 +600,83 @@ def generate_report(form_id):
 @app.route('/download_report/<int:form_id>')
 def download_report(form_id):
     responses_with_questions = db.session.query(Response, Question, Form.title).\
-    join(Question, Response.question_id == Question.questionid).\
-    join(Form, Response.form_id == Form.formid).\
-    filter(Response.form_id == form_id).all()
+        join(Question, Response.question_id == Question.questionid).\
+        join(Form, Response.form_id == Form.formid).\
+        filter(Response.form_id == form_id).all()
 
     # Create a temporary directory and get the path
     temp_dir = tempfile.mkdtemp()
 
     # Specify the full path for the temporary file
     file_name = f'{temp_dir}/Form_{form_id}_Report.xlsx'
-    print(f"File will be saved as: {file_name}")  # Add this line to log the file name
+    print(f"File will be saved as: {file_name}")
 
-    # Create a Pandas DataFrame from the query results
-    df = pd.DataFrame([(response.response, question.question_text, question.question_type, response.sentiment, response.sentiment_score, response.respondent, title) for response, question, title in responses_with_questions], columns=['response', 'question_text', 'question_type', 'sentiment', 'sentiment_score', 'respondent', 'form_title'])
+    # Create a list to hold unique question text
+    unique_questions = []
+
+    # Create a dictionary to store data for each unique question
+    data_by_question = {}
+
+    # Iterate through the responses and group them by unique question text
+    for response, question, title in responses_with_questions:
+        question_text = question.question_text
+        if question_text not in unique_questions:
+            unique_questions.append(question_text)
+            data_by_question[question_text] = {
+                'question_type': question.question_type,
+                'responses': [],
+                'sentiments': [],
+                'sentiment_scores': [],
+                'dates': [],
+            }
+        data_by_question[question_text]['responses'].append(response.response)
+        data_by_question[question_text]['sentiments'].append(response.sentiment)
+        data_by_question[question_text]['sentiment_scores'].append(response.sentiment_score)
+        data_by_question[question_text]['dates'].append(response.date)
+
+    # Create a Pandas DataFrame for the unique questions
+    df = pd.DataFrame(data_by_question).T.reset_index()
+    df = df.rename(columns={'index': 'question_text'})
 
     # Create an Excel writer object
     writer = pd.ExcelWriter(file_name, engine='xlsxwriter')
-    df.to_excel(writer, sheet_name='Responses', index=False)
 
     # Get the xlsxwriter workbook and worksheet objects
     workbook = writer.book
-    worksheet = writer.sheets['Responses']
+    worksheet = workbook.add_worksheet('Responses')
 
+    date_format = workbook.add_format({'num_format': 'yyyy-mm-dd'})
     # Add formatting to the worksheet
     header_format = workbook.add_format({'bold': True, 'text_wrap': True, 'valign': 'top'})
-    worksheet.set_column(0, len(df.columns) - 1, 20, header_format)
+
+    # Define the starting row for writing data
+    row = 4
+
+    # Iterate through the responses and group them by unique question text
+    for question_text, data in data_by_question.items():
+        num_responses = len(data['responses'])
+
+        # Merge the question and question type cells to cover all responses
+        worksheet.merge_range(row, 1, row + num_responses - 1, 1, question_text, header_format)
+        worksheet.merge_range(row, 2, row + num_responses - 1, 2, data['question_type'], header_format)
+
+        # Write responses, sentiments, sentiment scores, and dates
+        for i in range(num_responses):
+            worksheet.write(row + i, 3, data['responses'][i])
+            worksheet.write(row + i, 4, data['sentiments'][i])
+            worksheet.write(row + i, 5, data['sentiment_scores'][i])
+            worksheet.write(row + i, 6, data['dates'][i], date_format)
+
+        # Move to the next question
+        row += num_responses
+
+    # Write column names
+    column_names = list(df.columns)
+    worksheet.write_row(3, 1, column_names, header_format)
+
+    # Merge the title cells
+    title = responses_with_questions[0].title
+    worksheet.merge_range(0, 1, 0, len(df.columns), title, header_format)
 
     try:
         # Save the Excel file using Pandas ExcelWriter's save method
@@ -638,6 +690,7 @@ def download_report(form_id):
     response = send_file(file_name, as_attachment=True)
 
     return response
+
 
 
 

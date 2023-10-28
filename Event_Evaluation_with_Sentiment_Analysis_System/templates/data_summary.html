@@ -169,7 +169,7 @@
                     <li><a href="{{ url_for('individual_data', form_id=form_id) }}">Individual Responses</a></li>
                     <li><a href="{{ url_for('data_summary', form_id=form_id) }}">Summary Per Question</a></li>
                     <li><a href="">Answers Per Question</a></li>
-                    <li><a href="">Generate Reports</a></li>
+                    <li><a href="{{ url_for('generate_report', form_id=form_id) }}">Generate Reports</a></li>
                 </ul>
             </nav>
         </header>
@@ -191,8 +191,10 @@
                 
                 <div class="line-2"></div>
                 <div id="piechart" class="piechart"></div>
-
-                <div class="line-1"></div>
+                
+                <div class="line-container">
+                    <div class="line-1"></div>
+                </div>
 
                 <div class="info">
                     <img class="respondent-img" src="{{ url_for('static', filename='images/user-icon.svg') }}" alt="User">

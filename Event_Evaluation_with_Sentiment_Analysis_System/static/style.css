@@ -2154,11 +2154,10 @@ summary span {
 }
 
 .line-2 {
-    position: absolute;
+    position: relative;
     width: 581px;
     height: 0px;
-    left: -120px;
-    top: 55px;
+    margin-left: 170px;
 
     border: 1px solid #61492E;
 }
@@ -2166,6 +2165,8 @@ summary span {
 .rec-question1 {
     width: 140px;
     height: 35px;
+    position: relative;
+    margin-left: 20px;
 
     background: #E4D2BD;
 }
@@ -2189,13 +2190,17 @@ color: #61492E;
 }
 
 .line-1 {
-    position: absolute;
     width: 300px;
     height: 0px;
-    left: 400px;
-    top: 250px;
+
     border: 1px solid #61492E;
     transform: rotate(90deg);
+}
+
+.line-container {
+    display: flex;
+    justify-content: center; /* Horizontally center the line */
+    align-items: center; /* Vertically center the line */
 }
 
 .info {
@@ -2230,8 +2235,17 @@ color: #61492E;
 }
 
 .material-usrimg {
-    width: 40px;
-    height: 46px;
+    width: 88px;
+    height: 136px;
+    position: relative;
+    margin-top: -300px;
+}
+
+.material-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-right: 200px;
 }
 
 .summary-box1 {
@@ -2259,7 +2273,10 @@ color: #61492E;
 
 .columnchart_material {
     width: 600px;
-    height: 300px;
+    height: 400px;
+    position: relative;
+    margin-left: 50px;
+    margin-top: 20px;
 }
 
 .columnchart-age {
@@ -2326,6 +2343,9 @@ color: #61492E;
     font-size: 30px;
     line-height: 36px;
 
+    position: relative;
+    margin-right: -50px;
+
     color: #61492E;
 }
 
@@ -2354,7 +2374,8 @@ color: #61492E;
     margin-left: 15px;
     padding: 10px;
     box-sizing: border-box;
-    max-height: 500px;
+    min-height: 500px;
+    margin-bottom: 20px;
 
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
