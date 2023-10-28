@@ -1444,14 +1444,30 @@ input:checked + .slider1:before {
     }
 
 /*settings*/
+.settings-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/* Style the modal content */
 .settings {
     position: absolute;
-    width: 499px;
-    height: 690px;
-    left: 21px;
-    top: 149px;
-
-    background: #F8F4EE;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    min-height: 200px; /* Set a minimum height for the modal */
+    max-height: 80%; /* Set a maximum height for the modal */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
 }
 
 .header {
@@ -1461,7 +1477,7 @@ input:checked + .slider1:before {
     font-size: 20px;
     line-height: 30px;
     text-align: center;
-
+    margin-bottom: 20px;
     color: #44585F;
 }
 
