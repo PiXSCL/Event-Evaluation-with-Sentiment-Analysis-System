@@ -1224,7 +1224,8 @@ input:checked + .slider1:before {
 /* Form Design */
 
 .form-container1 {
-    max-height: 550px;
+    transform:translateY(-20px);
+    max-height: 465px;
     overflow-y: auto;
 }
 
@@ -1944,7 +1945,7 @@ input:checked + .slider1:before {
 .data-container {
     width: 90%;
     margin-left: 12%;
-    max-height: 490px;
+    max-height: 460px;
     overflow-y: auto;
 }
 

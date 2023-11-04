@@ -512,9 +512,6 @@ def data(form_id):
         question_summary += f"The majority, constituting {percentage:.2f}% of respondents, selected {max_choice}, with a total count of {max_count}. "
         choice_summaries.append(question_summary)
 
-    # Fetch data for CheckBox type responses
-    checkbox_responses = db.session.query(Response, Question).join(Question).filter(Question.question_type == 'CheckBox').all()
-
     # Calculate the total number of respondents for CheckBox questions
     total_checkbox_respondents = len(checkbox_responses)
 
