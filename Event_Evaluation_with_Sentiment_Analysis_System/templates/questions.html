@@ -82,9 +82,6 @@
                 <div class="save-button">
                     <button type="submit" id="save-button">Save</button>
                 </div>
-                <div class="link-button">
-                    <button type="submit" id="link-button">Share Link</button>
-                </div>
             </form>
         </div>
     <div class="settings-modal" id="settings-modal">
@@ -252,30 +249,30 @@
             newBox2.className = "box2";
             newBox2.id = `box-${boxCounter}`;
             newBox2.innerHTML = `
-        <div class="quadrant upper-left">
-            <input type="text" class="question-input" name="question_text_${boxCounter}" placeholder="Question">
-        </div>
+            <div class="quadrant upper-left">
+                <input type="text" class="question-input" name="question_text_${boxCounter}" placeholder="Question">
+            </div>
 
-        <div class="quadrant upper-right">
-            <img id="dropdownImg" src="{{ url_for('static', filename='images/dropdown.png') }}" alt="Dropdown Icon" class="dropdownimg">
-            <select id="dropdown" class="dropdown" name="question_type_${boxCounter}">
-                <option value="Open-Ended Response">Open-Ended Response</option>
-                <option value="Multiple Choices">Multiple Choices</option>
-                <option value="CheckBox">CheckBox</option>
-            </select>
-        </div>
-        <div class="quadrant lower-left">
-            <p class="selected-option"><span id="selectedOption">Open-Ended Response</span></p>
-            <div class="options-container"></div>
-        </div>
-        <div class="quadrant lower-right">
-            <span class="switch1-text">Required</span>
-            <label class="switch1">
-                <input type="checkbox" name="is_required_${boxCounter}">
-                <span class="slider1 round"></span>
-            </label>
-        </div>
-    `;
+            <div class="quadrant upper-right">
+                <img id="dropdownImg" src="{{ url_for('static', filename='images/dropdown.png') }}" alt="Dropdown Icon" class="dropdownimg">
+                <select id="dropdown" class="dropdown" name="question_type_${boxCounter}">
+                    <option value="Open-Ended Response">Open-Ended Response</option>
+                    <option value="Multiple Choices">Multiple Choices</option>
+                    <option value="CheckBox">CheckBox</option>
+                </select>
+            </div>
+            <div class="quadrant lower-left">
+                <p class="selected-option"><span id="selectedOption">Open-Ended Response</span></p>
+                <div class="options-container"></div>
+            </div>
+            <div class="quadrant lower-right">
+                <span class="switch1-text">Required</span>
+                <label class="switch1">
+                    <input type="checkbox" name="is_required_${boxCounter}">
+                    <span class="slider1 round"></span>
+                </label>
+            </div>
+        `;
             form.insertBefore(newBox2, iconBox);
 
             const newDropdown = newBox2.querySelector(".dropdown");
@@ -306,6 +303,31 @@
                 }
             }
         });
+
+        iconBox.querySelector(".duplicate-icon").addEventListener("click", function () {
+            const mostRecentBox = form.querySelector(`#box-${boxCounter}`);
+            if (mostRecentBox) {
+                // Duplicate the most recent box
+                const newBox2 = mostRecentBox.cloneNode(true);
+
+                // Increment the box counter
+                boxCounter++;
+
+                // Update the ID of the duplicated box
+                newBox2.id = `box-${boxCounter}`;
+
+                // Insert the duplicated box after the most recent box
+                mostRecentBox.parentNode.insertBefore(newBox2, mostRecentBox.nextSibling);
+
+                const newDropdown = newBox2.querySelector(".dropdown");
+                const newSelectedOption = newBox2.querySelector(".selected-option span");
+                const newOptionsContainer = newBox2.querySelector(".options-container");
+
+                newDropdown.addEventListener("change", function () {
+                    handleDropdownChange(newDropdown, newSelectedOption, newOptionsContainer);
+                });
+            }
+        });
     });
 
     document.querySelector("#save-button").addEventListener("click", function () {
@@ -319,9 +341,6 @@
             description: description,
             questions: []
         };
-
-        // Variable to hold the captured data for alert
-        let alertMessage = "Captured Choice Text:\n";
 
         // Find and iterate through all question elements
         document.querySelectorAll(".quadrant.upper-left").forEach(function (questionElement, questionCounter) {
@@ -348,18 +367,12 @@
                     };
                     // Push the choice object to the question's choices array
                     questionData.choices.push(choiceData);
-
-                    // Add the choice text to the alert message
-                    alertMessage += `Question ${questionCounter + 1}, Choice ${choiceCounter + 1}: ${choiceText}\n`;
                 });
             }
 
             // Push the question object to the form's questions array
             formData.questions.push(questionData);
         });
-
-        // Display the captured data in an alert
-        alert(alertMessage);
 
         // Convert the formData object to JSON
         const formDataJSON = JSON.stringify(formData);

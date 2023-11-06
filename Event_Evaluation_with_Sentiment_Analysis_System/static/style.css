@@ -1201,31 +1201,17 @@ input:checked + .slider1:before {
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
-.link-button {
-    display: flex;
-    justify-content: flex-start;
-    margin-left: 200px;
-    transform: translateY(-68px);
-}
-
-#link-button {
-    width: 150px;
-    padding: 10px 20px;
-    background-color: #667F87;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 20px;
-    transition: background-color 0.3s ease-in-out;
-    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
-}
-
 /* Form Design */
 
 .form-container1 {
     transform:translateY(-20px);
-    max-height: 465px;
+    max-height: 565px;
+    overflow-y: auto;
+}
+
+.form-container2 {
+    transform: translateY(-20px);
+    max-height: 450px;
     overflow-y: auto;
 }
 
@@ -1409,7 +1395,7 @@ input:checked + .slider1:before {
 
 .custom-checkbox-label::after {
     top: 2px;
-    width: 200px;
+    width: 500px;
     content: attr(data-label);
     position: absolute;
     left: 50px;
@@ -1444,6 +1430,97 @@ input:checked + .slider1:before {
         background-color: #9A7850;
     }
 
+/*Form Preview*/
+
+.link-button {
+    text-align: center;
+    margin-top: 20px; /* Add some top margin for spacing */
+}
+
+#link-button {
+    background-color: #667F87;
+    color: white;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    #link-button:hover {
+        background-color: #9A7850;
+    }
+
+/* Modal container */
+.link-modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal content */
+.link-modal-content {
+    background-color: #E8BA84;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 8px;
+    max-width: 400px;
+    position: relative;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+    /* Center the text in the modal content */
+    .link-modal-content h2 {
+        text-align: center;
+        color: #61492e;
+    }
+
+/* Close button */
+.link-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+    .link-close:hover {
+        color: #f00;
+    }
+
+/* Shareable link text */
+#shareLink {
+    padding: 5px;
+    font-size: 20px;
+    text-align: center;
+    margin-top: 10px;
+    background-color: #e4d2bd;
+    border-radius: 5px;
+    position: center;
+}
+
+.link-copy {
+    margin-left: 40%;
+    text-align: center;
+    margin-top: 20px; /* Add some top margin for spacing */
+    background-color: #667F87;
+    color: white;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+    .link-copy:hover {
+        background-color: #9A7850;
+    }
 /*settings*/
 .settings-modal {
     display: none;
@@ -2049,6 +2126,7 @@ input:checked + .slider1:before {
     margin-bottom: 50px;
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
     overflow: hidden;
+    z-index: 4;
 }
 
     .summary:hover {
@@ -2078,7 +2156,7 @@ summary span {
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 5;
     left: 0;
     top: 0;
     width: 100%;
@@ -2441,6 +2519,8 @@ color: #61492E;
     font-size: 16px; /* Font size */
     margin-bottom: 10px; /* Spacing between responses */
 }
+
+/*Generate Report*/
 
 .report-container {
     margin-top: 15px;

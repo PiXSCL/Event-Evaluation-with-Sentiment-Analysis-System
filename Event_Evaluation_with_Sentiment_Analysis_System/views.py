@@ -206,6 +206,8 @@ def save_form():
             db.session.add(new_form)
             db.session.commit()
 
+            form_id = new_form.formid
+
             # Add all questions to the session and then commit
             db.session.add_all(questions_data)
             db.session.commit()
@@ -215,10 +217,10 @@ def save_form():
             print(f"Error inserting form or choices: {str(e)}")
 
         # Redirect to a success page or any other page you want
-        return redirect(url_for('home'))
+        return render_template('form_preview.html', form_id=form_id)
 
     # Handle other cases or render templates as needed
-    return render_template('questions.html')
+    return render_template('home.html')
 
 @app.route('/edit_form/<int:form_id>', methods=['GET', 'POST'])
 def edit_form(form_id):

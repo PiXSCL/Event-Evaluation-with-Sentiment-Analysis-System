@@ -37,7 +37,7 @@
                 </ul>
             </nav>
         </header>
-        <div class="form-container1">
+        <div class="form-container2">
             <form action="{{ url_for('submit_form', form_id=form_id) }}" method="post">
                 <div class="fbox">
                     <h2 class="title">{{ form.title }}</h2>
@@ -68,8 +68,66 @@
                 </div>
                 {% endfor %}
             </form>
+            <div class="link-button">
+                <button type="submit" id="link-button">Share Link</button>
+            </div>
         </div>
+        <div id="shareModal" class="link-modal">
+                <div class="link-modal-content">
+                    <span class="link-close">&times;</span>
+                    <h2>Share Link</h2>
+                    <p id="shareLink"></p>
+                    <button class="link-copy" id="copyButton" onclick="copyLinkToClipboard()">Copy</button>
+                </div>
+            </div>
         <div class="rectangle-3"></div>
     </div>
+    <input type="hidden" id="form_id" value="{{ form_id }}">
 </body>
 </html>
+<script>
+    document.getElementById("link-button").addEventListener("click", function () {
+        // Get the form_id from the hidden input or any other source
+        var form_id = document.getElementById("form_id").value;  // Make sure this element exists in your form
+
+        // Build the shareable link
+        var shareableLink = "http://localhost:5555/form/" + form_id;
+
+        // Display the modal
+        var modal = document.getElementById("shareModal");
+        var shareLinkElement = document.getElementById("shareLink");
+        shareLinkElement.innerHTML = shareableLink;
+        modal.style.display = "block";
+
+        // Handle the modal close button
+        document.querySelector(".link-close").addEventListener("click", function () {
+            modal.style.display = "none";
+        });
+
+        // Function to copy the link to the clipboard
+        function copyLinkToClipboard() {
+            // Select the text to copy
+            const linkText = document.querySelector("#shareLink");
+            const range = document.createRange();
+            range.selectNode(linkText);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+
+            // Try to copy the selected text
+            const copySuccessful = document.execCommand("copy");
+
+            // Clear the selection
+            window.getSelection().removeAllRanges();
+
+            // Display a message indicating the result
+            if (copySuccessful) {
+                alert("Link copied to clipboard!");
+            } else {
+                alert("Copy failed. Please copy the link manually.");
+            }
+        }
+
+        // Attach the copyLinkToClipboard function to the "Copy" button
+        document.getElementById("copyButton").addEventListener("click", copyLinkToClipboard);
+    });
+</script>
