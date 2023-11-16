@@ -1,6 +1,8 @@
 from datetime import datetime
 from email.policy import default
 from flask import Flask, render_template, request, redirect, url_for, session, send_file, jsonify
+from flask_mail import Mail, Message
+from itsdangerous import URLSafeTimedSerializer
 from Event_Evaluation_with_Sentiment_Analysis_System import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import joinedload
@@ -704,8 +706,9 @@ def filtered_data(form_id):
 
         if question_type not in ['multiple choices']:
             if question_text not in grouped_responses:
-                grouped_responses[question_text] = {"responses": [], "question_type": question_type}
+                grouped_responses[question_text] = {"responses": [], "question_type": question_type, "response_count": 0}
             grouped_responses[question_text]["responses"].append(response)
+            grouped_responses[question_text]["response_count"] += 1
         elif question_type == 'multiple choices':
             if question_text not in multiple_choices:
                 multiple_choices[question_text] = {"responses": set(), "question_type": question_type}
@@ -713,7 +716,6 @@ def filtered_data(form_id):
 
     print("Grouped Responses", grouped_responses)
 
-    selected_question = request.args.get('question', None)
     # Initialize chart_data outside the loop as a list
     chart_data = [['Sentiment', 'Count']]
     checkbox_chart_data = [['Option', 'Count', {'role': 'style'}]]
@@ -724,6 +726,10 @@ def filtered_data(form_id):
 
         print(f"Question Text: {question_text}, Question Type: {question_type}")
 
+        # Initialize highest_response and highest_percentage
+        highest_response = ""
+        highest_percentage = 0
+
         if question_type == 'open-ended response':
             positive_count = sum(1 for resp in responses if resp.sentiment == 'Positive')
             neutral_count = sum(1 for resp in responses if resp.sentiment == 'Neutral')
@@ -732,6 +738,12 @@ def filtered_data(form_id):
             chart_data.append(['Positive', positive_count])
             chart_data.append(['Neutral', neutral_count])
             chart_data.append(['Negative', negative_count])
+
+            # Calculate highest response and percentage
+            for sentiment, count in chart_data[1:]:
+                percentage = round((count / data["response_count"]) * 100, 2)
+                if percentage > highest_percentage:
+                    highest_response, highest_percentage = sentiment, percentage
 
         elif question_type == 'checkbox':
             # Count occurrences of each response
@@ -747,6 +759,16 @@ def filtered_data(form_id):
             # Append data for each response
             for response_text, count in response_counts.items():
                 checkbox_chart_data.append([response_text, count, "#CEA778"])
+
+            # Calculate highest response and percentage
+            for option, count, _ in checkbox_chart_data[1:]:
+                percentage = round((count / data["response_count"]) * 100, 2)
+                if percentage > highest_percentage:
+                    highest_response, highest_percentage = option, percentage
+
+        # Store highest_response and highest_percentage in the dictionary
+        data["highest_response"] = highest_response
+        data["highest_percentage"] = highest_percentage
 
     # Log the chart data and checkbox chart data
     print("Chart Data:", chart_data)
@@ -811,10 +833,54 @@ def api_filtered_data(form_id):
             for response_text, count in response_counts.items():
                 filtered_checkbox_chart_data.append([response_text, count, "#CEA778"])
 
-    print("Filtered Chart Data:", filtered_chart_data)
-    print("Filtered Checkbox Chart Data:", filtered_checkbox_chart_data)
+    result_data = []
+    chart_data_without_percentage = [['Sentiment', 'Count']]
+    checkbox_chart_data_without_percentage = [['Option', 'Count', {'role': 'style'}]]
+
+    for question_text, data in filtered_responses.items():
+        question_type = data["question_type"]
+        responses = data["responses"]
+
+        highest_response, highest_percentage = "", 0
+
+        if question_type == 'open-ended response':
+            for sentiment, count in filtered_chart_data[1:]:
+                count = int(count)  # Convert count to int
+                chart_data_without_percentage.append([sentiment, count])
+                if count > 0:  # Avoid division by zero
+                    percentage = round((count / len(responses)) * 100, 2)
+                    if percentage > highest_percentage:
+                        highest_response, highest_percentage = sentiment, percentage
+
+        elif question_type == 'checkbox':
+            for option, count, _ in filtered_checkbox_chart_data[1:]:
+                count = int(count)  # Convert count to int
+                checkbox_chart_data_without_percentage.append([option, count, "#CEA778"])
+                if count > 0:  # Avoid division by zero
+                    percentage = round((count / len(responses)) * 100, 2)
+                    if percentage > highest_percentage:
+                        highest_response, highest_percentage = option, percentage
+
+        total_responses = len(responses)
+        result_data.append({
+            "question_text": question_text,
+            "highest_response": highest_response,
+            "highest_percentage": highest_percentage,
+            "total_responses": total_responses,
+        })
+
+    print("Filtered Chart Data:", chart_data_without_percentage)
+    print("Filtered Checkbox Chart Data:", checkbox_chart_data_without_percentage)
 
     return jsonify({
-        'filtered_chart_data': filtered_chart_data,
-        'filtered_checkbox_chart_data': filtered_checkbox_chart_data
+        'filtered_responses': result_data,
+        'filtered_chart_data': chart_data_without_percentage,
+        'filtered_checkbox_chart_data': checkbox_chart_data_without_percentage,
     }), 200
+
+ 
+#forgot_password   
+#@app.route('/reset_pasword')
+#def reset_request():
+    #return render_template('password_recovery.html', title='Password Recovery')
+    

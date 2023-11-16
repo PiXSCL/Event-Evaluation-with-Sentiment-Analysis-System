@@ -47,11 +47,31 @@
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json();  // Assuming the response is in JSON format
+                return response.json();
             })
             .then(data => {
-                console.log('Filtered Chart Data:', data.filtered_chart_data);
-                console.log('Filtered Checkbox Chart Data:', data.filtered_checkbox_chart_data);
+                console.log('Filtered Responses:', data.filtered_responses);
+
+                // Update the summary div with information for each question
+                var summaryDiv = document.getElementById('summary');
+
+                // Clear existing content
+                summaryDiv.innerHTML = "";
+
+                // Iterate over each question in the filtered_responses data
+                data.filtered_responses.forEach(questionData => {
+                    var questionText = questionData.question_text;
+                    var highestResponse = questionData.highest_response;
+                    var highestPercentage = questionData.highest_percentage;
+                    var totalResponses = questionData.total_responses;
+
+                    // Create a new paragraph element with the question information
+                    var paragraph = document.createElement('span');
+                    paragraph.innerHTML = `The question about "${questionText}" received a total of ${totalResponses} responses with the highest response being "${highestResponse}" and a percentage of ${highestPercentage}%`;
+
+                    // Append the paragraph to the summary div
+                    summaryDiv.appendChild(paragraph);
+                });
 
                 // Call drawCharts with the data
                 drawCharts(data.filtered_chart_data, data.filtered_checkbox_chart_data);
@@ -136,10 +156,22 @@
                     {% endif %}
                     <div class="response-count">
                         <img class="respondent1-img" src="{{ url_for('static', filename='images/user-icon.svg') }}" alt="User">
-                        <span></span><p>responses</p>
+                        <span>{{ data["response_count"] }}</span><p>responses</p>
                     </div>
-                    <div class="summary">
-                        <span></span><br><br>
+                    <div class="summary" id="summary">
+                        {% if data.question_type == 'open-ended response' %}
+                            {% if data["response_count"] > 0 %}
+                                <span>The question about "{{ question_text }}" received a total of {{ data["response_count"] }} responses with the highest response being "{{ data["highest_response"] }}" and a percentage of {{ data["highest_percentage"] }}%</span><br><br>
+                            {% else %}
+                                <span>No responses for this question</span><br><br>
+                            {% endif %}
+                        {% elif data.question_type == 'checkbox' %}
+                            {% if data["response_count"] > 0 %}
+                                <span>The question about "{{ question_text }}" received a total of {{ data["response_count"] }} responses with the most chosen option being "{{ data["highest_response"] }}" and a percentage of {{ data["highest_percentage"] }}%</span><br><br>
+                            {% else %}
+                                <span>No responses for this question</span><br><br>
+                            {% endif %}
+                        {% endif %}
                         <span>For more info, Press the Details Button</span>
                     </div>
                     <button class="details-button">Details</button>
