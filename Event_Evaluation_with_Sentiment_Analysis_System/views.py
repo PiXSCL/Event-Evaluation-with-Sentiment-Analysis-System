@@ -1,6 +1,6 @@
 from datetime import datetime
 from email.policy import default
-from flask import Flask, render_template, request, redirect, url_for, session, send_file
+from flask import Flask, render_template, request, redirect, url_for, session, send_file, jsonify
 from Event_Evaluation_with_Sentiment_Analysis_System import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import joinedload
@@ -217,7 +217,7 @@ def save_form():
             print(f"Error inserting form or choices: {str(e)}")
 
         # Redirect to a success page or any other page you want
-        return render_template('form_preview.html', form_id=form_id)
+        return redirect(url_for('home'))
 
     # Handle other cases or render templates as needed
     return render_template('home.html')
@@ -577,7 +577,6 @@ def data_summary(form_id):
 
 @app.route('/individual_data/<int:form_id>')
 def individual_data(form_id):
-
     responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
 
     grouped_responses = {}
@@ -588,7 +587,8 @@ def individual_data(form_id):
             grouped_responses[respondent] = []
         grouped_responses[respondent].append((question.question_text, response.response))
 
-    unique_respondents = len(grouped_responses)
+    # Extract unique respondents and sort them
+    unique_respondents = sorted(grouped_responses.keys())
 
     return render_template('individual_data.html', grouped_responses=grouped_responses, unique_respondents=unique_respondents, form_id=form_id)
 
@@ -690,7 +690,131 @@ def download_report(form_id):
 
     return response
 
+@app.route('/filtered_data/<int:form_id>')
+def filtered_data(form_id):
+    # Fetch responses and questions
+    responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
 
+    # Group responses by question_text
+    grouped_responses = {}
+    multiple_choices = {}
+    for response, question in responses_with_questions:
+        question_text = question.question_text
+        question_type = question.question_type.lower()
 
+        if question_type not in ['multiple choices']:
+            if question_text not in grouped_responses:
+                grouped_responses[question_text] = {"responses": [], "question_type": question_type}
+            grouped_responses[question_text]["responses"].append(response)
+        elif question_type == 'multiple choices':
+            if question_text not in multiple_choices:
+                multiple_choices[question_text] = {"responses": set(), "question_type": question_type}
+            multiple_choices[question_text]["responses"].add(response.response)
 
+    print("Grouped Responses", grouped_responses)
 
+    selected_question = request.args.get('question', None)
+    # Initialize chart_data outside the loop as a list
+    chart_data = [['Sentiment', 'Count']]
+    checkbox_chart_data = [['Option', 'Count', {'role': 'style'}]]
+
+    for question_text, data in grouped_responses.items():
+        question_type = data["question_type"]
+        responses = data["responses"]
+
+        print(f"Question Text: {question_text}, Question Type: {question_type}")
+
+        if question_type == 'open-ended response':
+            positive_count = sum(1 for resp in responses if resp.sentiment == 'Positive')
+            neutral_count = sum(1 for resp in responses if resp.sentiment == 'Neutral')
+            negative_count = sum(1 for resp in responses if resp.sentiment == 'Negative')
+
+            chart_data.append(['Positive', positive_count])
+            chart_data.append(['Neutral', neutral_count])
+            chart_data.append(['Negative', negative_count])
+
+        elif question_type == 'checkbox':
+            # Count occurrences of each response
+            response_counts = {}
+            for resp in responses:
+                response_text = resp.response
+
+                if response_text not in response_counts:
+                    response_counts[response_text] = 0
+
+                response_counts[response_text] += 1
+
+            # Append data for each response
+            for response_text, count in response_counts.items():
+                checkbox_chart_data.append([response_text, count, "#CEA778"])
+
+    # Log the chart data and checkbox chart data
+    print("Chart Data:", chart_data)
+    print("Checkbox Chart Data:", checkbox_chart_data)
+
+    # Pass grouped_responses to the template
+    return render_template('filter.html', form_id=form_id, grouped_responses=grouped_responses, chart_data=chart_data, checkbox_chart_data=checkbox_chart_data, multiple_choices=multiple_choices )
+
+@app.route('/api/filtered_data/<int:form_id>')
+def api_filtered_data(form_id):
+    responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
+
+    selected_response = request.args.get('response', None)
+    respondents_with_selected_response = set()
+    filtered_responses = {}
+
+    for response, question in responses_with_questions:
+        question_text = question.question_text
+        question_type = question.question_type.lower()
+
+        if response.response == selected_response:
+            if response.respondent not in respondents_with_selected_response:
+                respondents_with_selected_response.add(response.respondent)
+
+    for response, question in responses_with_questions:
+        question_text = question.question_text
+        question_type = question.question_type.lower()
+
+        if response.respondent in respondents_with_selected_response:
+            if question_type not in ['multiple choices']:
+                if question_text not in filtered_responses:
+                    filtered_responses[question_text] = {"responses": [], "question_type": question_type}
+
+                filtered_responses[question_text]["responses"].append(response)
+
+    filtered_chart_data = [['Sentiment', 'Count']]
+    filtered_checkbox_chart_data = [['Option', 'Count', {'role': 'style'}]]
+
+    for question_text, data in filtered_responses.items():
+        question_type = data["question_type"]
+        responses = data["responses"]
+
+        if question_type == 'open-ended response':
+            positive_count = sum(1 for resp in responses if resp.sentiment == 'Positive')
+            neutral_count = sum(1 for resp in responses if resp.sentiment == 'Neutral')
+            negative_count = sum(1 for resp in responses if resp.sentiment == 'Negative')
+
+            filtered_chart_data.append(['Positive', positive_count])
+            filtered_chart_data.append(['Neutral', neutral_count])
+            filtered_chart_data.append(['Negative', negative_count])
+
+        elif question_type == 'checkbox':
+            response_counts = {}
+            for resp in responses:
+                response_text = resp.response
+
+                if response_text not in response_counts:
+                    response_counts[response_text] = 0
+
+                response_counts[response_text] += 1
+
+            for response_text, count in response_counts.items():
+                filtered_checkbox_chart_data.append([response_text, count, "#CEA778"])
+
+    print("Filtered Chart Data:", filtered_chart_data)
+    print("Filtered Checkbox Chart Data:", filtered_checkbox_chart_data)
+
+    return jsonify({
+        'filtered_chart_data': filtered_chart_data,
+        'filtered_checkbox_chart_data': filtered_checkbox_chart_data
+    }), 200

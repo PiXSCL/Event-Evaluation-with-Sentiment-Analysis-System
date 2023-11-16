@@ -2520,6 +2520,81 @@ color: #61492E;
     margin-bottom: 10px; /* Spacing between responses */
 }
 
+/*Filtered Data*/
+/* Style for the filter dropdown */
+.filter-data-container {
+    margin-top: -20px;
+    width: 90%;
+    margin-left: 12%;
+    max-height: 470px;
+    overflow-y: auto;
+}
+
+.filter-qbox {
+    color: #f0e7cf;
+    text-align: left;
+    font: 700 18px "Cabin", sans-serif;
+    position: relative;
+    background: #ab9b87;
+    width: 160px;
+    height: 30px;
+    position: relative;
+    margin-top: 10px;
+    margin-left: 35px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 10px;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.filter-response-container {
+    top: -60px;
+    margin-left: 15px;
+    background: #f0e7cf;
+    border-radius: 25px;
+    width: 95%;
+    min-height: 0; /* Allow it to shrink */
+    display: grid;
+    grid-template-rows: auto auto auto; /* Define two rows */
+    grid-template-columns: 1fr auto; /* Define two columns */
+    grid-gap: 10px; /* Adjust the gap as needed */
+    position: relative;
+    overflow: hidden;
+    height: auto;
+    margin-bottom: 20px;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+    .filter-response-container h2 {
+        grid-row: 1;
+        grid-column: 1 / span 2;
+        text-align: center;
+    }
+
+.filter-dropdown {
+    top: -70px;
+    position: relative;
+    left: 50%;
+    display: inline-block;
+    margin-top: 20px; /* Adjust the margin as needed */
+    background: none;
+    border: none;
+    color: #61492e;
+    font-size: 20px;
+}
+
+    /* Style for the label */
+    .filter-dropdown label {
+        margin-right: 10px; /* Adjust the margin as needed */
+    }
+
+    /* Style for the select elements */
+    .filter-dropdown select {
+        background-color: #9A7850; /* Set your desired background color */
+        border: 1px solid #61492e; /* Set your desired border color */
+        padding: 10px; /* Adjust the padding as needed */
+        margin-right: 10px; /* Adjust the margin as needed */
+        color: #e4d2bd;
+    }
 /*Generate Report*/
 
 .report-container {

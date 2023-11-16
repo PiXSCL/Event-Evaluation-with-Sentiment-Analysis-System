@@ -50,7 +50,7 @@
         <div class="data-container">
             <div class="navigation">
                 <button id="prevBtn" onclick="showResponse(-1)"><</button>
-                <span id="responseNumber">1 out of {{ unique_respondents }}</span>
+                <span id="responseNumber">1 out of {{ unique_respondents|length }}</span>
                 <button id="nextBtn" onclick="showResponse(1)">></button>
             </div>
             <div class="qbox"><span>Individual Responses</span></div>
@@ -61,21 +61,20 @@
 </body>
 </html>
 <script>
-    var totalRespondents = {{ unique_respondents }}; // Fetch this from your Flask template
-
-    var currentResponseIndex = 1;
+    var totalRespondents = {{ unique_respondents | tojson | safe }};
+    var currentResponseIndex = 0;
 
     function showResponse(step) {
         currentResponseIndex += step;
-        if (currentResponseIndex < 1) {
-            currentResponseIndex = 1;
-        } else if (currentResponseIndex > totalRespondents) {
-            currentResponseIndex = totalRespondents;
+        if (currentResponseIndex < 0) {
+            currentResponseIndex = 0;
+        } else if (currentResponseIndex >= totalRespondents.length) {
+            currentResponseIndex = totalRespondents.length - 1;
         }
 
-        // Get the responses for the selected respondent from your Flask route
-        var responses = {{ grouped_responses | tojson | safe
-    }}[currentResponseIndex];
+        var respondent = totalRespondents[currentResponseIndex];
+        var responses = {{ grouped_responses | tojson | e
+    }}[respondent];
 
     // Update the response display by appending to the placeholder
     var placeholder = document.querySelector('.response-placeholder');
@@ -103,11 +102,12 @@
     }
 
     // Update the response number
-    document.getElementById('responseNumber').textContent = currentResponseIndex + " out of " + totalRespondents;
+    document.getElementById('responseNumber').textContent = currentResponseIndex + 1 + " out of " + totalRespondents.length;
     }
 
     // Initialize with the first response
     showResponse(0);
 </script>
+
 
 

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analytics</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <style>
+        a,
+        button,
+        input,
+        select,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+            text-decoration: none;
+            appearance: none;
+            background: none;
+        }
+    </style>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { packages: ['corechart'] });
+
+        google.charts.setOnLoadCallback(function () {
+            // Assuming you have initial data available
+            var initialChartData = {{ chart_data | safe
+        }};
+        var initialCheckboxChartData = {{ checkbox_chart_data | safe }};
+
+        drawCharts(initialChartData, initialCheckboxChartData);
+
+        document.getElementById('selectResponse').addEventListener('change', function () {
+            var selectedResponse = this.value;
+            var selectedQuestion = document.getElementById('selectQuestion').value;
+
+            fetch('/api/filtered_data/' + {{ form_id }} + '?question=' + selectedQuestion + '&response=' + selectedResponse)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();  // Assuming the response is in JSON format
+            })
+            .then(data => {
+                console.log('Filtered Chart Data:', data.filtered_chart_data);
+                console.log('Filtered Checkbox Chart Data:', data.filtered_checkbox_chart_data);
+
+                // Call drawCharts with the data
+                drawCharts(data.filtered_chart_data, data.filtered_checkbox_chart_data);
+            })
+            .catch(error => console.error('Error fetching filtered data:', error));
+            });
+        });
+
+        function drawCharts(chartData, checkboxChartData) {
+            var pieData = google.visualization.arrayToDataTable(chartData);
+            var pieOptions = {
+                title: 'Sentiment Analysis Results',
+                backgroundColor: 'transparent',
+            };
+            var pieChart = new google.visualization.PieChart(document.getElementById('piechart'));
+            pieChart.draw(pieData, pieOptions);
+
+            console.log("Checkbox Chart Data in JavaScript:", checkboxChartData);
+
+            var modifiedCheckboxChartData = [['Option', 'Count', { 'role': 'style' }]];
+            for (var i = 1; i < checkboxChartData.length; i++) {
+                modifiedCheckboxChartData.push(checkboxChartData[i]);
+            }
+
+            var checkboxData = google.visualization.arrayToDataTable(modifiedCheckboxChartData);
+            var checkboxOptions = {
+                title: 'Checkbox Response Counts',
+                backgroundColor: 'transparent',
+                legend: { position: "none" },
+            };
+
+            var checkboxChart = new google.visualization.ColumnChart(document.getElementById('checkbox_barchart'));
+            checkboxChart.draw(checkboxData, checkboxOptions);
+        }
+    </script>
+</head>
+<body>
+    <div class="background">
+        <header class="header">
+            <nav class="navbar">
+                <ul class="menu">
+                    <li><a href="{{ url_for('home') }}" class="home-link"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{{ url_for('form_preview', form_id=form_id) }}">Form</a></li>
+                    <li><a href="{{ url_for('data', form_id=form_id) }}">Data Analytics</a></li>
+                </ul>
+            </nav>
+            <nav class="sidebar">
+                <ul class="sidebar-menu">
+                    <li><a href="{{ url_for('data', form_id=form_id) }}">Overall Summary</a></li>
+                    <li><a href="{{ url_for('individual_data', form_id=form_id) }}">Individual Responses</a></li>
+                    <li><a href="{{ url_for('data_summary', form_id=form_id) }}">Summary Per Question</a></li>
+                    <li><a href="">Answers Per Question</a></li>
+                    <li><a href="{{ url_for('generate_report', form_id=form_id) }}">Generate Reports</a></li>
+                </ul>
+            </nav>
+        </header>
+            <div class="filter-data-container">
+            <div class="filter-qbox"><span>Filtered Data</span></div>
+            <div class="filter-dropdown">
+                <label>Filter By:</label>
+                {% for question_text, data in multiple_choices.items() %}
+                    {% if data.question_type == 'multiple choices' %}
+                        <select id="selectQuestion">
+                            <option value="{{ question_text }}">{{ question_text }}</option>
+                        </select>
+            
+                        <select id="selectResponse">
+                            {% for response in data.responses %}
+                                <option value="{{ response }}">{{ response }}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% for question_text, data in grouped_responses.items() %}
+                <div class="filter-response-container">
+                    <h2>{{ question_text }}</h2>
+                    {% if data.question_type == 'open-ended response' %}
+                        <div id="piechart" class="overall-piechart"></div>
+                    {% elif data.question_type == 'checkbox' %}
+                        <div id="checkbox_barchart" class="overall-barchart"></div>
+                    {% endif %}
+                    <div class="response-count">
+                        <img class="respondent1-img" src="{{ url_for('static', filename='images/user-icon.svg') }}" alt="User">
+                        <span></span><p>responses</p>
+                    </div>
+                    <div class="summary">
+                        <span></span><br><br>
+                        <span>For more info, Press the Details Button</span>
+                    </div>
+                    <button class="details-button">Details</button>
+                    <div class="modal">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <ul>
+                                <li>
+                                    <strong>Question:</strong> {{ question_text }}
+                                    <ul class="sentiment-columns">
+                                        <li class="positive">
+                                            <strong>Positive</strong>
+                                            <ul>
+                                            </ul>
+                                        </li>
+                                        <li class="neutral">
+                                            <strong>Neutral</strong>
+                                            <ul>
+                                            </ul>
+                                        </li>
+                                        <li class="negative">
+                                            <strong>Negative</strong>
+                                            <ul>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+<div class="rectangle-3"></div> 
+</body>
+</html>
+<script type="text/javascript">
+    // Get all "Details" buttons and modal elements
+    var buttons = document.querySelectorAll('.details-button');
+    var modals = document.querySelectorAll('.modal');
+
+    // Add a click event listener to each "Details" button
+    buttons.forEach(function (button, index) {
+        button.addEventListener('click', function () {
+            modals[index].style.display = 'block';
+        });
+    });
+
+    // Add a click event listener to each close button (the "x" icon)
+    var closeButtons = document.querySelectorAll('.close');
+    closeButtons.forEach(function (closeButton) {
+        closeButton.addEventListener('click', function () {
+            closeButton.parentElement.parentElement.style.display = 'none';
+        });
+    });
+
+    // When the user clicks anywhere outside the modal, close it
+    window.addEventListener('click', function (event) {
+        modals.forEach(function (modal) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+
+    // Close the modal when the user presses the Esc key
+    window.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            modals.forEach(function (modal) {
+                modal.style.display = 'none';
+            });
+        }
+    });
+
+    function showResponses() {
+        var selectedQuestion = document.getElementById("selectQuestion").value;
+        var submenus = document.querySelectorAll(".submenu");
+
+        submenus.forEach(function (submenu) {
+            submenu.style.display = (submenu.id === selectedQuestion + "-submenu") ? "block" : "none";
+        });
+    }
+</script>
