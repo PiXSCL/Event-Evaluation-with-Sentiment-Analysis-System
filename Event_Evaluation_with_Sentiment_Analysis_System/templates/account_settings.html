@@ -151,27 +151,29 @@
     </style>
 </head>
 <body>
-    <div class="edit-container">
-        <p class="text-profile">Edit Profile</p>
-        <img id="profile-image" src="./images/edited kharyn.jpg" alt="Profile Image" class="img">
-        <div class="labels">
-            <label for="first-name" class="label-name">First Name</label>
-            <label for="last-name" class="label-name">Last Name</label>
+    <form id="edit-profile">
+        <div class="edit-container">
+            <p class="text-profile">Edit Profile</p>
+            <img id="profile-image" src="./images/edited kharyn.jpg" alt="Profile Image" class="img">
+            <div class="labels">
+                <label for="first-name" class="label-name">First Name</label>
+                <label for="last-name" class="label-name">Last Name</label>
+            </div>
+            <div class="full-name">  
+                <input type="text" placeholder="First Name" id="first-name" class="name"> 
+                <input type="text" placeholder="Last Name" id="last-name" class="name">
+            </div>
+            <label for="email" class="email-text">Email</label>
+            <input type="text" placeholder="Email" id="email" class="email">
+            <label for="password" class="password-text">Password</label>
+            <input type="password" placeholder="Password" id="password" class="password">
+            <label for="number" class="contact-text">Contact Number</label>
+            <input type="text" placeholder="Contact Number" id="number" class="number">
+            <div class="button-container">
+                <button type="button" class="buttons">Cancel</button>
+                <button type="button" class="buttons">Save</button>
+            </div>
         </div>
-        <div class="full-name">  
-            <input type="text" placeholder="First Name" id="first-name" class="name"> 
-            <input type="text" placeholder="Last Name" id="last-name" class="name">
-        </div>
-        <label for="email" class="email-text">Email</label>
-        <input type="text" placeholder="Email" id="email" class="email">
-        <label for="password" class="password-text">Password</label>
-        <input type="password" placeholder="Password" id="password" class="password">
-        <label for="number" class="contact-text">Contact Number</label>
-        <input type="text" placeholder="Contact Number" id="number" class="number">
-        <div class="button-container">
-            <button type="button" class="buttons">Cancel</button>
-            <button type="button" class="buttons">Save</button>
-        </div>
-    </div>
+    </form>
 </body>
 </html>
