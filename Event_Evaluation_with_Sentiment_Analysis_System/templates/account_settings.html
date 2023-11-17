@@ -24,6 +24,8 @@
             margin-top: 100px;
             border-radius: 10px;
             width: 500px;
+            box-shadow: 5px 5px 10px 5px #888;
+            margin-bottom: 50px;
         }
         .text-profile {
             display: relative;
@@ -128,7 +130,6 @@
             margin-top: 10px;
             margin-bottom: 20px;
             background-color: #E8BA84;
-            width: 100%;
             border: none;
             color: #61492E;
             font-family: 'Cabin';
@@ -137,16 +138,22 @@
             padding: 10px;
             font-weight: bold;
             cursor: pointer;
+            width: 20%;
         }
         .buttons:hover {
             background-color: #CEA778;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: row;
+            column-gap: 25px;
         }
     </style>
 </head>
 <body>
     <div class="edit-container">
         <p class="text-profile">Edit Profile</p>
-        <img id="profile-image" src="" alt="Profile Image" class="img">
+        <img id="profile-image" src="./images/edited kharyn.jpg" alt="Profile Image" class="img">
         <div class="labels">
             <label for="first-name" class="label-name">First Name</label>
             <label for="last-name" class="label-name">Last Name</label>
