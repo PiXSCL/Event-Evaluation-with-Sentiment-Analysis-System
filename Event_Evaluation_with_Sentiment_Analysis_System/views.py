@@ -692,14 +692,14 @@ def download_report(form_id):
 
     return response
 
+# Updated filtered_data route
 @app.route('/filtered_data/<int:form_id>')
 def filtered_data(form_id):
-    # Fetch responses and questions
     responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
 
-    # Group responses by question_text
     grouped_responses = {}
     multiple_choices = {}
+
     for response, question in responses_with_questions:
         question_text = question.question_text
         question_type = question.question_type.lower()
@@ -714,40 +714,39 @@ def filtered_data(form_id):
                 multiple_choices[question_text] = {"responses": set(), "question_type": question_type}
             multiple_choices[question_text]["responses"].add(response.response)
 
-    print("Grouped Responses", grouped_responses)
-
-    # Initialize chart_data outside the loop as a list
-    chart_data = [['Sentiment', 'Count']]
-    checkbox_chart_data = [['Option', 'Count', {'role': 'style'}]]
+    chart_data = {}
+    checkbox_chart_data = {}
 
     for question_text, data in grouped_responses.items():
         question_type = data["question_type"]
         responses = data["responses"]
 
-        print(f"Question Text: {question_text}, Question Type: {question_type}")
-
-        # Initialize highest_response and highest_percentage
         highest_response = ""
         highest_percentage = 0
 
         if question_type == 'open-ended response':
-            positive_count = sum(1 for resp in responses if resp.sentiment == 'Positive')
-            neutral_count = sum(1 for resp in responses if resp.sentiment == 'Neutral')
-            negative_count = sum(1 for resp in responses if resp.sentiment == 'Negative')
+            chart_data[question_text] = [['Sentiment', 'Count']]
+            chart_data[question_text].append(['Positive', sum(1 for resp in responses if resp.sentiment == 'Positive')])
+            chart_data[question_text].append(['Neutral', sum(1 for resp in responses if resp.sentiment == 'Neutral')])
+            chart_data[question_text].append(['Negative', sum(1 for resp in responses if resp.sentiment == 'Negative')])
 
-            chart_data.append(['Positive', positive_count])
-            chart_data.append(['Neutral', neutral_count])
-            chart_data.append(['Negative', negative_count])
+            for sentiment, count in chart_data[question_text][1:]:
+                if count > 0:
+                    percentage = round((count / data["response_count"]) * 100, 2)
+                    if percentage > highest_percentage:
+                        highest_response, highest_percentage = sentiment, percentage
 
-            # Calculate highest response and percentage
-            for sentiment, count in chart_data[1:]:
-                percentage = round((count / data["response_count"]) * 100, 2)
-                if percentage > highest_percentage:
-                    highest_response, highest_percentage = sentiment, percentage
+            positive_responses = [{"response_text": str(resp.response), "response": str(resp)} for resp in responses if resp.sentiment == 'Positive']
+            neutral_responses = [{"response_text": str(resp.response), "response": str(resp)} for resp in responses if resp.sentiment == 'Neutral']
+            negative_responses = [{"response_text": str(resp.response), "response": str(resp)} for resp in responses if resp.sentiment == 'Negative']
 
+            data['positive_responses'] = positive_responses
+            data['neutral_responses'] = neutral_responses
+            data['negative_responses'] = negative_responses
         elif question_type == 'checkbox':
-            # Count occurrences of each response
             response_counts = {}
+            checkbox_chart_data[question_text] = [['Option', 'Count', {'role': 'style'}]]
+
             for resp in responses:
                 response_text = resp.response
 
@@ -756,56 +755,68 @@ def filtered_data(form_id):
 
                 response_counts[response_text] += 1
 
-            # Append data for each response
             for response_text, count in response_counts.items():
-                checkbox_chart_data.append([response_text, count, "#CEA778"])
+                checkbox_chart_data[question_text].append([response_text, count, "#CEA778"])
 
-            # Calculate highest response and percentage
-            for option, count, _ in checkbox_chart_data[1:]:
-                percentage = round((count / data["response_count"]) * 100, 2)
-                if percentage > highest_percentage:
-                    highest_response, highest_percentage = option, percentage
+            for option, count, _ in checkbox_chart_data[question_text][1:]:
+                if count > 0:
+                    percentage = round((count / data["response_count"]) * 100, 2)
+                    if percentage > highest_percentage:
+                        highest_response, highest_percentage = option, percentage
 
-        # Store highest_response and highest_percentage in the dictionary
         data["highest_response"] = highest_response
         data["highest_percentage"] = highest_percentage
 
-    # Log the chart data and checkbox chart data
-    print("Chart Data:", chart_data)
-    print("Checkbox Chart Data:", checkbox_chart_data)
+    grouped_responses_cleaned = {}
+    for question_text, response_data in grouped_responses.items():
+        cleaned_responses = [str(response) for response in response_data['responses']]
+        cleaned_data = {
+            'responses': cleaned_responses,
+            'question_type': response_data['question_type'],
+            'response_count': response_data['response_count'],
+            'highest_response': response_data['highest_response'],
+            'highest_percentage': response_data['highest_percentage'],
+        }
 
-    # Pass grouped_responses to the template
-    return render_template('filter.html', form_id=form_id, grouped_responses=grouped_responses, chart_data=chart_data, checkbox_chart_data=checkbox_chart_data, multiple_choices=multiple_choices )
+        if response_data['question_type'] == 'open-ended response':
+            cleaned_data['positive_responses'] = positive_responses
+            cleaned_data['neutral_responses'] = neutral_responses
+            cleaned_data['negative_responses'] = negative_responses
+
+        grouped_responses_cleaned[question_text] = cleaned_data
+
+    print("grouped_responses", grouped_responses)
+    print("chart_data", chart_data)
+    print("checkbox_chart_data", checkbox_chart_data)
+
+    return render_template('filter.html', form_id=form_id, grouped_responses=grouped_responses, grouped_responses_cleaned=grouped_responses_cleaned, chart_data=chart_data, checkbox_chart_data=checkbox_chart_data, multiple_choices=multiple_choices)
+
 
 @app.route('/api/filtered_data/<int:form_id>')
 def api_filtered_data(form_id):
     responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
-
     selected_response = request.args.get('response', None)
     respondents_with_selected_response = set()
     filtered_responses = {}
-
+    
     for response, question in responses_with_questions:
         question_text = question.question_text
         question_type = question.question_type.lower()
-
         if response.response == selected_response:
             if response.respondent not in respondents_with_selected_response:
                 respondents_with_selected_response.add(response.respondent)
-
+    
     for response, question in responses_with_questions:
         question_text = question.question_text
         question_type = question.question_type.lower()
-
         if response.respondent in respondents_with_selected_response:
             if question_type not in ['multiple choices']:
                 if question_text not in filtered_responses:
                     filtered_responses[question_text] = {"responses": [], "question_type": question_type}
-
                 filtered_responses[question_text]["responses"].append(response)
-
-    filtered_chart_data = [['Sentiment', 'Count']]
-    filtered_checkbox_chart_data = [['Option', 'Count', {'role': 'style'}]]
+    
+    filtered_chart_data = {}
+    filtered_checkbox_chart_data = {}
 
     for question_text, data in filtered_responses.items():
         question_type = data["question_type"]
@@ -815,27 +826,27 @@ def api_filtered_data(form_id):
             positive_count = sum(1 for resp in responses if resp.sentiment == 'Positive')
             neutral_count = sum(1 for resp in responses if resp.sentiment == 'Neutral')
             negative_count = sum(1 for resp in responses if resp.sentiment == 'Negative')
-
-            filtered_chart_data.append(['Positive', positive_count])
-            filtered_chart_data.append(['Neutral', neutral_count])
-            filtered_chart_data.append(['Negative', negative_count])
+            filtered_chart_data[question_text] = [['Sentiment', 'Count']]
+            filtered_chart_data[question_text].append(['Positive', positive_count])
+            filtered_chart_data[question_text].append(['Neutral', neutral_count])
+            filtered_chart_data[question_text].append(['Negative', negative_count])
 
         elif question_type == 'checkbox':
             response_counts = {}
+            filtered_checkbox_chart_data[question_text] = [['Option', 'Count', {'role': 'style'}]]
             for resp in responses:
                 response_text = resp.response
-
                 if response_text not in response_counts:
                     response_counts[response_text] = 0
-
                 response_counts[response_text] += 1
-
             for response_text, count in response_counts.items():
-                filtered_checkbox_chart_data.append([response_text, count, "#CEA778"])
+                filtered_checkbox_chart_data[question_text].append([response_text, count, "#CEA778"])
 
-    result_data = []
-    chart_data_without_percentage = [['Sentiment', 'Count']]
-    checkbox_chart_data_without_percentage = [['Option', 'Count', {'role': 'style'}]]
+    
+    print("Filtered Chart Data:", filtered_chart_data)
+    print("Filtered Checkbox Chart Data:", filtered_checkbox_chart_data)
+    
+    result_data = {}
 
     for question_text, data in filtered_responses.items():
         question_type = data["question_type"]
@@ -844,38 +855,38 @@ def api_filtered_data(form_id):
         highest_response, highest_percentage = "", 0
 
         if question_type == 'open-ended response':
-            for sentiment, count in filtered_chart_data[1:]:
+            sentiment_counts = filtered_chart_data[question_text][1:]
+            for sentiment, count in sentiment_counts:
                 count = int(count)  # Convert count to int
-                chart_data_without_percentage.append([sentiment, count])
                 if count > 0:  # Avoid division by zero
                     percentage = round((count / len(responses)) * 100, 2)
                     if percentage > highest_percentage:
                         highest_response, highest_percentage = sentiment, percentage
 
         elif question_type == 'checkbox':
-            for option, count, _ in filtered_checkbox_chart_data[1:]:
+            response_counts = filtered_checkbox_chart_data[question_text][1:]
+            for response_text, count, _ in response_counts:
                 count = int(count)  # Convert count to int
-                checkbox_chart_data_without_percentage.append([option, count, "#CEA778"])
                 if count > 0:  # Avoid division by zero
                     percentage = round((count / len(responses)) * 100, 2)
                     if percentage > highest_percentage:
-                        highest_response, highest_percentage = option, percentage
+                        highest_response, highest_percentage = response_text, percentage
 
         total_responses = len(responses)
-        result_data.append({
-            "question_text": question_text,
+        result_data[question_text] = {
             "highest_response": highest_response,
             "highest_percentage": highest_percentage,
             "total_responses": total_responses,
-        })
+        }
 
-    print("Filtered Chart Data:", chart_data_without_percentage)
-    print("Filtered Checkbox Chart Data:", checkbox_chart_data_without_percentage)
+    print("Result Data:", result_data)
+    print("Filtered Chart Data:", filtered_chart_data)
+    print("Filtered Checkbox Chart Data:", filtered_checkbox_chart_data)
 
     return jsonify({
         'filtered_responses': result_data,
-        'filtered_chart_data': chart_data_without_percentage,
-        'filtered_checkbox_chart_data': checkbox_chart_data_without_percentage,
+        'filtered_chart_data': filtered_chart_data,
+        'filtered_checkbox_chart_data': filtered_checkbox_chart_data,
     }), 200
 
  
