@@ -36,12 +36,12 @@
                     <img id="profile-picture" src="{{ url_for('static', filename='images/profile.svg') }}" alt="Profile Picture">
                     <div class="profile-dropdown" id="profile-dropdown">
                         <ul>
-                            <li><a href="#">Account Settings</a></li>
+                            <li><a href="#" onclick="openModal()">Account Settings</a></li>
                             <li><a onclick="window.location.href = '{{ url_for('login')}}'">Logout</a></li>
                         </ul>
                     </div>
                 </div>
-                <div class="home-email">{{ user_email }}</div>
+                <div class="home-email">{{ user.email }}</div>
             </div>
             <div class="home-buttons">
                 <button class="new-form" onclick="window.location.href = '{{ url_for('questions')}}'">New Form</button>
@@ -87,6 +87,30 @@
         {% else %}
             <p class="no-forms-message">No created forms yet.<br> Click "New Form" to create one.</p>
         {% endif %}
+        </div>
+        <div id="editProfileModal" class="s-modal-container">
+            <form id="editProfileForm" action="{{ url_for('home') }}" method="post">
+                <div class="s-edit-container">
+                    <p class="s-text-profile">Edit Profile</p>
+                    <img id="profile-image" src="{{ url_for('static', filename='images/profile.svg') }}" alt="Profile Image" class="s-img">
+                    <div class="s-labels">
+                        <label for="first-name" class="s-label-name">Name</label>
+                    </div>
+                    <div class="s-full-name">
+                        <input type="text" placeholder="{{ user.name }}" id="name" name="name" class="s-name">
+                    </div>
+                    <label for="email" class="s-email-text">Email</label>
+                    <input type="text" placeholder="{{ user.email }}" id="email" name="email" class="s-email">
+                    <label for="password" class="s-password-text">Password</label>
+                    <input type="password" placeholder="Change Password" id="password" name="password" class="s-password">
+                    <label for="number" class="s-contact-text">Contact Number</label>
+                    <input type="text" placeholder="Contact Number" id="number" name="contact_number" class="s-number">
+                    <div class="s-button-container">
+                        <button type="button" class="s-buttons" id="cancelButton" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="s-buttons" id="saveButton" onclick="saveChanges()">Save</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </body>
@@ -269,6 +293,25 @@
         } else {
             console.log('Form ID is null or empty');
         }
+    }
+
+    // Function to show the modal
+    function openModal() {
+        document.querySelector('.s-modal-container').style.display = 'block';
+        document.querySelector('.overlay').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.querySelector('.s-modal-container').style.display = 'none';
+        document.querySelector('.overlay').style.display = 'none';
+    }
+
+    // Function to save changes (you can implement this)
+    function saveChanges() {
+        // Display a confirmation message (you can customize this)
+        alert('Changes saved successfully!');
+
+        closeModal();
     }
 </script>
 </html>

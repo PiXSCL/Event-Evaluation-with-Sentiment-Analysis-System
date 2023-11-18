@@ -30,6 +30,7 @@ class User(db.Model):
     name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
+    contact_number = db.Column(db.String(20))
 
     forms = db.relationship('Form', backref='user', lazy=True)
 
@@ -119,14 +120,25 @@ if __name__ == '__main__':
     db.create_all()
     app.run(debug=True)
 
-@app.route('/home')
+@app.route('/home', methods=['GET', 'POST'])
 def home():
     user_email = session.get('user_email', None)
     user_id = session.get('user_id', None)
 
     if user_email:
+        user = User.query.get(user_id)
         form_data = fetch_form_data(user_id)
-        return render_template('home.html', user_email=user_email, form_data=form_data)
+
+        if request.method == 'POST':
+            user.name = request.form.get('name') or user.name
+            user.email = request.form.get('email') or user.email
+            user.password = request.form.get('password') or user.password  # Note: You should hash the password before saving
+            user.contact_number = request.form.get('contact_number') or user.contact_number
+
+            # Commit changes to the database
+            db.session.commit()
+
+        return render_template('home.html', user_email=user_email, form_data=form_data, user=user)
     else:
         return redirect(url_for('login'))
 
