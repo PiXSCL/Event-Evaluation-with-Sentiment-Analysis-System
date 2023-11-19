@@ -148,8 +148,7 @@
                 <ul class="sidebar-menu">
                     <li><a href="{{ url_for('data', form_id=form_id) }}">Overall Summary</a></li>
                     <li><a href="{{ url_for('individual_data', form_id=form_id) }}">Individual Responses</a></li>
-                    <li><a href="{{ url_for('data_summary', form_id=form_id) }}">Summary Per Question</a></li>
-                    <li><a href="">Answers Per Question</a></li>
+                    <li><a href="{{ url_for('filtered_data', form_id=form_id) }}">Filter<br>Data</a></li>
                     <li><a href="{{ url_for('generate_report', form_id=form_id) }}">Generate Reports</a></li>
                 </ul>
             </nav>

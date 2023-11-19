@@ -1,6 +1,6 @@
 from datetime import datetime
 from email.policy import default
-from flask import Flask, render_template, request, redirect, url_for, session, send_file, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, send_file, jsonify, render_template_string, make_response
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
 from Event_Evaluation_with_Sentiment_Analysis_System import app
@@ -15,6 +15,9 @@ from gensim.summarization import summarize
 from googletrans import Translator
 import pandas as pd
 import tempfile
+from reportlab.pdfgen import canvas
+import matplotlib.pyplot as plt
+from io import BytesIO
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:ra05182002@localhost:3306/EventDB'
 app.secret_key = 'secret_key' 
@@ -141,6 +144,32 @@ def home():
         return render_template('home.html', user_email=user_email, form_data=form_data, user=user)
     else:
         return redirect(url_for('login'))
+
+@app.route('/delete_form/<int:form_id>', methods=['GET', 'POST'])
+def delete_form(form_id):
+    # Check if form_id is not None
+    if form_id is not None:
+        form = Form.query.get_or_404(form_id)
+
+        # Delete associated responses
+        responses = Response.query.filter_by(form_id=form_id).all()
+        for response in responses:
+            db.session.delete(response)
+
+        # Delete associated questions
+        questions = Question.query.filter_by(formid=form_id).all()
+        for question in questions:
+            db.session.delete(question)
+
+        # Delete the form
+        db.session.delete(form)
+
+        # Commit the changes
+        db.session.commit()
+        return redirect(url_for('home'))
+    else:
+        # Handle the case where form_id is None
+        return render_template('error.html', error_message='Invalid form ID')
 
 @app.route('/questions')
 def questions():
@@ -703,6 +732,153 @@ def download_report(form_id):
     response = send_file(file_name, as_attachment=True)
 
     return response
+
+@app.route('/generate_pdf/<int:form_id>')
+def generate_pdf(form_id):
+    # Process responses with all questions
+    responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
+
+    # Your existing data processing logic
+    grouped_responses = {}
+    multiple_choices = {}
+    chart_data = {}
+    checkbox_chart_data = {}
+
+    for response, question in responses_with_questions:
+        question_text = question.question_text
+        question_type = question.question_type.lower()
+
+        # Include your existing logic to process responses and generate charts
+        if question_type not in ['multiple choices']:
+            if question_text not in grouped_responses:
+                grouped_responses[question_text] = {"responses": [], "question_type": question_type, "response_count": 0}
+            grouped_responses[question_text]["responses"].append(response)
+            grouped_responses[question_text]["response_count"] += 1
+        elif question_type == 'multiple choices':
+            if question_text not in multiple_choices:
+                multiple_choices[question_text] = {"responses": set(), "question_type": question_type}
+            multiple_choices[question_text]["responses"].add(response.response)
+
+        # Implement chart data generation based on question_type
+        if question_type == 'open-ended response':
+            # Example: Generate chart data for open-ended responses
+            # Modify this based on your actual chart generation logic
+            chart_data[question_text] = [['Sentiment', 'Count']]
+            chart_data[question_text].append(['Positive', sum(1 for resp in grouped_responses[question_text]["responses"] if resp.sentiment == 'Positive')])
+            chart_data[question_text].append(['Neutral', sum(1 for resp in grouped_responses[question_text]["responses"] if resp.sentiment == 'Neutral')])
+            chart_data[question_text].append(['Negative', sum(1 for resp in grouped_responses[question_text]["responses"] if resp.sentiment == 'Negative')])
+        elif question_type == 'checkbox':
+            # Example: Generate checkbox chart data
+            # Modify this based on your actual chart generation logic
+            response_counts = {}
+            checkbox_chart_data[question_text] = [['Option', 'Count', {'role': 'style'}]]
+            for resp in grouped_responses[question_text]["responses"]:
+                response_text = resp.response
+                if response_text not in response_counts:
+                    response_counts[response_text] = 0
+                response_counts[response_text] += 1
+            for response_text, count in response_counts.items():
+                checkbox_chart_data[question_text].append([response_text, count, "#CEA778"])
+
+    # Create a PDF document
+    pdf = BytesIO()
+    pdf_canvas = canvas.Canvas(pdf)
+
+    # Draw the PDF content
+    pdf_canvas.drawString(100, 800, "Form Title Report")  # Update the header to "Form Title Report"
+    pdf_canvas.drawString(100, 780, f"Form ID: {form_id}")
+    pdf_canvas.drawString(100, 760, "-----------------------")
+
+    # Draw charts in the PDF
+    for question_text, data in grouped_responses.items():
+        question_type = data["question_type"]
+
+        # Call the function to draw charts on the PDF
+        draw_charts_on_pdf(pdf_canvas, question_text, chart_data.get(question_text), checkbox_chart_data.get(question_text))
+
+    # Draw the summary on the PDF
+    draw_summary_on_pdf(pdf_canvas, grouped_responses)
+
+    # Save the PDF canvas
+    pdf_canvas.save()
+
+    # Move the buffer's position to the beginning
+    pdf.seek(0)
+
+    # Create a Flask response with the PDF content
+    response = make_response(pdf.read())
+    response.headers['Content-Disposition'] = f'attachment; filename=form_title_report_form_{form_id}.pdf'
+    response.headers['Content-Type'] = 'application/pdf'
+
+    return response
+
+# Function to draw charts on the PDF
+def draw_charts_on_pdf(pdf_canvas, question_text, chart_data, checkbox_chart_data):
+    pdf_canvas.showPage()
+    pdf_canvas.drawString(100, 720, f"Question: {question_text}")
+
+    # Check if chart_data is defined before drawing the chart
+    if chart_data:
+        # Draw chart for open-ended response using Google Charts
+        draw_google_chart_on_pdf(pdf_canvas, question_text, chart_data, 100, 400)
+
+    # Check if checkbox_chart_data is defined before drawing the chart
+    if checkbox_chart_data:
+        # Draw chart for checkbox response using Google Charts
+        draw_google_chart_on_pdf(pdf_canvas, question_text, checkbox_chart_data, 100, 120)
+
+# Function to draw Google Charts on the PDF
+def draw_google_chart_on_pdf(pdf_canvas, question_text, chart_data, x, y):
+    # Check if chart_data is defined before rendering the template
+    if chart_data is None:
+        return
+
+    # Generate HTML for the Google Chart
+    chart_html = generate_google_chart_html(question_text, chart_data)
+
+    # Draw the HTML content on the PDF
+    pdf_canvas.drawString(x, y, chart_html)
+
+# Function to generate HTML for Google Chart
+def generate_google_chart_html(question_text, chart_data):
+    # Extract chart labels and values
+    labels = [row[0] for row in chart_data[1:]]
+    values = [row[1] for row in chart_data[1:]]
+
+    # Generate HTML for the Google Chart
+    chart_html = f'''
+        <img src="https://chart.googleapis.com/chart?chs=300x200&cht=p3&chd=t:{",".join(map(str, values))}&chl={",".join(map(str, labels))}" alt="{question_text} Chart">
+    '''
+    
+    return chart_html
+
+def draw_summary_on_pdf(pdf_canvas, grouped_responses):
+    # Move to a new page for the summary
+    pdf_canvas.showPage()
+
+    # Set font for the summary
+    pdf_canvas.setFont("Helvetica", 12)
+
+    # Draw the summary title
+    pdf_canvas.drawString(100, 720, "Summary:")
+    pdf_canvas.drawString(100, 700, "-" * 50)
+
+    # Iterate through each question in grouped_responses
+    for question_text, data in grouped_responses.items():
+        # Get relevant information from data
+        question_type = data.get("question_type", "")
+        response_count = data.get("response_count", 0)
+        highest_response = data.get("highest_response", "")
+        highest_percentage = data.get("highest_percentage", 0)
+
+        # Draw summary information for each question
+        pdf_canvas.drawString(100, 680, f"Question: {question_text}")
+        pdf_canvas.drawString(100, 660, f"Question Type: {question_type}")
+        pdf_canvas.drawString(100, 640, f"Total Responses: {response_count}")
+        pdf_canvas.drawString(100, 620, f"Highest Response: {highest_response}")
+        pdf_canvas.drawString(100, 600, f"Highest Percentage: {highest_percentage}%")
+        pdf_canvas.drawString(100, 580, "-" * 50)
+
 
 # Updated filtered_data route
 @app.route('/filtered_data/<int:form_id>')

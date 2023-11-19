@@ -43,11 +43,13 @@
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\excel.png" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\filter.png" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\neutral.svg" />
+    <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\palette.svg" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\pdf.png" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\sad.svg" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\search.svg" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\profile.svg" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\smiley.svg" />
+    <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\upload.svg" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\user-icon.svg" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\user.svg" />
     <Content Include="Event_Evaluation_with_Sentiment_Analysis_System\static\images\email.svg" />

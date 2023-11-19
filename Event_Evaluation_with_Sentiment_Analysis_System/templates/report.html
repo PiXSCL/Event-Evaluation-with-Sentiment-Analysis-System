@@ -41,8 +41,7 @@
                 <ul class="sidebar-menu">
                     <li><a href="{{ url_for('data', form_id=form_id) }}">Overall Summary</a></li>
                     <li><a href="{{ url_for('individual_data', form_id=form_id) }}">Individual Responses</a></li>
-                    <li><a href="{{ url_for('data_summary', form_id=form_id) }}">Summary Per Question</a></li>
-                    <li><a href="">Answers Per Question</a></li>
+                    <li><a href="{{ url_for('filtered_data', form_id=form_id) }}">Filter<br>Data</a></li>
                     <li><a href="{{ url_for('generate_report', form_id=form_id) }}">Generate Reports</a></li>
                 </ul>
             </nav>
@@ -52,7 +51,7 @@
                 <h2> Download Data and Generate Report</h2>
                 <span class="download_excel">Download Excel file for this form</span>
                 <div class="pdf-file-download-container">
-                    <a href="{{ url_for('download_report', form_id=form_id) }}" class="download-link">
+                    <a href="{{ url_for('generate_pdf', form_id=form_id) }}" class="download-link">
                         <img src="{{ url_for('static', filename='images/pdf.png') }}" alt="Excel Icon" />
                         <p>Download File</p>
                     </a>
@@ -60,8 +59,8 @@
                 <span class="download_pdf">Download PDF file for this form</span>
                 <div class="excel-file-download-container">
                     <a href="{{ url_for('download_report', form_id=form_id) }}" class="download-link">
-                        <img src="{{ url_for('static', filename='images/excel.png') }}" alt="Excel Icon" />
-                        <p>Download File</p>
+                        <img src="{{ url_for('static', filename='images/excel.png') }}" alt="PDF Icon" />
+                        <p>Download PDF File</p>
                     </a>
                 </div>
             </div>

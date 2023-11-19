@@ -77,7 +77,7 @@
                                 <div class="select-menu" id="dropdown-content_{{ form_id }}" style="display: none;">
                                     <a href="#" onclick="handleOpenClick(event, '{{ form_id }}', '{{ form_title }}')">Open</a>
                                     <a href="#" onclick="handleViewClick(event, '{{ form_id }}', '{{ form_title }}')">View</a>
-                                    <a href="#">Delete</a>
+                                    <a href="{{ url_for('delete_form', form_id=form_id) }}">Delete</a>
                                 </div>
                             </div>
                         </div>
