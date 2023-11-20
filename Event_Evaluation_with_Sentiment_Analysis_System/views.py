@@ -15,8 +15,14 @@ from gensim.summarization import summarize
 from googletrans import Translator
 import pandas as pd
 import tempfile
-from reportlab.pdfgen import canvas
 import matplotlib.pyplot as plt
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.graphics.charts.piecharts import Pie
+from reportlab.graphics.charts.barcharts import VerticalBarChart
+from reportlab.graphics import renderPDF
+from reportlab.lib import colors
+from reportlab.graphics.shapes import Drawing
 from io import BytesIO
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:ra05182002@localhost:3306/EventDB'
@@ -737,6 +743,7 @@ def download_report(form_id):
 def generate_pdf(form_id):
     # Process responses with all questions
     responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
+    form_title = db.session.query(Form.title).filter(Form.formid == form_id).first()
 
     # Your existing data processing logic
     grouped_responses = {}
@@ -748,16 +755,10 @@ def generate_pdf(form_id):
         question_text = question.question_text
         question_type = question.question_type.lower()
 
-        # Include your existing logic to process responses and generate charts
-        if question_type not in ['multiple choices']:
-            if question_text not in grouped_responses:
-                grouped_responses[question_text] = {"responses": [], "question_type": question_type, "response_count": 0}
-            grouped_responses[question_text]["responses"].append(response)
-            grouped_responses[question_text]["response_count"] += 1
-        elif question_type == 'multiple choices':
-            if question_text not in multiple_choices:
-                multiple_choices[question_text] = {"responses": set(), "question_type": question_type}
-            multiple_choices[question_text]["responses"].add(response.response)
+        if question_text not in grouped_responses:
+            grouped_responses[question_text] = {"responses": [], "question_type": question_type, "response_count": 0}
+        grouped_responses[question_text]["responses"].append(response)
+        grouped_responses[question_text]["response_count"] += 1
 
         # Implement chart data generation based on question_type
         if question_type == 'open-ended response':
@@ -767,7 +768,7 @@ def generate_pdf(form_id):
             chart_data[question_text].append(['Positive', sum(1 for resp in grouped_responses[question_text]["responses"] if resp.sentiment == 'Positive')])
             chart_data[question_text].append(['Neutral', sum(1 for resp in grouped_responses[question_text]["responses"] if resp.sentiment == 'Neutral')])
             chart_data[question_text].append(['Negative', sum(1 for resp in grouped_responses[question_text]["responses"] if resp.sentiment == 'Negative')])
-        elif question_type == 'checkbox':
+        elif question_type in ['checkbox', 'multiple choices']:
             # Example: Generate checkbox chart data
             # Modify this based on your actual chart generation logic
             response_counts = {}
@@ -780,24 +781,28 @@ def generate_pdf(form_id):
             for response_text, count in response_counts.items():
                 checkbox_chart_data[question_text].append([response_text, count, "#CEA778"])
 
-    # Create a PDF document
+   # Create a PDF document
     pdf = BytesIO()
     pdf_canvas = canvas.Canvas(pdf)
 
     # Draw the PDF content
-    pdf_canvas.drawString(100, 800, "Form Title Report")  # Update the header to "Form Title Report"
-    pdf_canvas.drawString(100, 780, f"Form ID: {form_id}")
-    pdf_canvas.drawString(100, 760, "-----------------------")
+    y_coordinate = 800
+    pdf_canvas.drawString(50, y_coordinate, f"{form_title[0]} Report")  # Updated x-coordinate to 50
+    y_coordinate -= 20
+    pdf_canvas.drawString(50, y_coordinate, f"Form ID: {form_id}")  # Updated x-coordinate to 50
+    y_coordinate -= 20
+    pdf_canvas.drawString(50, y_coordinate, "-----------------------------------------------------------------")  # Updated x-coordinate to 50
+    y_coordinate -= 20
 
     # Draw charts in the PDF
     for question_text, data in grouped_responses.items():
         question_type = data["question_type"]
 
         # Call the function to draw charts on the PDF
-        draw_charts_on_pdf(pdf_canvas, question_text, chart_data.get(question_text), checkbox_chart_data.get(question_text))
+        y_coordinate = draw_charts_on_pdf(pdf_canvas, question_text, chart_data.get(question_text), checkbox_chart_data.get(question_text), 50, y_coordinate)  # Updated x-coordinate to 50
 
-    # Draw the summary on the PDF
-    draw_summary_on_pdf(pdf_canvas, grouped_responses)
+        # Draw the summary on the PDF for the specific question
+        y_coordinate = draw_summary_on_pdf(pdf_canvas, question_text, chart_data, checkbox_chart_data, data, 50, y_coordinate + 290)  # Updated x-coordinate to 50
 
     # Save the PDF canvas
     pdf_canvas.save()
@@ -807,78 +812,186 @@ def generate_pdf(form_id):
 
     # Create a Flask response with the PDF content
     response = make_response(pdf.read())
-    response.headers['Content-Disposition'] = f'attachment; filename=form_title_report_form_{form_id}.pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename={form_title[0]}_report_form_{form_id}.pdf'
     response.headers['Content-Type'] = 'application/pdf'
-
+    
     return response
 
-# Function to draw charts on the PDF
-def draw_charts_on_pdf(pdf_canvas, question_text, chart_data, checkbox_chart_data):
-    pdf_canvas.showPage()
-    pdf_canvas.drawString(100, 720, f"Question: {question_text}")
+def draw_charts_on_pdf(pdf_canvas, question_text, chart_data, checkbox_chart_data, x, y):
+    remaining_space = y - 150
+    if remaining_space < 0:
+        pdf_canvas.showPage()
+        y = 800
 
-    # Check if chart_data is defined before drawing the chart
+    pdf_canvas.drawString(x, y, f"Question: {question_text}")
+
     if chart_data:
-        # Draw chart for open-ended response using Google Charts
-        draw_google_chart_on_pdf(pdf_canvas, question_text, chart_data, 100, 400)
+        y = draw_pie_chart(pdf_canvas, chart_data, x, y - 200)
 
-    # Check if checkbox_chart_data is defined before drawing the chart
     if checkbox_chart_data:
-        # Draw chart for checkbox response using Google Charts
-        draw_google_chart_on_pdf(pdf_canvas, question_text, checkbox_chart_data, 100, 120)
+        y = draw_bar_chart(pdf_canvas, checkbox_chart_data, x, y - 150)
 
-# Function to draw Google Charts on the PDF
-def draw_google_chart_on_pdf(pdf_canvas, question_text, chart_data, x, y):
-    # Check if chart_data is defined before rendering the template
-    if chart_data is None:
-        return
+    return y - 40
 
-    # Generate HTML for the Google Chart
-    chart_html = generate_google_chart_html(question_text, chart_data)
 
-    # Draw the HTML content on the PDF
-    pdf_canvas.drawString(x, y, chart_html)
-
-# Function to generate HTML for Google Chart
-def generate_google_chart_html(question_text, chart_data):
+def draw_pie_chart(pdf_canvas, chart_data, x, y):
     # Extract chart labels and values
     labels = [row[0] for row in chart_data[1:]]
     values = [row[1] for row in chart_data[1:]]
 
-    # Generate HTML for the Google Chart
-    chart_html = f'''
-        <img src="https://chart.googleapis.com/chart?chs=300x200&cht=p3&chd=t:{",".join(map(str, values))}&chl={",".join(map(str, labels))}" alt="{question_text} Chart">
-    '''
-    
-    return chart_html
+    # Convert values to numeric
+    numeric_values = [int(value) for value in values]
 
-def draw_summary_on_pdf(pdf_canvas, grouped_responses):
-    # Move to a new page for the summary
-    pdf_canvas.showPage()
+    # Create a Drawing object for the chart
+    chart = Drawing(width=300, height=200)
+    pie = Pie()
+    pie.x = 150
+    pie.y = 100
+    pie.data = numeric_values
+    pie.labels = labels
+    pie.sideLabels = True
+    pie.width = pie.height = 140
+    pie.slices.strokeWidth = 0.5
 
-    # Set font for the summary
+    # Add the Pie chart to the Drawing
+    chart.add(pie)
+
+    # Position and draw the chart on the PDF canvas
+    chart.drawOn(pdf_canvas, x, y - 60)  # Adjusted y-coordinate
+
+    # Return the y-coordinate after drawing the chart
+    return y - 260
+
+
+def draw_bar_chart(pdf_canvas, chart_data, x, y):
+    # Extract chart labels and values
+    labels = [row[0] for row in chart_data[1:]]
+    values = [row[1] for row in chart_data[1:]]
+
+    # Convert values to numeric
+    numeric_values = [int(value) for value in values]
+
+    # Create a Drawing object for the chart
+    chart = Drawing(width=300, height=200)
+    bar_chart = VerticalBarChart()
+    bar_chart.x = 50
+    bar_chart.y = 50
+    bar_chart.width = 200
+    bar_chart.height = 150
+    bar_chart.data = [numeric_values]
+    bar_chart.categoryAxis.categoryNames = labels
+    bar_chart.valueAxis.valueMin = 0
+    bar_chart.valueAxis.valueMax = max(numeric_values) + 1
+    bar_chart.bars.strokeWidth = 0.5
+
+    # Add the Bar Chart to the Drawing
+    chart.add(bar_chart)
+
+    # Position and draw the chart on the PDF canvas
+    chart.drawOn(pdf_canvas, x, y - 60)  # Adjusted y-coordinate
+
+    # Return the y-coordinate after drawing the chart
+    return y - 310
+
+
+def draw_summary_on_pdf(pdf_canvas, question_text, chart_data, checkbox_chart_data, data, x, y):
+    # Calculate remaining space based on the current y-coordinate
+    remaining_space = y - 150
+
+    # Check if there's not enough space for the summary
+    if remaining_space < 0:
+        pdf_canvas.showPage()
+        y = 800  # Reset y-coordinate for the new page
+
+    question_type = data.get("question_type", "")
+    response_count = data.get("response_count", 0)
+    # Calculate the highest response and highest percentage based on the chart data
+    response_percentages = []
+    highest_response = ""
+    highest_percentage = 0
+
+    if question_type.lower() == 'open-ended response':
+        if chart_data.get(question_text):
+            chart_values = chart_data[question_text][1:]
+            total_responses = sum(value[1] for value in chart_values)
+
+            if total_responses > 0:
+                for row in chart_values:
+                    response_text = row[0]
+                    count = row[1]
+                    percentage = round((count / total_responses) * 100, 2)
+                    response_percentages.append((response_text, percentage))
+
+                    # Update highest response and percentage
+                    if percentage > highest_percentage:
+                        highest_response = response_text
+                        highest_percentage = percentage
+    else:
+        # Use checkbox chart data for non-open-ended questions
+        if checkbox_chart_data.get(question_text):
+            checkbox_values = checkbox_chart_data[question_text][1:]
+            total_responses = sum(value[1] for value in checkbox_values)
+
+            for row in checkbox_values:
+                response_text = row[0]
+                count = row[1]
+                percentage = round((count / total_responses) * 100, 2)
+                response_percentages.append((response_text, percentage))
+
+                # Update highest response and percentage
+                if percentage > highest_percentage:
+                    highest_response = response_text
+                    highest_percentage = percentage
+
+    response_string = ", ".join(f"{response}: {percentage}%" for response, percentage in response_percentages)
     pdf_canvas.setFont("Helvetica", 12)
+    # Define the maximum line length based on your page width
+    # Define the maximum line length based on your page width
+    max_line_length = 90
 
-    # Draw the summary title
-    pdf_canvas.drawString(100, 720, "Summary:")
-    pdf_canvas.drawString(100, 700, "-" * 50)
+    # Your text
+    text = f"The question \"{question_text}\" received a total of {total_responses} responses with these responses: {response_string}"
 
-    # Iterate through each question in grouped_responses
-    for question_text, data in grouped_responses.items():
-        # Get relevant information from data
-        question_type = data.get("question_type", "")
-        response_count = data.get("response_count", 0)
-        highest_response = data.get("highest_response", "")
-        highest_percentage = data.get("highest_percentage", 0)
+    # Split the text into words
+    words = text.split()
 
-        # Draw summary information for each question
-        pdf_canvas.drawString(100, 680, f"Question: {question_text}")
-        pdf_canvas.drawString(100, 660, f"Question Type: {question_type}")
-        pdf_canvas.drawString(100, 640, f"Total Responses: {response_count}")
-        pdf_canvas.drawString(100, 620, f"Highest Response: {highest_response}")
-        pdf_canvas.drawString(100, 600, f"Highest Percentage: {highest_percentage}%")
-        pdf_canvas.drawString(100, 580, "-" * 50)
+    # Initialize variables
+    lines = []
+    current_line = ""
 
+    # Iterate through the words
+    for word in words:
+        # Check if adding the word to the current line exceeds the maximum line length
+        if len(current_line + word) <= max_line_length:
+            current_line += word + " "
+        else:
+            lines.append(current_line.strip())
+            current_line = word + " "
+
+    # Add the last line
+    lines.append(current_line.strip())
+
+    # Draw each line on the PDF canvas
+    for line in lines:
+        pdf_canvas.drawString(x, y, line)
+        y -= 20  # Adjust the y-coordinate for the next line
+
+    pdf_canvas.drawString(x, y, "-" * 50)
+    y -= 20
+    
+    pdf_canvas.drawString(x, y, f"Total Responses: {response_count}")
+    y -= 20
+    pdf_canvas.drawString(x, y, f"Highest Response: {highest_response}")
+    y -= 20
+    pdf_canvas.drawString(x, y, f"Highest Percentage: {highest_percentage}%")
+    y -= 20
+    pdf_canvas.drawString(x, y, "-" * 50)
+
+    # Move y-coordinate down after drawing the summary for the question
+    y -= 40
+
+    # Return the final y-coordinate after drawing the summary for the question
+    return y
 
 # Updated filtered_data route
 @app.route('/filtered_data/<int:form_id>')
