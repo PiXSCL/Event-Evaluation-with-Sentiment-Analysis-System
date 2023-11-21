@@ -1023,14 +1023,13 @@
 .box {
     background-color: #F0E7CF;
     padding: 20px;
-    display: grid;
-    grid-template-columns: auto 1fr;
+    display: flex;
     align-items: center;
     max-width: 1000px;
     margin: 0 auto;
     border-radius: 10px;
     margin-top: 30px;
-    height: 70px;
+    max-height: 70px;
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -1045,11 +1044,6 @@
     display: flex;
     flex-wrap: wrap;
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
-}
-
-
-.title-input {
-    width: 300px !important;
 }
 
 .box input {
@@ -1078,9 +1072,13 @@
         color: #61492E
     }
 
+.title-input {
+    width: 300px !important;
+}
 .title-input::placeholder {
     font-size: 45px;
     font-weight: 500;
+    position: absolute;
 }
 
 .desc-input::placeholder {
@@ -1094,7 +1092,8 @@
     background: #9A7850;
     top: 28%; 
     left: 200px; 
-    transform: translate(307.5px,-90%); 
+    transform: translate(-690.5px,-0%); 
+    position: static;
 }
 
 .quadrant {
@@ -1153,7 +1152,17 @@
         font-style: normal;
         font-weight: 400;
     }
+.question-input::placeholder {
+    color: var(--placeholder-color)!important;
+}
 
+.desc-input::placeholder {
+    color: var(--placeholder-color)!important;
+}
+
+.title-input::placeholder {
+    color: var(--placeholder-color)!important;
+}
 .dropdownimg {
     width: 30px;
     height: 30px;
@@ -1188,16 +1197,8 @@ z-index: 2;
     font-weight: 400;
     line-height: normal;
     position: relative;
+    border-bottom: 2px solid #61492E;
 }
-
-    .selected-option::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 120%;
-        border-bottom: 2px solid #61492E;
-    }
 
 .options-container {
     padding: 10px;
@@ -1250,6 +1251,10 @@ z-index: 2;
     .option-label:focus {
         border-color: #9A7850;
     }
+
+.option-label::placeholder {
+    color: var(--placeholder-color) !important;
+}
 .delete-option {
     cursor: pointer;
     color: red; 

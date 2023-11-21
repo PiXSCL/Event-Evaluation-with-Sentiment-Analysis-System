@@ -25,6 +25,41 @@
             background: none;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#settings-form").submit(function (event) {
+                // Prevent the form from submitting in the traditional way
+                event.preventDefault();
+
+                // Create a FormData object to store the form data
+                var formData = new FormData(this);
+
+                // Make an AJAX request to the Flask server
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url_for('save_settings') }}",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        // Handle the success response
+                        alert("Settings saved successfully. ID: " + data.form_settings_id);
+                        // Set the value of the hidden input field after the alert
+                        $("#form_settings_id").val(data.form_settings_id);
+
+                        // Log the value of the hidden input field
+                        var formSettingsId = $("#form_settings_id").val();
+                        console.log("Form Settings ID:", formSettingsId);
+                    },
+                    error: function (error) {
+                        // Handle the error response
+                        console.error("Error saving settings: " + JSON.stringify(error));
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="background">
@@ -79,88 +114,89 @@
                     <i class="fas fa-plus-circle add-icon"></i>
                 </div>
                 <input type="hidden" name="html_content" id="html_content">
+                <input type="hidden" name="form_settings_id" id="form_settings_id" >
                 <div class="save-button">
                     <button type="submit" id="save-button">Save</button>
                 </div>
             </form>
         </div>
-    <div class="settings-modal" id="settings-modal">
-        <form action="">
-            <div class="settings">
-                <h1 class="header">Customize your form</h1>
-                <hr class="hr1">
-                <div class="input-box">
-                    <label class="form-title">Form Title</label>
-                    <label class="form-description">Form Description</label>
-                    <label class="question">Question</label>
+        <div class="settings-modal" id="settings-modal">
+            <form action="{{ url_for('save_settings') }}" method="post" id="settings-form">
+                <div class="settings">
+                    <h1 class="header">Customize your form</h1>
+                    <hr class="hr1">
+                    <div class="input-box">
+                        <label class="form-title">Form Title</label>
+                        <label class="form-description">Form Description</label>
+                        <label class="question">Question</label>
+                    </div>
+                    <div class="dropdown_1">
+                        <select name="fonts_1" id="dropdown_1">
+                            <option value="Arial">Arial</option>
+                            <option value="Calibri">Calibri</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                        </select>
+                    </div>
+                    <div class="dropdown_2">
+                        <select name="size_1" id="dropdown_2">
+                            <option value="40">40</option>
+                            <option value="45">45</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <div class="dropdown_3">
+                        <select name="fonts_2" id="dropdown_3">
+                            <option value="Arial">Arial</option>
+                            <option value="Calibri">Calibri</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                        </select>
+                    </div>
+                    <div class="dropdown_4">
+                        <select name="fonts_3" id="dropdown_4">
+                            <option value="Arial">Calibri</option>
+                            <option value="Calibri">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                        </select>
+                    </div>
+                    <div class="dropdown_5">
+                        <select name="size_2" id="dropdown_5">
+                            <option value="20">20</option>
+                            <option value="22">22</option>
+                            <option value="26">26</option>
+                        </select>
+                    </div>
+                    <div class="dropdown_6">
+                        <select name="size_3" id="dropdown_6">
+                            <option value="20">20</option>
+                            <option value="22">22</option>
+                            <option value="24">24</option>
+                        </select>
+                    </div>
+                    <hr class="hr2">
+                    <h2 class="primary-text">Primary Color</h2>
+                    <div class="primary-picker">
+                        <input type="color" name="primary_color" id="primary" class="primary" value="#F0E7CF">
+                        <img src="{{ url_for('static', filename='images/palette.svg') }}" alt="Color Palette" class="color-picker-icon">
+                    </div>
+                    <h2 class="secondary-text">Secondary Color</h2>
+                    <div class="secondary-picker">
+                        <input type="color" name="secondary_color" id="secondary" class="secondary" value="#a9cbc9">
+                        <img src="{{ url_for('static', filename='images/palette.svg') }}" alt="Color Palette" class="color-picker-icon">
+                    </div>
+                    <hr class="hr3">
+                    <hr class="hr4">
+                    <div class="image-upload-box">
+                        <label for="upload-image" class="upload-label">
+                            <img src="{{ url_for('static', filename='images/upload.svg') }}" alt="Upload Image" class="upload-icon">
+                            <p>Upload Image Banner</p>
+                        </label>
+                        <input type="file" id="upload-image" name="upload-image" accept="image/*" style="display: none;">
+                    </div>
+                    <hr class="hr5">
+                    <button type="submit" class="save-settings">Save Settings</button>
                 </div>
-                <div class="dropdown_1">
-                    <select name="fonts_1" id="dropdown_1">
-                        <option value="Arial">Arial</option>
-                        <option value="Calibri">Calibri</option>
-                        <option value="Option3">Times New Roman</option>
-                    </select>
-                </div>
-                <div class="dropdown_2">
-                    <select name="size_1" id="dropdown_2">
-                        <option value="12">12</option>
-                        <option value="14">14</option>
-                        <option value="16">16</option>
-                    </select>
-                </div>
-                <div class="dropdown_3">
-                    <select name="fonts_2" id="dropdown_3">
-                        <option value="Arial">Arial</option>
-                        <option value="Calibri">Calibri</option>
-                        <option value="Option3">Times New Roman</option>
-                    </select>
-                </div>
-                <div class="dropdown_4">
-                    <select name="fonts_3" id="dropdown_4">
-                        <option value="Arial">Calibri</option>
-                        <option value="Calibri">Arial</option>
-                        <option value="Option3">Times New Roman</option>
-                    </select>
-                </div>
-                <div class="dropdown_5">
-                    <select name="size_2" id="dropdown_5">
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="14">14</option>
-                    </select>
-                </div>
-                <div class="dropdown_6">
-                    <select name="size_3" id="dropdown_6">
-                        <option value="11">12</option>
-                        <option value="12">16</option>
-                        <option value="14">14</option>
-                    </select>
-                </div>
-                <hr class="hr2">
-                <h2 class="primary-text">Primary Color</h2>
-                <div class="primary-picker">
-                    <input type="color" id="primary" class="primary">
-                    <img src="{{ url_for('static', filename='images/palette.svg') }}" alt="Color Palette" class="color-picker-icon">
-                </div>
-                <h2 class="secondary-text">Secondary Color</h2>
-                <div class="secondary-picker">
-                    <input type="color" id="secondary" class="secondary">
-                    <img src="{{ url_for('static', filename='images/palette.svg') }}" alt="Color Palette" class="color-picker-icon">
-                </div>
-                <hr class="hr3">
-                <hr class="hr4">
-                <div class="image-upload-box">
-                    <label for="upload-image" class="upload-label">
-                        <img src="{{ url_for('static', filename='images/upload.svg') }}" alt="Upload Image" class="upload-icon">
-                        <p>Upload Image Banner</p>
-                    </label>
-                    <input type="file" id="upload-image" name="upload-image" accept="image/*" style="display: none;">
-                </div>
-                <hr class="hr5">
-                <button type="submit" class="save-settings">Save Settings</button>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
 </body>
 </html>
 <script>
@@ -395,4 +431,156 @@
         });
     });
 
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the form elements and the settings modal elements
+        const box = document.querySelector(".box");
+        const line = document.querySelector(".line");
+        const iconbox = document.querySelector(".icon-box");
+        const background = document.querySelector(".background");
+        const formDescription = document.querySelector(".desc-input");
+        const formTitle = document.querySelector(".title-input");
+        const dropdown1 = document.getElementById("dropdown_1");
+        const dropdown2 = document.getElementById("dropdown_2");
+        const dropdown3 = document.getElementById("dropdown_3");
+        const dropdown4 = document.getElementById("dropdown_4");
+        const dropdown5 = document.getElementById("dropdown_5");
+        const dropdown6 = document.getElementById("dropdown_6");
+        const primaryColorPicker = document.getElementById("primary");
+        const secondaryColorPicker = document.getElementById("secondary");
+
+        function updateFontColors() {
+            // Get the value of the primary color
+            const primaryColor = primaryColorPicker.value;
+
+            // Calculate a darker shade of the primary color (adjust the factor as needed)
+            const darkerColor = darkenColor(primaryColor, 0.7); // Example: Darken by 20%
+
+            line.style.backgroundColor = darkerColor;
+            const selectedOption = document.querySelectorAll(".selected-option");
+            selectedOption.forEach(function (selectedoption) {
+                selectedoption.style.color = darkerColor;
+                selectedoption.style.borderBottom = `2px solid ${darkerColor}`;
+            });
+            const optionLabel = document.querySelectorAll(".option-label");
+            optionLabel.forEach(function (optionlabel) {
+                optionlabel.style.color = darkerColor;
+                optionlabel.style.setProperty("--placeholder-color", darkerColor);
+            });
+            const dropdown = document.querySelectorAll(".dropdown");
+            dropdown.forEach(function (dropdowns) {
+                dropdowns.style.color = darkerColor;
+                dropdowns.style.border = `2px solid ${darkerColor}`;
+            });
+            // Update styles for question input
+            const formQuestion = document.querySelectorAll(".question-input");
+            formQuestion.forEach(function (questioninput) {
+                questioninput.style.setProperty("--placeholder-color", darkerColor);
+                questioninput.style.color = darkerColor;
+                questioninput.style.borderColor = darkerColor;
+                questioninput.style.borderBottomColor = darkerColor;
+                questioninput.style.borderBottom = `2px solid ${darkerColor}`;
+            });
+            // Update styles for description input
+            formDescription.style.color = darkerColor;
+            formDescription.style.borderColor = darkerColor;
+            formDescription.style.borderBottomColor = darkerColor;
+            formDescription.style.borderBottom = `2px solid ${darkerColor}`;
+
+            // Update styles for title input
+            formTitle.style.color = darkerColor;
+            formTitle.style.borderColor = darkerColor;
+            formTitle.style.borderBottomColor = darkerColor;
+            formTitle.style.borderBottom = `2px solid ${darkerColor}`;
+
+            const optionsLabel = document.querySelectorAll(".option-label");
+            optionsLabel.forEach(function (optionlabel) {
+                optionlabel.style.color = primaryColorPicker.value;
+            });
+
+            formDescription.style.setProperty("--placeholder-color", darkerColor);
+            formTitle.style.setProperty("--placeholder-color", darkerColor);
+        }
+
+        function updateFormStyles() {
+            box.style.backgroundColor = primaryColorPicker.value;
+            const box2List = document.querySelectorAll(".box2");
+            box2List.forEach(function (box2) {
+                box2.style.backgroundColor = primaryColorPicker.value;
+            });
+            iconbox.style.backgroundColor = primaryColorPicker.value;
+            background.style.backgroundColor = secondaryColorPicker.value;
+            updateFontColors();
+        }
+
+        function updateFormTitleStyles() {
+            // Update font family and size for the form title
+            formTitle.style.fontFamily = dropdown1.value;
+            formTitle.style.fontSize = dropdown2.value + "px";
+        }
+
+        function updateFormDescriptionStyles() {
+            // Update font family and size for the form title
+            formDescription.style.fontFamily = dropdown3.value;
+            formDescription.style.fontSize = dropdown5.value + "px";
+        }
+
+        function updateFormQuestionStyles() {
+            // Update font family and size for the form title
+            formQuestion.style.fontFamily = dropdown4.value;
+            formQuestion.style.fontSize = dropdown6.value + "px";
+        }
+
+        // Attach event listeners to settings modal elements
+        dropdown1.addEventListener("change", updateFormTitleStyles);
+        dropdown2.addEventListener("change", updateFormTitleStyles);
+        dropdown3.addEventListener("change", updateFormDescriptionStyles);
+        dropdown5.addEventListener("change", updateFormDescriptionStyles);
+        dropdown4.addEventListener("change", updateFormQuestionStyles);
+        dropdown6.addEventListener("change", updateFormQuestionStyles);
+        // Attach listeners for other dropdowns
+
+        primaryColorPicker.addEventListener("input", updateFormStyles);
+        secondaryColorPicker.addEventListener("input", updateFormStyles);
+    });
+
+    function darkenColor(color, factor) {
+        // Convert the hex color to RGB
+        const rgb = parseInt(color.slice(1), 16);
+        const r = (rgb >> 16) & 0xff;
+        const g = (rgb >> 8) & 0xff;
+        const b = (rgb >> 0) & 0xff;
+
+        // Darken the color by the specified factor
+        const darkenedR = Math.round(r * (1 - factor));
+        const darkenedG = Math.round(g * (1 - factor));
+        const darkenedB = Math.round(b * (1 - factor));
+
+        // Convert the darkened RGB values back to hex
+        const darkenedColor = "#" + ((darkenedR << 16) | (darkenedG << 8) | darkenedB).toString(16).padStart(6, '0');
+
+        return darkenedColor;
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        const uploadInput = document.getElementById("upload-image");
+        const uploadLabel = document.querySelector(".upload-label");
+
+        uploadInput.addEventListener("change", function () {
+            const file = uploadInput.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                // Display the selected file in the label if needed
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    uploadLabel.querySelector(".upload-icon").src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                // Set the image path in the image_path variable
+                const imagePath = "/static/images/" + file.name;
+                image_path = imagePath;
+            }
+        });
+    });
 </script>

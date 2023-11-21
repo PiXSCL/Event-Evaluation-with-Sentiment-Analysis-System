@@ -11,6 +11,7 @@ from transformers import pipeline
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import json
+import requests
 from gensim.summarization import summarize
 from googletrans import Translator
 import pandas as pd
@@ -60,6 +61,19 @@ class Question(db.Model):
     formid = db.Column(db.Integer, db.ForeignKey('form.formid'), nullable=False)
     form = db.relationship('Form', backref='questions')
     choices = db.relationship('Choice', backref='question')
+
+class Settings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    form_id = db.Column(db.Integer)
+    font_title = db.Column(db.String(50))
+    font_size_title = db.Column(db.Integer)
+    font_description = db.Column(db.String(50))
+    font_title_size = db.Column(db.Integer)
+    font_question = db.Column(db.String(50))
+    font_question_size = db.Column(db.Integer)
+    primary_color = db.Column(db.String(7))
+    secondary_color = db.Column(db.String(7))
+    image_path = db.Column(db.String(255), nullable=True)
 
 class Choice(db.Model):
     choice_id = db.Column(db.Integer, primary_key=True)
@@ -186,6 +200,55 @@ def questions():
     else:
         return redirect(url_for('login'))
 
+# Route to save the settings
+@app.route('/save_settings', methods=['POST'])
+def save_settings():
+    font_title = request.form['fonts_1']
+    font_size_title = int(request.form['size_1'])
+    font_description = request.form['fonts_2']
+    font_title_size = int(request.form['size_2'])
+    font_question = request.form['fonts_3']
+    font_question_size = int(request.form['size_3'])
+    primary_color = request.form['primary_color']
+    secondary_color = request.form['secondary_color']
+    
+    if 'file' in request.files:
+        image_file = request.files['file']
+        if image_file.filename != '':
+            # Save the uploaded image to a specific folder
+            upload_folder = 'static/images/uploads'
+            os.makedirs(upload_folder, exist_ok=True)
+            filename = secure_filename(image_file.filename)
+            image_path = os.path.join(upload_folder, filename)
+            image_file.save(image_path)
+        else:
+            # No file uploaded, set image path to None or a default value
+            image_path = None
+    else:
+        # No file field in the form, set image path to None or a default value
+        image_path = None
+
+    form_settings = Settings(
+        font_title=font_title,
+        font_size_title=font_size_title,
+        font_description=font_description,
+        font_title_size=font_title_size,
+        font_question=font_question,
+        font_question_size=font_question_size,
+        primary_color=primary_color,
+        secondary_color=secondary_color,
+        image_path=image_path
+    )
+
+    db.session.add(form_settings)
+    db.session.commit()
+
+    # Get the ID of the newly inserted row
+    form_settings_id = form_settings.id
+
+    # Return the ID as a JSON response
+    return jsonify({'form_settings_id': form_settings_id})
+
 @app.route('/save_form', methods=['POST'])
 def save_form():
     if request.method == 'POST':
@@ -261,10 +324,18 @@ def save_form():
             db.session.add_all(questions_data)
             db.session.commit()
 
+            form_settings_id = request.form.get('form_settings_id')
+            print(f"form_id: {form_id}, form_settings_id: {form_settings_id}")
+            if form_settings_id:
+                form_settings_row = Settings.query.get(form_settings_id)
+                if form_settings_row:
+                    form_settings_row.form_id = form_id
+                    db.session.commit()
+
             print("Form and choices successfully inserted into the database.")
         except Exception as e:
             print(f"Error inserting form or choices: {str(e)}")
-
+    
         # Redirect to a success page or any other page you want
         return redirect(url_for('home'))
 
