@@ -497,6 +497,7 @@ def submit_form(form_id):
         return redirect(url_for('success', form_id=form_id))
     else:
         return "Invalid request method", 400
+
 @app.route('/preview-form/<int:form_id>', methods=['GET', 'POST'])
 def form_preview(form_id):
     if request.method == 'GET':
@@ -505,7 +506,25 @@ def form_preview(form_id):
         if not form:
             return "Form not found", 404
 
-        return render_template('form_preview.html', form=form, form_id=form_id)
+        # Query the settings for the form
+        form_settings = Settings.query.filter_by(form_id=form_id).first()
+
+        # Convert relevant properties to a dictionary
+        form_settings_dict = {
+            'primary_color': form_settings.primary_color,
+            'secondary_color': form_settings.secondary_color,
+            'fonts_1': form_settings.font_title,
+            'size_1': form_settings.font_size_title,
+            'fonts_2': form_settings.font_description,
+            'size_2': form_settings.font_title_size,
+            'fonts_3': form_settings.font_question,
+            'size_3': form_settings.font_question_size,
+            # Add other properties as needed
+        }
+
+        print(f"Form Settings:", form_settings)
+
+        return render_template('form_preview.html', form=form, form_id=form_id, form_settings=form_settings_dict)
 
 @app.route('/success/<int:form_id>')
 def success(form_id):

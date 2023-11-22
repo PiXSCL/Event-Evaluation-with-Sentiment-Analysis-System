@@ -1175,14 +1175,14 @@
 }
 
 .dropdown {
-color: #61492E;
-font-size: 20px;
-padding: 15px;
-width: 60%;
-outline: none;
-border: 2px solid #61492E;
-border-radius: 15px;
-z-index: 2;
+    color: #61492E;
+    font-size: 20px;
+    padding: 15px;
+    width: 60%;
+    outline: none;
+    border: 2px solid #61492E;
+    border-radius: 15px;
+    z-index: 2;
 }
 
 .dropdown:hover{
@@ -1422,7 +1422,7 @@ input:checked + .slider1:before {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 23%;
+    left: 27%;
     transform: translateX(-50%);
     background: #61492e;
 }
@@ -1488,7 +1488,7 @@ input:checked + .slider1:before {
 }
 
     .open-ended-input::placeholder {
-        color: #61492E;
+        color: var(--open-color, #61492E);
     }
 
 .custom-radio {
@@ -1502,7 +1502,6 @@ input:checked + .slider1:before {
     cursor: pointer;
 }
 
-    /* Create the custom circle */
     .custom-label::before {
         content: "";
         position: absolute;
@@ -1510,17 +1509,17 @@ input:checked + .slider1:before {
         top: 2px; /* Adjust vertical alignment as needed */
         width: 20px; /* Adjust the circle size */
         height: 20px; /* Adjust the circle size */
-        border: 2px solid #61492E; /* Color of the circle outline */
+        border: 2px solid var(--before-border-color, #61492E); /* Color of the circle outline */
         border-radius: 50%; /* Makes it a circle */
         transition: all 0.2s; /* Smooth hover effect */
     }
 
 /* Style the custom circle when the radio button is checked */
 .custom-radio:checked + .custom-label::before {
-    background-color: #61492E;
-    border: 2px solid #E8BA84;
+    background-color: var(--before-background-color, #61492E);
+    border: 2px solid var(--before-border-color-checked, #E8BA84);
 }
-    
+
 /* Style the custom label text */
 .custom-label::after {
     top: 2px;
@@ -1528,7 +1527,7 @@ input:checked + .slider1:before {
     content: attr(data-label);
     position: absolute;
     left: 50px;
-    color: #61492E;
+    color: var(--after-color, #61492E);
     font-family: Cabin;
     font-size: 21px;
     font-style: normal;
@@ -1537,7 +1536,7 @@ input:checked + .slider1:before {
 }
 
 .custom-label:hover::before {
-    border-color: #9A7850; 
+    border-color: var(--before-border-color-hover, #9A7850);
 }
 
 .custom-checkbox {
@@ -1559,14 +1558,14 @@ input:checked + .slider1:before {
         top: 2px; /* Adjust vertical alignment as needed */
         width: 20px; /* Adjust the circle size */
         height: 20px; /* Adjust the circle size */
-        border: 2px solid #61492E; /* Color of the circle outline */
+        border: 2px solid var(--before-border-checkbox-color, #61492E);
         transition: all 0.2s; /* Smooth hover effect */
     }
 
 /* Style the custom circle when the radio button is checked */
 .custom-checkbox:checked + .custom-checkbox-label::before {
-    background-color: #61492E;
-    border: 2px solid #E8BA84;
+    background-color: var(--before-background-checkbox-color, #61492E);
+    border: 2px solid var(--before-border-color-checkbox-checked, #E8BA84);
 }
 
 .custom-checkbox-label::after {
@@ -1575,7 +1574,7 @@ input:checked + .slider1:before {
     content: attr(data-label);
     position: absolute;
     left: 50px;
-    color: #61492E;
+    color: var(--after-checkbox-color, #61492E);
     font-family: Cabin;
     font-size: 21px;
     font-style: normal;
@@ -1584,7 +1583,7 @@ input:checked + .slider1:before {
 }
 
 .custom-checkbox-label:hover::before {
-    border-color: #9A7850;
+    border-color: var(--before-border-color-checkbox-hover, #9A7850);
 }
 
 .submit-button {
