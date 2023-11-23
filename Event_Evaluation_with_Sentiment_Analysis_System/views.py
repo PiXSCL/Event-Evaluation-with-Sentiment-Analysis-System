@@ -11,6 +11,7 @@ from transformers import pipeline
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import json
+import base64
 import requests
 from gensim.summarization import summarize
 from googletrans import Translator
@@ -41,6 +42,7 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     contact_number = db.Column(db.String(20))
+    profile_pic = db.Column(db.LargeBinary, nullable=True) 
 
     forms = db.relationship('Form', backref='user', lazy=True)
 
@@ -73,7 +75,7 @@ class Settings(db.Model):
     font_question_size = db.Column(db.Integer)
     primary_color = db.Column(db.String(7))
     secondary_color = db.Column(db.String(7))
-    image_path = db.Column(db.String(255), nullable=True)
+    image_data = db.Column(db.LargeBinary, nullable=True) 
 
 class Choice(db.Model):
     choice_id = db.Column(db.Integer, primary_key=True)
@@ -119,7 +121,31 @@ def login_post():
 
 def fetch_form_data(user_id):
     form_data = Form.query.with_entities(Form.formid, Form.title, Form.date_created).filter_by(userid=user_id).order_by(Form.date_created.desc()).all()
-    return form_data
+
+    form_list = []
+    for form_id, title, date_created in form_data:
+        form_settings = Settings.query.filter_by(form_id=form_id).first()
+
+        form_settings_dict = {}
+
+        if form_settings:
+            # Convert relevant properties to a dictionary
+            form_settings_dict = {
+                'image': base64.b64encode(form_settings.image_data).decode('utf-8') if form_settings.image_data else None,
+            }
+
+            print(f"Form Settings for form_id {form_id}:", form_settings)
+        else:
+            print(f"No settings found for form_id: {form_id}")
+
+        form_list.append({
+            'form_id': form_id,
+            'title': title,
+            'date_created': date_created,
+            'settings': form_settings_dict,
+        })
+
+    return form_list
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -155,13 +181,24 @@ def home():
         if request.method == 'POST':
             user.name = request.form.get('name') or user.name
             user.email = request.form.get('email') or user.email
-            user.password = request.form.get('password') or user.password  # Note: You should hash the password before saving
+            user.password = request.form.get('password') or user.password  
             user.contact_number = request.form.get('contact_number') or user.contact_number
-
+            print(f"request.files:",request.files)  # Check the contents of request.files
+            if 'upload-image' in request.files:
+                image_file = request.files['upload-image']
+                print(f"image_file",image_file)
+                if image_file.filename != '':
+                    profile_pic = image_file.read()
+                else:
+                    profile_pic = None
+            else:
+                profile_pic = None
+            user.profile_pic = profile_pic
             # Commit changes to the database
             db.session.commit()
+        profile_pic = base64.b64encode(user.profile_pic).decode('utf-8') if user.profile_pic else None
 
-        return render_template('home.html', user_email=user_email, form_data=form_data, user=user)
+        return render_template('home.html', user_email=user_email, form_data=form_data, user=user, profile_pic=profile_pic)
     else:
         return redirect(url_for('login'))
 
@@ -176,8 +213,14 @@ def delete_form(form_id):
         for response in responses:
             db.session.delete(response)
 
-        # Delete associated questions
+        # Delete associated questions and choices
         questions = Question.query.filter_by(formid=form_id).all()
+        question_ids = [question.questionid for question in questions]
+
+        # Delete choices associated with the questions
+        Choice.query.filter(Choice.question_id.in_(question_ids)).delete(synchronize_session=False)
+
+        # Delete the questions
         for question in questions:
             db.session.delete(question)
 
@@ -212,21 +255,18 @@ def save_settings():
     primary_color = request.form['primary_color']
     secondary_color = request.form['secondary_color']
     
-    if 'file' in request.files:
-        image_file = request.files['file']
+    image_data = None
+
+    print(f"request.files:",request.files)  # Check the contents of request.files
+    if 'upload-image' in request.files:
+        image_file = request.files['upload-image']
+        print(f"image_file",image_file)
         if image_file.filename != '':
-            # Save the uploaded image to a specific folder
-            upload_folder = 'static/images/uploads'
-            os.makedirs(upload_folder, exist_ok=True)
-            filename = secure_filename(image_file.filename)
-            image_path = os.path.join(upload_folder, filename)
-            image_file.save(image_path)
+            image_data = image_file.read()
         else:
-            # No file uploaded, set image path to None or a default value
-            image_path = None
+            image_data = None
     else:
-        # No file field in the form, set image path to None or a default value
-        image_path = None
+        image_data = None
 
     form_settings = Settings(
         font_title=font_title,
@@ -237,7 +277,7 @@ def save_settings():
         font_question_size=font_question_size,
         primary_color=primary_color,
         secondary_color=secondary_color,
-        image_path=image_path
+         image_data=image_data
     )
 
     db.session.add(form_settings)
@@ -409,7 +449,30 @@ def submit_form(form_id):
         if not form:
             return "Form not found", 404
 
-        return render_template('form.html', form=form, form_id=form_id)
+        form_settings = Settings.query.filter_by(form_id=form_id).first()
+
+        form_settings_dict = {}
+
+        if form_settings:
+            # Convert relevant properties to a dictionary
+            form_settings_dict = {
+                'primary_color': form_settings.primary_color,
+                'secondary_color': form_settings.secondary_color,
+                'fonts_1': form_settings.font_title,
+                'size_1': form_settings.font_size_title,
+                'fonts_2': form_settings.font_description,
+                'size_2': form_settings.font_title_size,
+                'fonts_3': form_settings.font_question,
+                'size_3': form_settings.font_question_size,
+                'image': base64.b64encode(form_settings.image_data).decode('utf-8') if form_settings.image_data else None,
+                # Add other properties as needed
+            }
+
+            print(f"Form Settings:", form_settings)
+        else:
+            print(f"No settings found for form_id: {form_id}")
+
+        return render_template('form.html', form=form, form_id=form_id, form_settings=form_settings_dict)
 
     elif request.method == 'POST':
         # Get the form object based on form_id
@@ -505,25 +568,28 @@ def form_preview(form_id):
 
         if not form:
             return "Form not found", 404
-
-        # Query the settings for the form
+            
         form_settings = Settings.query.filter_by(form_id=form_id).first()
 
-        # Convert relevant properties to a dictionary
-        form_settings_dict = {
-            'primary_color': form_settings.primary_color,
-            'secondary_color': form_settings.secondary_color,
-            'fonts_1': form_settings.font_title,
-            'size_1': form_settings.font_size_title,
-            'fonts_2': form_settings.font_description,
-            'size_2': form_settings.font_title_size,
-            'fonts_3': form_settings.font_question,
-            'size_3': form_settings.font_question_size,
-            # Add other properties as needed
-        }
+        form_settings_dict = {}
 
-        print(f"Form Settings:", form_settings)
+        if form_settings:
+            # Convert relevant properties to a dictionary
+            form_settings_dict = {
+                'primary_color': form_settings.primary_color,
+                'secondary_color': form_settings.secondary_color,
+                'fonts_1': form_settings.font_title,
+                'size_1': form_settings.font_size_title,
+                'fonts_2': form_settings.font_description,
+                'size_2': form_settings.font_title_size,
+                'fonts_3': form_settings.font_question,
+                'size_3': form_settings.font_question_size,
+                'image': base64.b64encode(form_settings.image_data).decode('utf-8') if form_settings.image_data else None,
+                # Add other properties as needed
+            }
 
+        else:
+            print(f"No settings found for form_id: {form_id}")
         return render_template('form_preview.html', form=form, form_id=form_id, form_settings=form_settings_dict)
 
 @app.route('/success/<int:form_id>')

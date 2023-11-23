@@ -33,7 +33,11 @@
         <div class="home-navbar" id="home-navbar">
             <div class="user-profile">
                 <div class="profile-container">
-                    <img id="profile-picture" src="{{ url_for('static', filename='images/profile.svg') }}" alt="Profile Picture">
+                    {% if profile_pic %}
+                       <img id="profile-picture" src="data:image/jpeg;base64,{{ profile_pic }}" alt="Profile Picture">
+                    {% else %}
+                       <img id="profile-picture" src="{{ url_for('static', filename='images/profile.svg') }}" alt="Profile Picture">
+                    {% endif %}
                     <div class="profile-dropdown" id="profile-dropdown">
                         <ul>
                             <li><a href="#" onclick="openModal()">Account Settings</a></li>
@@ -65,19 +69,24 @@
             <input type="text" placeholder="Search" id="search-input">
        </div>
        <p class="no-forms-message" style="display: none; margin-right: 300px; margin-top: 250px;">No Forms Found</p>
-    <div class="data-grid-container">
+        <div class="data-grid-container">
         {% if form_data %}
             <div class="data-grid" >
-                {% for form_id, form_title, form_date_created in form_data %}
-                   <div class="data-grid-item" data-date-created="{{ form_date_created }}" >
+                {% for form in form_data %}
+                   <div class="data-grid-item" data-date-created="{{ form.date_created }}" >
                         <div class="item-content">
-                            <div class="title-label">{{ form_title }}</div>
+                            {% if form.settings.image %}
+                                <div class="banner-container">
+                                    <img src="data:image/jpeg;base64,{{ form.settings.image }}" alt="Form Image" class="banner-image">
+                                </div>
+                            {% endif %}
+                            <div class="title-label">{{ form.title }}</div>
                             <div class="select-container">
-                                <img class="select" id="select_{{ form_id }}" src="{{ url_for('static', filename='images/option.png') }}" alt="Select Icon">
-                                <div class="select-menu" id="dropdown-content_{{ form_id }}" style="display: none;">
-                                    <a href="#" onclick="handleOpenClick(event, '{{ form_id }}', '{{ form_title }}')">Open</a>
-                                    <a href="#" onclick="handleViewClick(event, '{{ form_id }}', '{{ form_title }}')">View</a>
-                                    <a href="{{ url_for('delete_form', form_id=form_id) }}">Delete</a>
+                                <img class="select" id="select_{{ form.form_id }}" src="{{ url_for('static', filename='images/option.png') }}" alt="Select Icon">
+                                <div class="select-menu" id="dropdown-content_{{ form.form_id }}" style="display: none;">
+                                    <a href="#" onclick="handleOpenClick(event, '{{ form.form_id }}', '{{ form.title }}')">Open</a>
+                                    <a href="#" onclick="handleViewClick(event, '{{ form.form_id }}', '{{ form.title }}')">View</a>
+                                    <a href="{{ url_for('delete_form', form_id=form.form_id) }}">Delete</a>
                                 </div>
                             </div>
                         </div>
@@ -89,10 +98,19 @@
         {% endif %}
         </div>
         <div id="editProfileModal" class="s-modal-container">
-            <form id="editProfileForm" action="{{ url_for('home') }}" method="post">
+            <form id="editProfileForm" action="{{ url_for('home') }}" method="post" enctype="multipart/form-data">
                 <div class="s-edit-container">
                     <p class="s-text-profile">Edit Profile</p>
-                    <img id="profile-image" src="{{ url_for('static', filename='images/profile.svg') }}" alt="Profile Image" class="s-img">
+                    <div class="s-img-container">
+                        <label for="upload-image" class="upload-label">
+                            {% if profile_pic %}
+                                <img id="profile-image" src="data:image/jpeg;base64,{{ profile_pic }}" alt="Profile Picture" class="s-img">
+                            {% else %}
+                                <img id="profile-image" src="{{ url_for('static', filename='images/profile.svg') }}" alt="Profile Picture" class="s-img">
+                            {% endif %}
+                        </label>
+                        <input type="file" id="upload-image" name="upload-image" accept="image/*" style="display: none;">
+                    </div>
                     <div class="s-labels">
                         <label for="first-name" class="s-label-name">Name</label>
                     </div>
@@ -244,12 +262,11 @@
         visibleDataGridItems.forEach(function (item) {
             const selectContainer = item.querySelector('.select');
             const selectMenu = item.querySelector('.select-menu');
+            const bannerImage = item.querySelector('.banner-image');
 
-            selectContainer.style.top = '100px';
-            selectContainer.style.right = '2px';
-
-            selectMenu.style.top = '110px';
-            selectMenu.style.right = '-110px';
+            bannerImage.style.marginTop = '-13px';
+            selectContainer.style.marginTop = '-13px';
+            selectMenu.style.marginTop = '-13px';
         });
     }
 
@@ -313,5 +330,24 @@
 
         closeModal();
     }
+    document.addEventListener("DOMContentLoaded", function () {
+        const uploadInput = document.getElementById("upload-image");
+        const uploadLabel = document.querySelector(".upload-label");
+
+        uploadInput.addEventListener("change", function () {
+            const file = uploadInput.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                // Display the selected file in the label if needed
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    uploadLabel.querySelector(".s-img").src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
 </script>
 </html>

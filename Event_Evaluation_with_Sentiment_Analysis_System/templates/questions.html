@@ -121,7 +121,7 @@
             </form>
         </div>
         <div class="settings-modal" id="settings-modal">
-            <form action="{{ url_for('save_settings') }}" method="post" id="settings-form">
+            <form action="{{ url_for('save_settings') }}" method="post" id="settings-form" enctype="multipart/form-data">
                 <div class="settings">
                     <h1 class="header">Customize your form</h1>
                     <hr class="hr1">
@@ -576,10 +576,6 @@
                     uploadLabel.querySelector(".upload-icon").src = e.target.result;
                 };
                 reader.readAsDataURL(file);
-
-                // Set the image path in the image_path variable
-                const imagePath = "/static/images/" + file.name;
-                image_path = imagePath;
             }
         });
     });

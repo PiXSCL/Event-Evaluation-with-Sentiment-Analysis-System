@@ -37,7 +37,14 @@
                 </ul>
             </nav>
         </header>
-        <div class="form-container2">
+        {% if form_settings.image %}
+            <div class="image-container">
+                <img src="data:image/jpeg;base64,{{ form_settings.image }}" alt="Form Image" class="form-banner-image">
+            </div>
+            <div class="form-container2" style="margin-top: -390px;">
+        {% else %}
+            <div class="form-container2">
+        {% endif %}
             <form action="{{ url_for('submit_form', form_id=form_id) }}" method="post">
                 <div class="fbox">
                     <h2 class="title">{{ form.title }}</h2>

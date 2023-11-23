@@ -429,7 +429,7 @@
 #profile-picture {
     position: absolute;
     border-radius: 50%;
-    width: 70px;
+    width: 65px;
     height: 50px;
     left: 20px;
     top: -10px;
@@ -675,6 +675,21 @@
         left: 0;
     }
 
+.banner-container {
+    position:relative;
+    border-radius: 35px 35px 0px 0px;
+    width:105%;
+}
+
+.banner-image {
+    position: relative;
+    border-radius: 35px 35px 0px 0px;
+    margin-left: -10px;
+    height: 125px;
+    margin-bottom: -5px;
+    width: 110%;
+}
+
 .title-label {
     position:absolute;
     bottom: 5px;
@@ -778,6 +793,13 @@
     background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay background */
     z-index: 100;
     overflow-y:auto;
+}
+
+.s-img-container {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    border-radius: 50%;
 }
 
 .s-img {
@@ -1379,15 +1401,41 @@ input:checked + .slider1:before {
 /* Form Design */
 
 .form-container1 {
-    transform:translateY(-20px);
+    transform: translateY(-20px);
     max-height: 565px;
     overflow-y: auto;
 }
 
 .form-container2 {
     transform: translateY(-20px);
-    max-height: 450px;
+    max-height: 470px;
     overflow-y: auto;
+}
+
+.banner-image-container {
+    position: absolute;
+    width: 70%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 20px;
+    z-index: 0;
+}
+
+.form-banner-image {
+    border-radius: 10px;
+    transform: translateX(20%);
+    width: 70%;
+    height: auto;
+    opacity: 0.5;
+}
+
+.form-banner-image1 {
+    margin-top: 70px;
+    border-radius: 10px;
+    transform: translateX(20%);
+    width: 70%;
+    height: auto;
+    opacity: 0.5;
 }
 
 .fbox {
@@ -1399,7 +1447,9 @@ input:checked + .slider1:before {
     margin: 0 auto;
     border-radius: 10px;
     margin-top: 30px;
-    position: relative
+    position: relative;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
+    z-index: 2;
 }
 
 .fbox-content {
@@ -1435,7 +1485,7 @@ input:checked + .slider1:before {
     color: #61492E;
     width: 1000px; 
     margin-top: 10px; 
-    margin-left: 55px;
+    margin-left: 100px;
 }
 
 .fbox2 {
@@ -1448,6 +1498,7 @@ input:checked + .slider1:before {
     margin-top: 30px;
     display: flex;
     flex-wrap: wrap;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 .question_container .question {
@@ -2679,10 +2730,6 @@ color: #61492E;
     padding: 10px;
     box-sizing: border-box;
     max-height: 500px;
-
-    /*display: flex;
-    justify-content: center; 
-    align-items: center;*/
 
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
