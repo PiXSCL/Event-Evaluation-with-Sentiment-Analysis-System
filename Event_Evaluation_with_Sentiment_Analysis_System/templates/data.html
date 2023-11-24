@@ -48,6 +48,7 @@
         </header>
         <div class="data-container">
         <div class="qbox"><span>Overall Summary</span></div>
+            {% if question_responses %}
             <div class="response-container">
                 <h2>Open Ended Summary</h2>
                 <div id="piechart" class="overall-piechart"></div>
@@ -199,6 +200,11 @@
                 </div>
             </div>
         </div>
+        {% else %}
+        <div class="response-container">
+            <h2>No Responses Collected<br> Share the Form and Collect Responses</h2>
+        </div>
+        {% endif %}
     </div>
 <div class="rectangle-3"></div> 
 </body>

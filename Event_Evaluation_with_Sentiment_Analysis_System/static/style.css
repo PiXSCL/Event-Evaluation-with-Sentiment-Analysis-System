@@ -2214,7 +2214,7 @@ input:checked + .slider1:before {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 300px;
-    height: 300px;
+    height: 340px;
     background-color: #e4d2bd;
     border-radius: 10px;
     text-align: center;
@@ -2239,7 +2239,7 @@ input:checked + .slider1:before {
     }
 
     .success-container button {
-        margin-top: 20px;
+        margin-top: 10px;
         background-color: #007BFF;
         color: #fff;
         padding: 10px 20px;
@@ -2253,6 +2253,20 @@ input:checked + .slider1:before {
             background-color: #0056b3;
         }
 
+.profile {
+    border-radius: 50%;
+    width: 65px;
+    height: 50px;
+}
+.success-banner-image {
+    margin-top: 60px;
+    position:center;
+    border-radius: 10px;
+    transform: translateX(20%);
+    width: 70%;
+    height: 70%;
+    opacity: 0.5;
+}
 /*Data Analytics*/
 
 .sidebar {

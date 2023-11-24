@@ -1,5 +1,6 @@
 from datetime import datetime
 from email.policy import default
+from http.client import responses
 from flask import Flask, render_template, request, redirect, url_for, session, send_file, jsonify, render_template_string, make_response
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
@@ -563,34 +564,39 @@ def submit_form(form_id):
 
 @app.route('/preview-form/<int:form_id>', methods=['GET', 'POST'])
 def form_preview(form_id):
-    if request.method == 'GET':
-        form = Form.query.filter_by(formid=form_id).options(joinedload(Form.questions).joinedload(Question.choices)).first()
+    user_id = session.get('user_id', None)
+    if user_id:
 
-        if not form:
-            return "Form not found", 404
+        if request.method == 'GET':
+            form = Form.query.filter_by(formid=form_id).options(joinedload(Form.questions).joinedload(Question.choices)).first()
+
+            if not form:
+                return "Form not found", 404
             
-        form_settings = Settings.query.filter_by(form_id=form_id).first()
+            form_settings = Settings.query.filter_by(form_id=form_id).first()
 
-        form_settings_dict = {}
+            form_settings_dict = {}
 
-        if form_settings:
-            # Convert relevant properties to a dictionary
-            form_settings_dict = {
-                'primary_color': form_settings.primary_color,
-                'secondary_color': form_settings.secondary_color,
-                'fonts_1': form_settings.font_title,
-                'size_1': form_settings.font_size_title,
-                'fonts_2': form_settings.font_description,
-                'size_2': form_settings.font_title_size,
-                'fonts_3': form_settings.font_question,
-                'size_3': form_settings.font_question_size,
-                'image': base64.b64encode(form_settings.image_data).decode('utf-8') if form_settings.image_data else None,
-                # Add other properties as needed
-            }
+            if form_settings:
+                # Convert relevant properties to a dictionary
+                form_settings_dict = {
+                    'primary_color': form_settings.primary_color,
+                    'secondary_color': form_settings.secondary_color,
+                    'fonts_1': form_settings.font_title,
+                    'size_1': form_settings.font_size_title,
+                    'fonts_2': form_settings.font_description,
+                    'size_2': form_settings.font_title_size,
+                    'fonts_3': form_settings.font_question,
+                    'size_3': form_settings.font_question_size,
+                    'image': base64.b64encode(form_settings.image_data).decode('utf-8') if form_settings.image_data else None,
+                    # Add other properties as needed
+                }
 
-        else:
-            print(f"No settings found for form_id: {form_id}")
-        return render_template('form_preview.html', form=form, form_id=form_id, form_settings=form_settings_dict)
+            else:
+                print(f"No settings found for form_id: {form_id}")
+            return render_template('form_preview.html', form=form, form_id=form_id, form_settings=form_settings_dict)
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/success/<int:form_id>')
 def success(form_id):
@@ -605,176 +611,182 @@ def success(form_id):
 
     if not user:
         return "User not found", 404
+    form_settings = Settings.query.filter_by(form_id=form_id).first()
 
+    banner_image = base64.b64encode(form_settings.image_data).decode('utf-8') if form_settings.image_data else None
     name = user.name  # Assuming "name" is the field in the User model
-
-    return render_template('response_success.html', name=name, form=form)
+    profile_pic = base64.b64encode(user.profile_pic).decode('utf-8') if user.profile_pic else None
+    return render_template('response_success.html', name=name, form=form, profile_pic=profile_pic, banner_image=banner_image)
 
 @app.route('/data/<int:form_id>')
 def data(form_id):
-    responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
-    open_ended_responses = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id, Question.question_type == 'Open-Ended Response').all()
-    multiple_choice_responses = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id, Question.question_type == 'Multiple Choices').all()
-    checkbox_responses = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id, Question.question_type == 'CheckBox').all()
+    user_id = session.get('user_id', None)
+    if user_id:
+        responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
+        open_ended_responses = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id, Question.question_type == 'Open-Ended Response').all()
+        multiple_choice_responses = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id, Question.question_type == 'Multiple Choices').all()
+        checkbox_responses = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id, Question.question_type == 'CheckBox').all()
 
-    total_respondents = len(open_ended_responses)
+        total_respondents = len(open_ended_responses)
 
-    sentiment_counts = {
-        'Positive': 0,
-        'Neutral': 0,
-        'Negative': 0
-    }
+        sentiment_counts = {
+            'Positive': 0,
+            'Neutral': 0,
+            'Negative': 0
+        }
 
-    # Initialize an empty list to store responses and questions
-    responses_and_questions = []
-    positive_responses = []
-    negative_responses = []
+        # Initialize an empty list to store responses and questions
+        responses_and_questions = []
+        positive_responses = []
+        negative_responses = []
 
-    for response, question in open_ended_responses:
-        response_sentiment = response.sentiment
-        sentiment_counts[response_sentiment] += 1
+        for response, question in open_ended_responses:
+            response_sentiment = response.sentiment
+            sentiment_counts[response_sentiment] += 1
 
-        # Translate the response to English here
-        translated_response = translator.translate(response.response, src='tl', dest='en').text
-        responses_and_questions.append((translated_response, question.question_text))
+            # Translate the response to English here
+            translated_response = translator.translate(response.response, src='tl', dest='en').text
+            responses_and_questions.append((translated_response, question.question_text))
 
-        if response_sentiment == "Positive":
-            positive_responses.append((translated_response, question.question_text))
-        elif response_sentiment == "Negative":
-            negative_responses.append((translated_response, question.question_text))
+            if response_sentiment == "Positive":
+                positive_responses.append((translated_response, question.question_text))
+            elif response_sentiment == "Negative":
+                negative_responses.append((translated_response, question.question_text))
 
-    # Find the sentiment with the most counts
-    most_common_sentiment = max(sentiment_counts, key=sentiment_counts.get)
+        # Find the sentiment with the most counts
+        most_common_sentiment = max(sentiment_counts, key=sentiment_counts.get)
 
-    # Process all responses to generate a single summary
-    combined_responses = [response for response, _ in responses_and_questions]
-    combined_questions = [question for _, question in responses_and_questions]
-    combined_positive_responses = [response for response, _ in positive_responses]
-    combined_negative_responses = [response for response, _ in negative_responses]
+        # Process all responses to generate a single summary
+        combined_responses = [response for response, _ in responses_and_questions]
+        combined_questions = [question for _, question in responses_and_questions]
+        combined_positive_responses = [response for response, _ in positive_responses]
+        combined_negative_responses = [response for response, _ in negative_responses]
  
-    if most_common_sentiment == "Positive":
-        summary = f"The questions received a total of {total_respondents} responses, with most of them being positive. They include: {combined_positive_responses}."
-    elif most_common_sentiment == "Negative":
-        summary = f"The questions received a total of {total_respondents} responses, and most of them were negative. They include: {combined_negative_responses}."
-    else:
-        summary = f"The questions received a total of {total_respondents} responses, with mixed sentiments. They include: {combined_responses}."
-
-    chart_data = [['Sentiment', 'Count']]
-    for sentiment, count in sentiment_counts.items():
-        chart_data.append([sentiment, count])
-
-    # Collect data for the bar graph
-    choice_counts = {}  # Initialize a dictionary to count multiple-choice responses
-
-    for response, question in multiple_choice_responses:
-        response_choice = response.response
-        question_text = question.question_text
-
-        if question_text not in choice_counts:
-            choice_counts[question_text] = {}
-
-        if response_choice not in choice_counts[question_text]:
-            choice_counts[question_text][response_choice] = 0
-
-        choice_counts[question_text][response_choice] += 1
-
-    # Prepare the data for the bar chart
-    choice_chart_data = [['Choice', 'Count', { 'role': 'style' }]]
-    for question_text, choices in choice_counts.items():
-        for choice, count in choices.items():
-            choice_chart_data.append([f'{choice}', count, "#CEA778"])
-
-    # Group responses by question text for open-ended responses
-    question_responses = {}
-
-    for response, question in open_ended_responses:
-        question_text = question.question_text
-        response_sentiment = response.sentiment
-
-        if question_text not in question_responses:
-            question_responses[question_text] = {}
-
-        if response_sentiment not in question_responses[question_text]:
-            question_responses[question_text][response_sentiment] = []
-
-        question_responses[question_text][response_sentiment].append(response.response)
-
-    # Initialize an empty list to store choice summaries
-    choice_summaries = []
-
-    # Process multiple-choice responses and count the choices
-    for question_text, choices in choice_counts.items():
-        # Calculate the total count for the question
-        total_count = sum(choices.values())
-
-        # Find the choice with the highest count
-        max_choice = max(choices, key=choices.get)
-        max_count = choices[max_choice]
-
-        # Calculate the percentage for the most popular choice
-        percentage = (max_count / total_count) * 100
-
-        # Construct the summary for the question
-        question_summary = f"In response to the question, '{question_text}', survey participants provided insights into the question. "
-        question_summary += f"The majority, constituting {percentage:.2f}% of respondents, selected {max_choice}, with a total count of {max_count}. "
-        choice_summaries.append(question_summary)
-
-    # Calculate the total number of respondents for CheckBox questions
-    total_checkbox_respondents = len(checkbox_responses)
-
-    # Process and count the CheckBox responses
-    checkbox_counts = {}
-    for response, question in checkbox_responses:
-        response_text = response.response
-        question_text = question.question_text
-
-        if question_text not in checkbox_counts:
-            checkbox_counts[question_text] = {}
-
-        if response_text not in checkbox_counts[question_text]:
-            checkbox_counts[question_text][response_text] = 0
-
-        checkbox_counts[question_text][response_text] += 1
-
-    # Prepare the data for the CheckBox bar chart
-    checkbox_chart_data = [['Choice', 'Count', { 'role': 'style' }]]
-    for question_text, choices in checkbox_counts.items():
-        for choice, count in choices.items():
-            checkbox_chart_data.append([f'{choice}', count, "#CEA778"])
-
-    # Initialize an empty list to store choice summaries
-    checkbox_choice_summaries = []
-
-    # Process multiple-choice responses and count the choices
-    for question_text, choices in checkbox_counts.items():
-        # Calculate the total count for the question
-        total_count = sum(choices.values())
-
-        # Find the maximum count among all choices
-        max_count = max(choices.values())
-
-        # Find all choices with the maximum count
-        max_choices = [choice for choice, count in choices.items() if count == max_count]
-
-        # Calculate the percentage for the most popular choices
-        percentage = (max_count / total_count) * 100
-
-        # Construct the summary for the CheckBox question
-        question_summary = f"In response to the question, '{question_text}', survey participants provided insights into the question. "
-    
-        if len(max_choices) == 1:
-            question_summary += f"The majority, constituting {percentage:.2f}% of respondents, selected '{max_choices[0]}', with a total count of {max_count}. "
+        if most_common_sentiment == "Positive":
+            summary = f"The questions received a total of {total_respondents} responses, with most of them being positive. They include: {combined_positive_responses}."
+        elif most_common_sentiment == "Negative":
+            summary = f"The questions received a total of {total_respondents} responses, and most of them were negative. They include: {combined_negative_responses}."
         else:
-            # If there are multiple choices with the same highest count
-            choices_text = ", ".join(f"'{choice}'" for choice in max_choices)
-            question_summary += f"The majority, constituting {percentage:.2f}% of respondents, selected {choices_text}, each with a total count of {max_count}. "
+            summary = f"The questions received a total of {total_respondents} responses, with mixed sentiments. They include: {combined_responses}."
 
-        checkbox_choice_summaries.append(question_summary)
+        chart_data = [['Sentiment', 'Count']]
+        for sentiment, count in sentiment_counts.items():
+            chart_data.append([sentiment, count])
 
-    # Join the summaries for multiple-choice questions
-    checkbox_choice_summary_text = "\n".join(checkbox_choice_summaries)
+        # Collect data for the bar graph
+        choice_counts = {}  # Initialize a dictionary to count multiple-choice responses
 
-    return render_template('data.html', form_id=form_id , chart_data=chart_data, choice_chart_data=choice_chart_data, total_respondents=total_respondents, responses_with_questions=responses_with_questions, summary=summary, question_responses=question_responses, choice_summaries=choice_summaries, checkbox_chart_data=checkbox_chart_data, total_checkbox_respondents=total_checkbox_respondents, checkbox_choice_summary_text=checkbox_choice_summary_text)
+        for response, question in multiple_choice_responses:
+            response_choice = response.response
+            question_text = question.question_text
+
+            if question_text not in choice_counts:
+                choice_counts[question_text] = {}
+
+            if response_choice not in choice_counts[question_text]:
+                choice_counts[question_text][response_choice] = 0
+
+            choice_counts[question_text][response_choice] += 1
+
+        # Prepare the data for the bar chart
+        choice_chart_data = [['Choice', 'Count', { 'role': 'style' }]]
+        for question_text, choices in choice_counts.items():
+            for choice, count in choices.items():
+                choice_chart_data.append([f'{choice}', count, "#CEA778"])
+
+        # Group responses by question text for open-ended responses
+        question_responses = {}
+
+        for response, question in open_ended_responses:
+            question_text = question.question_text
+            response_sentiment = response.sentiment
+
+            if question_text not in question_responses:
+                question_responses[question_text] = {}
+
+            if response_sentiment not in question_responses[question_text]:
+                question_responses[question_text][response_sentiment] = []
+
+            question_responses[question_text][response_sentiment].append(response.response)
+
+        # Initialize an empty list to store choice summaries
+        choice_summaries = []
+
+        # Process multiple-choice responses and count the choices
+        for question_text, choices in choice_counts.items():
+            # Calculate the total count for the question
+            total_count = sum(choices.values())
+
+            # Find the choice with the highest count
+            max_choice = max(choices, key=choices.get)
+            max_count = choices[max_choice]
+
+            # Calculate the percentage for the most popular choice
+            percentage = (max_count / total_count) * 100
+
+            # Construct the summary for the question
+            question_summary = f"In response to the question, '{question_text}', survey participants provided insights into the question. "
+            question_summary += f"The majority, constituting {percentage:.2f}% of respondents, selected {max_choice}, with a total count of {max_count}. "
+            choice_summaries.append(question_summary)
+
+        # Calculate the total number of respondents for CheckBox questions
+        total_checkbox_respondents = len(checkbox_responses)
+
+        # Process and count the CheckBox responses
+        checkbox_counts = {}
+        for response, question in checkbox_responses:
+            response_text = response.response
+            question_text = question.question_text
+
+            if question_text not in checkbox_counts:
+                checkbox_counts[question_text] = {}
+
+            if response_text not in checkbox_counts[question_text]:
+                checkbox_counts[question_text][response_text] = 0
+
+            checkbox_counts[question_text][response_text] += 1
+
+        # Prepare the data for the CheckBox bar chart
+        checkbox_chart_data = [['Choice', 'Count', { 'role': 'style' }]]
+        for question_text, choices in checkbox_counts.items():
+            for choice, count in choices.items():
+                checkbox_chart_data.append([f'{choice}', count, "#CEA778"])
+
+        # Initialize an empty list to store choice summaries
+        checkbox_choice_summaries = []
+
+        # Process multiple-choice responses and count the choices
+        for question_text, choices in checkbox_counts.items():
+            # Calculate the total count for the question
+            total_count = sum(choices.values())
+
+            # Find the maximum count among all choices
+            max_count = max(choices.values())
+
+            # Find all choices with the maximum count
+            max_choices = [choice for choice, count in choices.items() if count == max_count]
+
+            # Calculate the percentage for the most popular choices
+            percentage = (max_count / total_count) * 100
+
+            # Construct the summary for the CheckBox question
+            question_summary = f"In response to the question, '{question_text}', survey participants provided insights into the question. "
+    
+            if len(max_choices) == 1:
+                question_summary += f"The majority, constituting {percentage:.2f}% of respondents, selected '{max_choices[0]}', with a total count of {max_count}. "
+            else:
+                # If there are multiple choices with the same highest count
+                choices_text = ", ".join(f"'{choice}'" for choice in max_choices)
+                question_summary += f"The majority, constituting {percentage:.2f}% of respondents, selected {choices_text}, each with a total count of {max_count}. "
+
+            checkbox_choice_summaries.append(question_summary)
+
+        # Join the summaries for multiple-choice questions
+        checkbox_choice_summary_text = "\n".join(checkbox_choice_summaries)
+
+        return render_template('data.html', form_id=form_id , chart_data=chart_data, choice_chart_data=choice_chart_data, total_respondents=total_respondents, responses_with_questions=responses_with_questions, summary=summary, question_responses=question_responses, choice_summaries=choice_summaries, checkbox_chart_data=checkbox_chart_data, total_checkbox_respondents=total_checkbox_respondents, checkbox_choice_summary_text=checkbox_choice_summary_text)
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/data_summary/<int:form_id>')
 def data_summary(form_id):
@@ -782,24 +794,33 @@ def data_summary(form_id):
 
 @app.route('/individual_data/<int:form_id>')
 def individual_data(form_id):
-    responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
+    user_id = session.get('user_id', None)
+    if user_id:
+        responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
 
-    grouped_responses = {}
+        grouped_responses = {}
 
-    for response, question in responses_with_questions:
-        respondent = response.respondent
-        if respondent not in grouped_responses:
-            grouped_responses[respondent] = []
-        grouped_responses[respondent].append((question.question_text, response.response))
+        for response, question in responses_with_questions:
+            respondent = response.respondent
+            if respondent not in grouped_responses:
+                grouped_responses[respondent] = []
+            grouped_responses[respondent].append((question.question_text, response.response))
 
-    # Extract unique respondents and sort them
-    unique_respondents = sorted(grouped_responses.keys())
+        # Extract unique respondents and sort them
+        unique_respondents = sorted(grouped_responses.keys())
 
-    return render_template('individual_data.html', grouped_responses=grouped_responses, unique_respondents=unique_respondents, form_id=form_id)
+        return render_template('individual_data.html', grouped_responses=grouped_responses, unique_respondents=unique_respondents, form_id=form_id)
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/generate_report/<int:form_id>')
 def generate_report(form_id):
-    return render_template('report.html', form_id=form_id)
+    user_id = session.get('user_id', None)
+    if user_id:
+        responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
+        return render_template('report.html', form_id=form_id, responses=responses_with_questions)
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/download_report/<int:form_id>')
 def download_report(form_id):
@@ -1152,101 +1173,105 @@ def draw_summary_on_pdf(pdf_canvas, question_text, chart_data, checkbox_chart_da
 # Updated filtered_data route
 @app.route('/filtered_data/<int:form_id>')
 def filtered_data(form_id):
-    responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
+    user_id = session.get('user_id', None)
+    if user_id:
+        responses_with_questions = db.session.query(Response, Question).join(Question).filter(Response.form_id == form_id).all()
 
-    grouped_responses = {}
-    multiple_choices = {}
+        grouped_responses = {}
+        multiple_choices = {}
 
-    for response, question in responses_with_questions:
-        question_text = question.question_text
-        question_type = question.question_type.lower()
+        for response, question in responses_with_questions:
+            question_text = question.question_text
+            question_type = question.question_type.lower()
 
-        if question_type not in ['multiple choices']:
-            if question_text not in grouped_responses:
-                grouped_responses[question_text] = {"responses": [], "question_type": question_type, "response_count": 0}
-            grouped_responses[question_text]["responses"].append(response)
-            grouped_responses[question_text]["response_count"] += 1
-        elif question_type == 'multiple choices':
-            if question_text not in multiple_choices:
-                multiple_choices[question_text] = {"responses": set(), "question_type": question_type}
-            multiple_choices[question_text]["responses"].add(response.response)
+            if question_type not in ['multiple choices']:
+                if question_text not in grouped_responses:
+                    grouped_responses[question_text] = {"responses": [], "question_type": question_type, "response_count": 0}
+                grouped_responses[question_text]["responses"].append(response)
+                grouped_responses[question_text]["response_count"] += 1
+            elif question_type == 'multiple choices':
+                if question_text not in multiple_choices:
+                    multiple_choices[question_text] = {"responses": set(), "question_type": question_type}
+                multiple_choices[question_text]["responses"].add(response.response)
 
-    chart_data = {}
-    checkbox_chart_data = {}
+        chart_data = {}
+        checkbox_chart_data = {}
 
-    for question_text, data in grouped_responses.items():
-        question_type = data["question_type"]
-        responses = data["responses"]
+        for question_text, data in grouped_responses.items():
+            question_type = data["question_type"]
+            responses = data["responses"]
 
-        highest_response = ""
-        highest_percentage = 0
+            highest_response = ""
+            highest_percentage = 0
 
-        if question_type == 'open-ended response':
-            chart_data[question_text] = [['Sentiment', 'Count']]
-            chart_data[question_text].append(['Positive', sum(1 for resp in responses if resp.sentiment == 'Positive')])
-            chart_data[question_text].append(['Neutral', sum(1 for resp in responses if resp.sentiment == 'Neutral')])
-            chart_data[question_text].append(['Negative', sum(1 for resp in responses if resp.sentiment == 'Negative')])
+            if question_type == 'open-ended response':
+                chart_data[question_text] = [['Sentiment', 'Count']]
+                chart_data[question_text].append(['Positive', sum(1 for resp in responses if resp.sentiment == 'Positive')])
+                chart_data[question_text].append(['Neutral', sum(1 for resp in responses if resp.sentiment == 'Neutral')])
+                chart_data[question_text].append(['Negative', sum(1 for resp in responses if resp.sentiment == 'Negative')])
 
-            for sentiment, count in chart_data[question_text][1:]:
-                if count > 0:
-                    percentage = round((count / data["response_count"]) * 100, 2)
-                    if percentage > highest_percentage:
-                        highest_response, highest_percentage = sentiment, percentage
+                for sentiment, count in chart_data[question_text][1:]:
+                    if count > 0:
+                        percentage = round((count / data["response_count"]) * 100, 2)
+                        if percentage > highest_percentage:
+                            highest_response, highest_percentage = sentiment, percentage
 
-            positive_responses = [{"response_text": str(resp.response), "response": str(resp)} for resp in responses if resp.sentiment == 'Positive']
-            neutral_responses = [{"response_text": str(resp.response), "response": str(resp)} for resp in responses if resp.sentiment == 'Neutral']
-            negative_responses = [{"response_text": str(resp.response), "response": str(resp)} for resp in responses if resp.sentiment == 'Negative']
+                positive_responses = [{"response_text": str(resp.response), "response": str(resp)} for resp in responses if resp.sentiment == 'Positive']
+                neutral_responses = [{"response_text": str(resp.response), "response": str(resp)} for resp in responses if resp.sentiment == 'Neutral']
+                negative_responses = [{"response_text": str(resp.response), "response": str(resp)} for resp in responses if resp.sentiment == 'Negative']
 
-            data['positive_responses'] = positive_responses
-            data['neutral_responses'] = neutral_responses
-            data['negative_responses'] = negative_responses
-        elif question_type == 'checkbox':
-            response_counts = {}
-            checkbox_chart_data[question_text] = [['Option', 'Count', {'role': 'style'}]]
+                data['positive_responses'] = positive_responses
+                data['neutral_responses'] = neutral_responses
+                data['negative_responses'] = negative_responses
+            elif question_type == 'checkbox':
+                response_counts = {}
+                checkbox_chart_data[question_text] = [['Option', 'Count', {'role': 'style'}]]
 
-            for resp in responses:
-                response_text = resp.response
+                for resp in responses:
+                    response_text = resp.response
 
-                if response_text not in response_counts:
-                    response_counts[response_text] = 0
+                    if response_text not in response_counts:
+                        response_counts[response_text] = 0
 
-                response_counts[response_text] += 1
+                    response_counts[response_text] += 1
 
-            for response_text, count in response_counts.items():
-                checkbox_chart_data[question_text].append([response_text, count, "#CEA778"])
+                for response_text, count in response_counts.items():
+                    checkbox_chart_data[question_text].append([response_text, count, "#CEA778"])
 
-            for option, count, _ in checkbox_chart_data[question_text][1:]:
-                if count > 0:
-                    percentage = round((count / data["response_count"]) * 100, 2)
-                    if percentage > highest_percentage:
-                        highest_response, highest_percentage = option, percentage
+                for option, count, _ in checkbox_chart_data[question_text][1:]:
+                    if count > 0:
+                        percentage = round((count / data["response_count"]) * 100, 2)
+                        if percentage > highest_percentage:
+                            highest_response, highest_percentage = option, percentage
 
-        data["highest_response"] = highest_response
-        data["highest_percentage"] = highest_percentage
+            data["highest_response"] = highest_response
+            data["highest_percentage"] = highest_percentage
 
-    grouped_responses_cleaned = {}
-    for question_text, response_data in grouped_responses.items():
-        cleaned_responses = [str(response) for response in response_data['responses']]
-        cleaned_data = {
-            'responses': cleaned_responses,
-            'question_type': response_data['question_type'],
-            'response_count': response_data['response_count'],
-            'highest_response': response_data['highest_response'],
-            'highest_percentage': response_data['highest_percentage'],
-        }
+        grouped_responses_cleaned = {}
+        for question_text, response_data in grouped_responses.items():
+            cleaned_responses = [str(response) for response in response_data['responses']]
+            cleaned_data = {
+                'responses': cleaned_responses,
+                'question_type': response_data['question_type'],
+                'response_count': response_data['response_count'],
+                'highest_response': response_data['highest_response'],
+                'highest_percentage': response_data['highest_percentage'],
+            }
 
-        if response_data['question_type'] == 'open-ended response':
-            cleaned_data['positive_responses'] = positive_responses
-            cleaned_data['neutral_responses'] = neutral_responses
-            cleaned_data['negative_responses'] = negative_responses
+            if response_data['question_type'] == 'open-ended response':
+                cleaned_data['positive_responses'] = positive_responses
+                cleaned_data['neutral_responses'] = neutral_responses
+                cleaned_data['negative_responses'] = negative_responses
 
-        grouped_responses_cleaned[question_text] = cleaned_data
+            grouped_responses_cleaned[question_text] = cleaned_data
 
-    print("grouped_responses", grouped_responses)
-    print("chart_data", chart_data)
-    print("checkbox_chart_data", checkbox_chart_data)
+        print("grouped_responses", grouped_responses)
+        print("chart_data", chart_data)
+        print("checkbox_chart_data", checkbox_chart_data)
 
-    return render_template('filter.html', form_id=form_id, grouped_responses=grouped_responses, grouped_responses_cleaned=grouped_responses_cleaned, chart_data=chart_data, checkbox_chart_data=checkbox_chart_data, multiple_choices=multiple_choices)
+        return render_template('filter.html', form_id=form_id, grouped_responses=grouped_responses, grouped_responses_cleaned=grouped_responses_cleaned, chart_data=chart_data, checkbox_chart_data=checkbox_chart_data, multiple_choices=multiple_choices)
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/api/filtered_data/<int:form_id>')
@@ -1309,6 +1334,9 @@ def api_filtered_data(form_id):
         question_type = data["question_type"]
         responses = data["responses"]
 
+        response_list = [{"response_text": str(resp.response), "sentiment": resp.sentiment} for resp in responses]
+        print(f"Question: {question_text}, Response List: {response_list}")
+
         highest_response, highest_percentage = "", 0
 
         if question_type == 'open-ended response':
@@ -1330,10 +1358,15 @@ def api_filtered_data(form_id):
                         highest_response, highest_percentage = response_text, percentage
 
         total_responses = len(responses)
+
+        print(f"Response List:", response_list)
         result_data[question_text] = {
+            "question_text": question_text,
+            "responses": response_list,
             "highest_response": highest_response,
             "highest_percentage": highest_percentage,
             "total_responses": total_responses,
+            "selected_response": selected_response,
         }
 
     print("Result Data:", result_data)
@@ -1346,9 +1379,5 @@ def api_filtered_data(form_id):
         'filtered_checkbox_chart_data': filtered_checkbox_chart_data,
     }), 200
 
- 
-#forgot_password   
-#@app.route('/reset_pasword')
-#def reset_request():
-    #return render_template('password_recovery.html', title='Password Recovery')
+
     

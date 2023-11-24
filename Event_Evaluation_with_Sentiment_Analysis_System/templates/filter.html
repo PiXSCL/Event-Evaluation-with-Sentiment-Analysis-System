@@ -63,12 +63,37 @@
                 var highestResponse = questionData.highest_response;
                 var highestPercentage = questionData.highest_percentage;
                 var totalResponses = questionData.total_responses;
+                var selectedResponse = questionData.selected_response;
+                var responses = questionData.responses;
+                var question = questionData.question_text;
+
+                // Iterate over each response in the filtered_responses data
+                for (var i = 0; i < responses.length; i++) {
+                    var response = responses[i];
+
+                    // Check if the current response's sentiment is not None
+                    if (response.sentiment !== null) {
+                        // Clear the content of all sentiment elements
+                        document.querySelector('.positive ul').innerHTML = '';
+                        document.querySelector('.neutral ul').innerHTML = '';
+                        document.querySelector('.negative ul').innerHTML = '';
+
+                        // Update content based on sentiment
+                        if (response.sentiment === "Positive") {
+                            document.querySelector('.positive ul').innerHTML += '<li>' + response.response_text + '</li>';
+                        } else if (response.sentiment === "Neutral") {
+                            document.querySelector('.neutral ul').innerHTML += '<li>' + response.response_text + '</li>';
+                        } else if (response.sentiment === "Negative") {
+                            document.querySelector('.negative ul').innerHTML += '<li>' + response.response_text + '</li>';
+                        }
+                    }
+                }
 
                 // Ensure that questionText is a valid string
                 if (typeof questionText === 'string') {
                     // Create a new paragraph element with the question information
                     var paragraph = document.createElement('span');
-                    paragraph.innerHTML = `The question about "${questionText}" received a total of ${totalResponses} responses with the highest response being "${highestResponse}" and a percentage of ${highestPercentage}%`;
+                    paragraph.innerHTML = `The question about "${questionText}" received a total of ${totalResponses} ${selectedResponse} responses with the highest response being "${highestResponse}" and a percentage of ${highestPercentage}%`;
 
                     // Get the correct summary div based on question_text
                     var summaryDiv = document.getElementById('summary' + questionText);
@@ -155,22 +180,40 @@
         </header>
             <div class="filter-data-container">
             <div class="filter-qbox"><span>Filtered Data</span></div>
+            {% if grouped_responses %}
             <div class="filter-dropdown">
                 <label>Filter By:</label>
-                {% for question_text, data in multiple_choices.items() %}
-                    {% if data.question_type == 'multiple choices' %}
-                        <select id="selectQuestion">
-                            <option value="{{ question_text }}">{{ question_text }}</option>
-                        </select>
-            
-                        <select id="selectResponse">
+                <div class="select-container">
+                    <select id="selectQuestion" name="selectQuestion">
+                        <option value="" disabled selected>Select a Question</option>
+                        {% for question_text, data in multiple_choices.items() %}
+                            {% if data.question_type == 'multiple choices' %}
+                                <option value="{{ question_text }}">{{ question_text }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="select-container">
+                    <label for="selectResponse">Responses:</label>
+                    <select id="selectResponse" name="selectResponse" disabled>
+                        <!-- Options will be populated dynamically based on the selected question -->
+                    </select>
+                </div>
+            </div>
+
+            {% for question_text, data in multiple_choices.items() %}
+                {% if data.question_type == 'multiple choices' %}
+                    <div class="response-options" id="{{ question_text }}" style="display: none;">
+                        <label>{{ question_text }} Responses:</label>
+                        <select name="selectResponse">
                             {% for response in data.responses %}
                                 <option value="{{ response }}">{{ response }}</option>
                             {% endfor %}
                         </select>
-                    {% endif %}
-                {% endfor %}
-            </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
             {% for question_text, data in grouped_responses.items() %}
                 <div class="filter-response-container">
                     <h2>{{ question_text }}</h2>
@@ -250,6 +293,11 @@
                     </div>
                 </div>
             {% endfor %}
+            {% else %}
+            <div class="response-container">
+                <h2>No Response Collected<br>Share the Form and Collect Responses</h2>
+            </div>
+            {% endif %}
         </div>
     </div>
 <div class="rectangle-3"></div> 
@@ -301,4 +349,30 @@
             submenu.style.display = (submenu.id === selectedQuestion + "-submenu") ? "block" : "none";
         });
     }
+
+    document.getElementById("selectQuestion").addEventListener("change", function () {
+        var selectedQuestion = this.value;
+        var selectResponse = document.getElementById("selectResponse");
+
+        // Clear previous options
+        selectResponse.innerHTML = "";
+
+        // Populate the response options based on the selected question
+        var selectedResponseDiv = document.getElementById(selectedQuestion);
+        if (selectedResponseDiv) {
+            var responses = selectedResponseDiv.getElementsByTagName("select")[0].options;
+            for (var i = 0; i < responses.length; i++) {
+                var option = document.createElement("option");
+                option.text = responses[i].text;
+                option.value = responses[i].value;
+                selectResponse.add(option);
+            }
+
+            // Enable the response dropdown
+            selectResponse.disabled = false;
+        } else {
+            // If no question is selected, disable the response dropdown
+            selectResponse.disabled = true;
+        }
+    });
 </script>

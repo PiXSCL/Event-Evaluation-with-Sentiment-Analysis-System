@@ -48,6 +48,7 @@
         </header>
         <div class="data-container">
             <div class="report-container">
+                {% if responses %}
                 <h2> Download Data and Generate Report</h2>
                 <span class="download_excel">Download Excel file for this form</span>
                 <div class="pdf-file-download-container">
@@ -63,6 +64,9 @@
                         <p>Download PDF File</p>
                     </a>
                 </div>
+                {% else %}
+                <h2 style="margin-top:150px;">No Response Collected<br>Share the form and Collect Responses</h2>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -28,9 +28,18 @@
 </head>
 <body>
     <div class="background">
+        {% if banner_image %}
+            <img src='data:image/jpeg;base64,{{ banner_image }}' alt="Form Image" class="success-banner-image">
+        {% endif %}
         <div class="success-container">
             <h2>Response Success!!!</h2>
-            <span>Thank you for answering this form:</span><br><p>{{form.title}}</p><br><span>created by:</span><p>{{name}}</p>
+            <span>Thank you for answering this form:</span><br><p>{{form.title}}</p><br>
+            <span>created by:</span>
+            <p>{{name}}</p>
+            {% if profile_pic %}
+                <img class="profile" src="data:image/jpeg;base64,{{ profile_pic }}" alt="Profile Picture">
+            {% endif %}
+            <br>
             <a href="{{url_for('login')}}">
                 <button>Create Your Own Form</button>
             </a>
