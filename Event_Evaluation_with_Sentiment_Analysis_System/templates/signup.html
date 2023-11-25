@@ -58,6 +58,7 @@
                     <input type="email" placeholder="Email" id="email" name="email" class="email-input2" style="display:block;" required>
                 </div>
             </div>
+            <p id="error-message" style="color: red; display: block; transform: translate(630px, 270px)">{{ error_message }}</p>
             <div class="password-container2">
                 <div class="password-content2">
                     <img class="ImgPassword2" src="{{ url_for('static', filename='images/password.svg') }}" alt="Password" />

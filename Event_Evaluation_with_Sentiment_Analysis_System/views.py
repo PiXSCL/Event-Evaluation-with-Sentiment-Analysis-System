@@ -118,7 +118,8 @@ def login_post():
         # Redirect to the user's home page
         return redirect(url_for('home'))
     else:
-        return '<script>alert("Invalid account. Please check the email and password you entered."); window.location.href="/login";</script>'
+        error_message = 'Invalid account. Please check the email and password you entered.'
+        return render_template('index.html', error_message=error_message)
 
 def fetch_form_data(user_id):
     form_data = Form.query.with_entities(Form.formid, Form.title, Form.date_created).filter_by(userid=user_id).order_by(Form.date_created.desc()).all()
@@ -157,7 +158,8 @@ def signup():
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-           return '<script>alert("Email already exists. Please use a different email."); window.location.href="/signup";</script>'
+           error_message = 'Email already exist please use different email.'
+           return render_template('signup.html', error_message=error_message)
         else:
             new_user = User(name=name, email=email, password=password)
             db.session.add(new_user)
