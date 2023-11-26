@@ -24,6 +24,8 @@ from reportlab.lib import colors
 from reportlab.graphics.shapes import Drawing
 from io import BytesIO
 
+nltk.download('vader_lexicon')
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:ra05182002@localhost:3306/EventDB'
 app.secret_key = 'secret_key' 
 
