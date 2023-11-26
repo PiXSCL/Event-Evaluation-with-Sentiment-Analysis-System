@@ -11,7 +11,6 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import json
 import base64
 import requests
-from gensim.summarization import summarize
 from googletrans import Translator
 import pandas as pd
 import tempfile
