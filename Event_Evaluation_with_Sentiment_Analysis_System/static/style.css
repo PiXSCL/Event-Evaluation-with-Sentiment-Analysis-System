@@ -1660,6 +1660,7 @@ input:checked + .slider1:before {
         transform: translateY(0);
         max-height: 94%;
         overflow-y: auto;
+        overflow-x:hidden;
     }
 
     .form-container2 {
@@ -1709,7 +1710,7 @@ input:checked + .slider1:before {
     .question_container .question {
         font-size: 20px;
         height:auto;
-        width: 95%;
+        width: 90%;
     }
 
     .answer_container {
