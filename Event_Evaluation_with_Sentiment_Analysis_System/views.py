@@ -621,10 +621,7 @@ def success(form_id):
         return "User not found", 404
     form_settings = Settings.query.filter_by(form_id=form_id).first()
 
-    if form_settings:
-        banner_image = base64.b64encode(form_settings.image_data).decode('utf-8') if form_settings.image_data else None
-    else:
-        banner_image = None
+    banner_image = base64.b64encode(form_settings.image_data).decode('utf-8') if form_settings.image_data else None
     name = user.name  # Assuming "name" is the field in the User model
     profile_pic = base64.b64encode(user.profile_pic).decode('utf-8') if user.profile_pic else None
     return render_template('response_success.html', name=name, form=form, profile_pic=profile_pic, banner_image=banner_image)

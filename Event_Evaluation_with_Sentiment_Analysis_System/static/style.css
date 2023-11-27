@@ -1655,6 +1655,74 @@ input:checked + .slider1:before {
         background-color: #9A7850;
     }
 
+@media only screen and (max-width: 600px) {
+    .form-container1 {
+        transform: translateY(0);
+        max-height: 94%;
+        overflow-y: auto;
+    }
+
+    .form-container2 {
+        transform: translateY(0);
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    .banner-image-container {
+        width: 100%;
+        left: 0;
+        transform: translateX(0);
+        margin-top: 10px;
+    }
+
+    .form-banner-image,
+    .form-banner-image1 {
+        width: 100%;
+        transform: translateX(0);
+    }
+
+    .fbox {
+        margin-top: 20px;
+    }
+
+    .title {
+        font-size: 30px;
+        width: 140px;
+        margin-left: -10px;
+    }
+
+    .vertical-line {
+        left: 220px;
+    }
+
+    .description {
+        font-size: 18px;
+        width: 100%;
+        margin-top: 10px;
+        margin-left: 60px;
+    }
+
+    .fbox2 {
+        margin-top: 20px;
+    }
+
+    .question_container .question {
+        font-size: 20px;
+        height:auto;
+        width: 95%;
+    }
+
+    .answer_container {
+        width: 100%;
+    }
+
+    .open-ended-input {
+        width: 100%;
+    }
+
+    /* Add additional responsive styles as needed */
+}
+
 /*Form Preview*/
 
 .link-button {
