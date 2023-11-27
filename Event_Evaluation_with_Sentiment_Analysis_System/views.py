@@ -26,8 +26,16 @@ from io import BytesIO
 
 nltk.download('vader_lexicon')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:ra05182002@localhost:3306/EventDB'
-app.secret_key = 'secret_key' 
+# Replace these values with the provided database information
+db_host = 'sql12.freesqldatabase.com'
+db_name = 'sql12665315'
+db_user = 'sql12665315'
+db_password = 'gT8wQk3YnV'
+db_port = '3306'
+
+# Update the database URI
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
+app.secret_key = 'secret_key'
 
 db = SQLAlchemy(app)
 
