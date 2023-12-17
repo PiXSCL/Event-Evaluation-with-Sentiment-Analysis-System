@@ -70,6 +70,17 @@
                 </div>
             </form>
         </div>
+        <div id="instructionModal" class="modal-instruction">
+            <div class="modal-instruction-content">
+                <span class="close-instruction">&times;</span>
+                <div class="instruction-text">
+                </div>
+                <div class="modal-navigation">
+                    <button class="modal-btn" onclick="prevInstruction()">&lt; Previous</button>
+                    <button class="modal-btn" onclick="nextInstruction()">Next &gt;</button>
+                </div>
+            </div>
+        </div>
         <div class="rectangle-3"></div>
     </div>
 </body>
@@ -220,4 +231,111 @@
         // Convert the darkened RGB values back to hex
         return "#" + ((darkenedR << 16) | (darkenedG << 8) | darkenedB).toString(16).padStart(6, '0');
     }
+
+    // Get the modal
+    var modal = document.getElementById('instructionModal');
+
+    // Get the <span> element that closes the modal
+    var closeBtn = document.getElementsByClassName('close-instruction')[0];
+
+    // Open the modal when the page loads
+    window.onload = function () {
+        modal.style.display = 'block';
+    }
+
+    // Close the modal when the close button is clicked
+    closeBtn.onclick = function () {
+        modal.style.display = 'none';
+    }
+
+    // Close the modal when clicking outside the modal content
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    var instructions = [
+        // Array of instruction pages
+        "<p class='instruction-title'>Instructions for answering the form</p><br>\
+        <p class='additional-instructions'>\
+            <span style='color: orangered;'>Reminder: By Answering this form you are willing to provide the feedback or answers data to the creator of the form.</span>\
+        </p><br>\
+        <p class='additional-instructions'>There are 3 question types which are \
+            <span style='color: blue;'>Open-Ended</span>, \
+            <span style='color: darkblue;'>Multiple-Choice</span>, and \
+            <span style='color: indigo;'>Checkbox</span>.\
+        </p><br>\
+        <p class='additional-instructions'>\
+            <span style='color: blue;'>Open-Ended Questions</span> can receive open-ended responses which can be a sentence or paragraphs of any length. \
+            You can also make the statements clearer and precise by using specific sentiment analysis keywords \
+            <span style='color: #61492e;'>(Next Page)</span>\
+            that mostly describe your thoughts or answer about that certain question.\
+        </p><br>\
+        <p class='additional-instructions'>\
+            <span style='color: darkblue;'>Multiple Choice Questions</span> allow you to choose only one of the provided choices or options.\
+        </p><br />\
+        <p class='additional-instructions'>\
+            <span style='color: indigo;'>Checkbox Questions</span> allow you to choose multiple choices from the provided choices or options.\
+        </p><br>\
+        <p class='additional-instructions'>After answering all the questions needed, you can press the submit button at the end of the form to submit your response.</p>",
+        "<p class='instruction-title'>Sentiment Analysis Keywords</p><br>\
+        <div class='sentiment-columns'>\
+            <div class='positive-column'>\
+                <p class='column-title' style='color: green;>Positive</p>\
+                <ul class='keyword-list'>\
+                    <li style='color: green;'>Good</li>\
+                    <li style='color: green;'>Excellent</li>\
+                    <li style='color: green;'>Happy</li>\
+                    <li style='color: green;'>Wonderful</li>\
+                    <li style='color: green;'>Amazing</li>\
+                </ul>\
+            </div>\
+            <div class='neutral-column'>\
+                <p class='column-title' style='color: grey;>Neutral</p>\
+                <ul class='keyword-list'>\
+                    <li style='color: grey;'>Okay</li>\
+                    <li style='color: grey;'>Neutral</li>\
+                    <li style='color: grey;'>Meh</li>\
+                    <li style='color: grey;'>Indifferent</li>\
+                    <li style='color: grey;'>Average</li>\
+                </ul>\
+            </div>\
+            <div class='negative-column'>\
+                <p class='column-title' style='color: red>Negative</p>\
+                <ul class='keyword-list'>\
+                    <li style='color: red;'>Bad</li>\
+                    <li style='color: red;'>Terrible</li>\
+                    <li style='color: red;'>Unhappy</li>\
+                    <li style='color: red;'>Awful</li>\
+                    <li style='color: red;'>Disappointing</li>\
+                </ul>\
+            </div>\
+            <p class='additional-instructions'>More words and details  click <a href='https://github.com/cjhutto/vaderSentiment/blob/master/vaderSentiment/vader_lexicon.txt?fbclid=IwAR1gGwSOahhteTl5JGDD9VxPPLgwJnn8PCjf9GXVPyFaUH-iQHZmU1lG7Bc' target='_blank'>here</a></p>\
+        </div>",
+    ];
+
+    var currentInstruction = 0;
+
+    function updateInstructionContent() {
+        var instructionText = document.querySelector('.instruction-text');
+        instructionText.innerHTML = instructions[currentInstruction];
+    }
+
+    function nextInstruction() {
+        if (currentInstruction < instructions.length - 1) {
+            currentInstruction++;
+            updateInstructionContent();
+        }
+    }
+
+    function prevInstruction() {
+        if (currentInstruction > 0) {
+            currentInstruction--;
+            updateInstructionContent();
+        }
+    }
+    // Call updateInstructionContent to set initial content
+    updateInstructionContent();
+
 </script>

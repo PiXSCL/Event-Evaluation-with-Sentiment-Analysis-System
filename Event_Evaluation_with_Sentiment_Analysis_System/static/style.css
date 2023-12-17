@@ -1655,6 +1655,71 @@ input:checked + .slider1:before {
         background-color: #9A7850;
     }
 
+/* Modal styles */
+.modal-instruction {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+}
+
+.modal-instruction-content {
+    background-color: #E8BA84;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #61492e;
+    border-radius: 20px;
+    width: 60%;
+    position: relative;
+    margin-top:70px;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.close-instruction {
+    color: black;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-instruction:hover{
+    color:red
+}
+
+.instruction-title {
+    font-size: 24px; /* Set the desired font size */
+    font-weight: bold; /* Make it bold */
+    font-family: cursive; /* Use cursive font */
+    text-align: center; /* Center the specific element */
+}
+
+.instruction-text {
+    margin-bottom: 20px;
+}
+
+.additional-instructions {
+    font-weight: bold; /* Make it bold */
+}
+
+.modal-navigation {
+    text-align: center;
+}
+
+.modal-btn {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-weight: bold; /* Make it bold */
+}
+
+.modal-btn:hover{
+    color: #61492e;
+}
+
+
 @media only screen and (max-width: 600px) {
     .form-container1 {
         transform: translateY(0);
@@ -1723,6 +1788,7 @@ input:checked + .slider1:before {
 
     /* Add additional responsive styles as needed */
 }
+
 
 /*Form Preview*/
 
@@ -3038,3 +3104,49 @@ color: #61492E;
         height: 200px;
         width: 200px;
     }
+
+    @media only screen and (max-width: 600px) {
+        .rectangle-1 {
+            position: relative;
+            margin-left: -100px;
+            width: 255px;
+            height: 150px;
+            margin-top: 140px;
+        }
+        .rectangle-2 {
+            width: 300px;
+            height: 10px;
+            position: relative;
+            margin-top: -290px;
+        }
+        .create-your-forms-seamlessly {
+            font-size: 18px;
+            position: relative;
+            top: 50px;
+            left: 30px;
+            display: inline;
+        }
+        .empower-your-survey-data-with-sentiment-analysis {
+            font-size: 12px;
+            margin-top: -200px;
+            margin-left: 20px;
+        }
+        .email-container .ImgEmail {
+            width: 100px; /* Adjust the width as needed for smaller screens */
+            height: auto; /* Automatically adjust the height to maintain aspect ratio */
+            fill: #61492E; /* Retain the fill color if needed */
+            margin-right: 0; /* Override margin-right for smaller screens */
+            margin-left: 0; /* Override margin-left for smaller screens */
+        }
+        .password-container {
+            width: 100px;
+            height: 20px;
+            left: 100px;
+            top: 280px;
+        }
+        
+        .email-content {
+            width: 20px;
+            height: 20px;
+        }
+      }
