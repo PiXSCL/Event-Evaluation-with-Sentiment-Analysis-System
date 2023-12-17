@@ -36,7 +36,7 @@
                     {% if profile_pic %}
                        <img id="profile-picture" src="data:image/jpeg;base64,{{ profile_pic }}" alt="Profile Picture">
                     {% else %}
-                       <img id="profile-picture" src="{{ url_for('static', filename='images/user.svg') }}" alt="Profile Picture">
+                       <img id="profile-picture" src="{{ url_for('static', filename='images/profile.svg') }}" alt="Profile Picture">
                     {% endif %}
                     <div class="profile-dropdown" id="profile-dropdown">
                         <ul>
