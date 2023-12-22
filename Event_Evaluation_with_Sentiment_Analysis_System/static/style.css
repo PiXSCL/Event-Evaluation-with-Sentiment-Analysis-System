@@ -15,9 +15,9 @@
 .rectangle-1 {
     background: #f0e7cf;
     border-radius: 35px;
-    width: 650px;
+    width: 52%;
     height: 450px;
-    position: fixed;
+    position: absolute;
     left: 41%;
     top: 10%;
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
@@ -78,17 +78,17 @@
     text-align: left;
     font: 400 1.47vw "Cabin", sans-serif;
     position: absolute;
-    left: 56%;
-    top: 18%;
+    left: 30%;
+    top: 10%;
 }
 
 .email-container {
     background: #e4d2bd;
-    width: 42.92%;
-    height: 8.71%;
+    width: 80%;
+    height: 11%;
     position: absolute;
-    left: 45.76%;
-    top: 26.44%;
+    left: 10%;
+    top: 20%;
 }
 
 .email-content {
@@ -126,11 +126,11 @@
 
 .password-container {
     background: #e4d2bd;
-    width: 42.92%;
-    height: 8.71%;
+    width: 80%;
+    height: 11%;
     position: absolute;
-    left: 45.76%;
-    top: 43%;
+    left: 10%;
+    top: 40%;
 }
 
 .password-content {
@@ -173,8 +173,8 @@
     font: 400 1.47vw "Cabin", sans-serif;
     text-decoration: underline;
     position: absolute;
-    left: 77%;
-    top: 52%;
+    left: 70%;
+    top: 51%;
     z-index: 1;
 }
 
@@ -187,8 +187,8 @@
     text-align: left;
     font: 400 1.68vw "Cabin", sans-serif;
     position: absolute;
-    left: 55.03%;
-    top: 76%;
+    left: 28%;
+    top: 84%;
 }
 
 .loginbutton {
@@ -196,11 +196,11 @@
     color: #61492e;
     border: none;
     border-radius: 35px;
-    width: 20%;
-    height: 7.62%;
+    width: 40%;
+    height: 9.62%;
     position: absolute;
-    left: 57.22%;
-    top: 62%;
+    left: 30%;
+    top: 67%;
     cursor: pointer;
     text-align: center;
     font: 400 2.12vw "Cabin", sans-serif;
@@ -220,8 +220,8 @@
     font: 400 1.68vw "Cabin", sans-serif;
     text-decoration: underline;
     position: absolute;
-    left: 74%;
-    top: 76%;
+    left: 65%;
+    top: 84%;
 }
 
     .sign-up:hover {
@@ -230,10 +230,10 @@
 
 .name-container {
     background: #e4d2bd;
-    width: 42.92%;
-    height: 8.71%;
+    width: 80%;
+    height: 11%;
     position: absolute;
-    left: 45.76%;
+    left: 10%;
     top: 20%;
 }
 
@@ -272,10 +272,10 @@
 
 .email-container2 {
     background: #e4d2bd;
-    width: 42.92%;
-    height: 8.71%;
+    width: 80%;
+    height: 11%;
     position: absolute;
-    left: 45.76%;
+    left: 10%;
     top: 36%;
 }
 
@@ -314,10 +314,10 @@
 
 .password-container2 {
     background: #e4d2bd;
-    width: 42.92%;
-    height: 8.71%;
+    width: 80%;
+    height: 11%;
     position: absolute;
-    left: 45.76%;
+    left: 10%;
     top: 52%;
 }
 
@@ -360,8 +360,8 @@
     text-align: left;
     font: 400 1.47vw "Cabin", sans-serif;
     position: absolute;
-    left: 56%;
-    top: 13%;
+    left: 30%;
+    top: 10%;
 }
 
 .signup {
@@ -369,8 +369,8 @@
     color: #61492e;
     border: none;
     border-radius: 35px;
-    width: 20%;
-    height: 7.62%;
+    width: 40%;
+    height: 9.62%;
     cursor: pointer;
     text-align: left;
     display: flex;
@@ -378,7 +378,7 @@
     justify-content: center;
     font: 400 2.12vw "Cabin", sans-serif;
     position: absolute;
-    left: 57%;
+    left: 30%;
     top: 68%;
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
@@ -392,8 +392,8 @@
     text-align: left;
     font: 400 1.68vw "Cabin", sans-serif;
     position: absolute;
-    left: 55.03%;
-    top: 79%;
+    left: 25%;
+    top: 85%;
 }
 
 .login {
@@ -402,8 +402,8 @@
     font: 400 1.68vw "Cabin", sans-serif;
     text-decoration: underline;
     position: absolute;
-    left: 76%;
-    top: 79%;
+    left: 65%;
+    top: 85%;
 }
 
     .login:hover {
@@ -1718,77 +1718,6 @@ input:checked + .slider1:before {
 .modal-btn:hover{
     color: #61492e;
 }
-
-
-@media only screen and (max-width: 600px) {
-    .form-container1 {
-        transform: translateY(0);
-        max-height: 94%;
-        overflow-y: auto;
-        overflow-x:hidden;
-    }
-
-    .form-container2 {
-        transform: translateY(0);
-        max-height: none;
-        overflow-y: visible;
-    }
-
-    .banner-image-container {
-        width: 100%;
-        left: 0;
-        transform: translateX(0);
-        margin-top: 10px;
-    }
-
-    .form-banner-image,
-    .form-banner-image1 {
-        width: 100%;
-        transform: translateX(0);
-    }
-
-    .fbox {
-        margin-top: 20px;
-    }
-
-    .title {
-        font-size: 30px;
-        width: 140px;
-        margin-left: -10px;
-    }
-
-    .vertical-line {
-        left: 220px;
-    }
-
-    .description {
-        font-size: 18px;
-        width: 100%;
-        margin-top: 10px;
-        margin-left: 60px;
-    }
-
-    .fbox2 {
-        margin-top: 20px;
-    }
-
-    .question_container .question {
-        font-size: 20px;
-        height:auto;
-        width: 90%;
-    }
-
-    .answer_container {
-        width: 100%;
-    }
-
-    .open-ended-input {
-        width: 100%;
-    }
-
-    /* Add additional responsive styles as needed */
-}
-
 
 /*Form Preview*/
 
@@ -3105,48 +3034,452 @@ color: #61492E;
         width: 200px;
     }
 
-    @media only screen and (max-width: 600px) {
-        .rectangle-1 {
-            position: relative;
-            margin-left: -100px;
-            width: 255px;
-            height: 150px;
-            margin-top: 140px;
+@media only screen and (max-width: 600px) {
+    .rectangle-1 {
+        background: #f0e7cf;
+        border-radius: 35px;
+        width: 90%;
+        height: 60%;
+        position: absolute;
+        left: 5%;
+        top: 28%;
+        box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .create-your-forms-seamlessly {
+        color: #44585f;
+        text-align: center;
+        font: 400 5.5vw "Dela Gothic One", sans-serif;
+        font-weight: bold;
+        position: absolute;
+        left: 5%;
+        top: 10%;
+        width: 90%;
+        height: auto;
+    }
+
+    .empower-your-survey-data-with-sentiment-analysis {
+        color: #44585f;
+        text-align: left;
+        font: 400 4.5vw "Cabin Condensed", sans-serif;
+        text-decoration: underline;
+        position: absolute;
+        left: 10%;
+        top: 20%;
+        width: 90%;
+    }
+
+    .text {
+        color: #000000;
+        text-align: left;
+        font: 400 1.47vw "Cabin", sans-serif;
+        position: absolute;
+        left: 62.08%;
+        top: 28.13%;
+    }
+
+    .log-in-to-try-insert-web-app-name {
+        color: #61492e;
+        text-align: left;
+        font: 400 4.5vw "Cabin", sans-serif;
+        position: absolute;
+        left: 15%;
+        top: 8%;
+    }
+
+    .email-container {
+        background: #e4d2bd;
+        width: 80%;
+        height: 11%;
+        position: absolute;
+        left: 10%;
+        top: 20%;
+    }
+
+    .email-content {
+        display: flex;
+        align-items: center;
+    }
+
+    .email-container .ImgEmail {
+        width: 50px;
+        height: 50px;
+        fill: #61492E;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .email-container .email-input {
+        display: block;
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        padding: 16px;
+        border: 0px solid #ccc;
+        border-radius: 5px;
+        margin-top: -3px;
+    }
+
+        .email-container .email-input::placeholder {
+            color: #61492E;
+            font-style: 'Cabin';
         }
-        .rectangle-2 {
-            width: 300px;
-            height: 10px;
-            position: relative;
-            margin-top: -290px;
+
+        .email-container .email-input:focus {
+            border: 1px solid #61492e;
         }
-        .create-your-forms-seamlessly {
-            font-size: 18px;
-            position: relative;
-            top: 50px;
-            left: 30px;
-            display: inline;
+
+    .password-container {
+        background: #e4d2bd;
+        width: 80%;
+        height: 11%;
+        position: absolute;
+        left: 10%;
+        top: 40%;
+    }
+
+    .password-content {
+        display: flex;
+        align-items: center;
+    }
+
+    .password-container .ImgPassword {
+        width: 70px;
+        height: 70px;
+        fill: #61492E;
+        margin-right: 1px;
+        margin-left: 1px;
+        margin-top: -10px;
+    }
+
+    .password-container .password-input {
+        display: block;
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        padding: 16px;
+        border: 0px solid #ccc;
+        border-radius: 5px;
+        margin-top: -8px;
+    }
+
+        .password-container .password-input::placeholder {
+            color: #61492E;
+            font-style: 'Cabin';
         }
-        .empower-your-survey-data-with-sentiment-analysis {
-            font-size: 12px;
-            margin-top: -200px;
-            margin-left: 20px;
+
+    .password .password-input:focus {
+        border: 1px solid #61492e;
+    }
+
+    .forgot-password {
+        color: #61492e;
+        text-align: left;
+        font: 400 3.5vw "Cabin", sans-serif;
+        text-decoration: underline;
+        position: absolute;
+        left: 60%;
+        top: 51%;
+        z-index: 1;
+    }
+
+        .forgot-password:hover {
+            color: #E8BA84;
         }
-        .email-container .ImgEmail {
-            width: 100px; /* Adjust the width as needed for smaller screens */
-            height: auto; /* Automatically adjust the height to maintain aspect ratio */
-            fill: #61492E; /* Retain the fill color if needed */
-            margin-right: 0; /* Override margin-right for smaller screens */
-            margin-left: 0; /* Override margin-left for smaller screens */
+
+    .don-t-have-an-account {
+        color: #61492e;
+        text-align: left;
+        font: 400 4.5vw "Cabin", sans-serif;
+        position: absolute;
+        left: 10%;
+        top: 84%;
+    }
+
+    .loginbutton {
+        background-color: #CEA778;
+        color: #61492e;
+        border: none;
+        border-radius: 35px;
+        width: 60%;
+        height: 9.62%;
+        position: absolute;
+        left: 20%;
+        top: 67%;
+        cursor: pointer;
+        text-align: center;
+        font: 400 5.5vw "Cabin", sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
+    }
+
+        .loginbutton:hover {
+            background-color: #E8BA84;
         }
-        .password-container {
-            width: 100px;
-            height: 20px;
-            left: 100px;
-            top: 280px;
+
+    .sign-up {
+        color: #61492e;
+        text-align: left;
+        font: 400 4.5vw "Cabin", sans-serif;
+        text-decoration: underline;
+        position: absolute;
+        left: 65%;
+        top: 84%;
+    }
+
+        .sign-up:hover {
+            color: #E8BA84;
         }
-        
-        .email-content {
-            width: 20px;
-            height: 20px;
+
+    .name-container {
+        background: #e4d2bd;
+        width: 80%;
+        height: 11%;
+        position: absolute;
+        left: 10%;
+        top: 20%;
+    }
+
+    .name-content {
+        display: flex;
+        align-items: center;
+    }
+
+    .name-container .ImgUser {
+        width: 56px;
+        height: 56px;
+        fill: #61492E;
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+
+    .name-container .name-input {
+        display: none;
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        padding: 16px;
+        border: 0px solid #ccc;
+        border-radius: 5px;
+        margin-top: -3px;
+    }
+
+        .name-container .name-input::placeholder {
+            color: #61492E;
+            font-style: 'Cabin';
         }
-      }
+
+        .name-container .name-input:focus {
+            border: 1px solid #61492e;
+        }
+
+    .email-container2 {
+        background: #e4d2bd;
+        width: 80%;
+        height: 11%;
+        position: absolute;
+        left: 10%;
+        top: 36%;
+    }
+
+    .email-content2 {
+        display: flex;
+        align-items: center;
+    }
+
+    .email-container2 .ImgEmail2 {
+        width: 50px;
+        height: 50px;
+        fill: #61492E;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .email-container2 .email-input2 {
+        display: none;
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        padding: 16px;
+        border: 0px solid #ccc;
+        border-radius: 5px;
+        margin-top: -3px;
+    }
+
+        .email-container2 .email-input2::placeholder {
+            color: #61492E;
+            font-style: 'Cabin';
+        }
+
+        .email-container2 .email-input2:focus {
+            border: 1px solid #61492e;
+        }
+
+    .password-container2 {
+        background: #e4d2bd;
+        width: 80%;
+        height: 11%;
+        position: absolute;
+        left: 10%;
+        top: 52%;
+    }
+
+    .password-content2 {
+        display: flex;
+        align-items: center;
+    }
+
+    .password-container2 .ImgPassword2 {
+        width: 70px;
+        height: 70px;
+        fill: #61492E;
+        margin-right: 1px;
+        margin-left: 1px;
+        margin-top: -10px;
+    }
+
+    .password-container2 .password-input2 {
+        display: none;
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        padding: 16px;
+        border: 0px solid #ccc;
+        border-radius: 5px;
+        margin-top: -8px;
+    }
+
+        .password-container2 .password-input2::placeholder {
+            color: #61492E;
+            font-style: 'Cabin';
+        }
+
+        .password-container2 .password-input2:focus {
+            border: 1px solid #61492e;
+        }
+
+    .sign-up-to-create {
+        color: #61492e;
+        text-align: left;
+        font: 400 4.5vw "Cabin", sans-serif;
+        position: absolute;
+        left: 15%;
+        top: 8%;
+    }
+
+    .signup {
+        background-color: #CEA778;
+        color: #61492e;
+        border: none;
+        border-radius: 35px;
+        width: 60%;
+        height: 9.62%;
+        cursor: pointer;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font: 400 5.5vw "Cabin", sans-serif;
+        position: absolute;
+        left: 20%;
+        top: 68%;
+        box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
+    }
+
+        .signup:hover {
+            background-color: #E8BA84;
+        }
+
+    .already-have-an-account {
+        color: #61492e;
+        text-align: left;
+        font: 400 4.5vw "Cabin", sans-serif;
+        position: absolute;
+        left: 15%;
+        top: 85%;
+    }
+
+    .login {
+        color: #61492e;
+        text-align: left;
+        font: 400 4.5vw "Cabin", sans-serif;
+        text-decoration: underline;
+        position: absolute;
+        left: 75%;
+        top: 85%;
+    }
+
+        .login:hover {
+            color: #E8BA84;
+        }
+
+    /*Form design*/
+    .form-container1 {
+        transform: translateY(0);
+        max-height: 94%;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .form-container2 {
+        transform: translateY(0);
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    .banner-image-container {
+        width: 100%;
+        left: 0;
+        transform: translateX(0);
+        margin-top: 10px;
+    }
+
+    .form-banner-image,
+    .form-banner-image1 {
+        width: 100%;
+        transform: translateX(0);
+    }
+
+    .fbox {
+        margin-top: 20px;
+    }
+
+    .title {
+        font-size: 30px;
+        width: 140px;
+        margin-left: -10px;
+    }
+
+    .vertical-line {
+        left: 220px;
+    }
+
+    .description {
+        font-size: 18px;
+        width: 100%;
+        margin-top: 10px;
+        margin-left: 60px;
+    }
+
+    .fbox2 {
+        margin-top: 20px;
+    }
+
+    .question_container .question {
+        font-size: 20px;
+        height: auto;
+        width: 90%;
+    }
+
+    .answer_container {
+        width: 100%;
+    }
+
+    .open-ended-input {
+        width: 100%;
+    }
+
+    /* Add additional responsive styles as needed */
+}
