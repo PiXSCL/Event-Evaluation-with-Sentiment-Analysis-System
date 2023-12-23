@@ -3441,10 +3441,10 @@ color: #61492E;
     #profile-picture {
         position: absolute;
         border-radius: 50%;
-        width: 65px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         left: 10px;
-        top: -3px;
+        top: -7px;
         cursor: pointer;
     }
 
@@ -3452,7 +3452,7 @@ color: #61492E;
         display: none;
         position: absolute;
         top: 45px;
-        right: -69px;
+        right: -75px;
         background: #fff;
         border: 1px solid #ccc;
         border-radius: 5px;
@@ -3515,7 +3515,7 @@ color: #61492E;
             padding-right: 20px;
             padding-top: 5px;
             padding-bottom: 5px;
-            font-size: 20px;
+            font-size: 15px;
             color: #D4D4D4;
             cursor: pointer;
             box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3), 0px 5px 10px rgba(0, 0, 0, 0.3), 5px 5px 10px rgba(0, 0, 0, 0.3);
@@ -3524,7 +3524,7 @@ color: #61492E;
     .add {
         position: absolute;
         right: 85px;
-        top: 100px;
+        top: 98px;
     }
 
         .add img {
@@ -3641,7 +3641,7 @@ color: #61492E;
             }
 
     .data-grid-container {
-        max-height: 475px;
+        max-height: 64%;
         overflow-y: auto;
         overflow-x: hidden;
         display: flex;
@@ -4014,7 +4014,7 @@ color: #61492E;
                 }
 
     .form-container {
-        max-height: 650px;
+        max-height: 90%;
         width: 360px;
         overflow-y: auto;
     }
@@ -4281,7 +4281,7 @@ color: #61492E;
     .option-label {
         color: #61492E;
         font-family: Cabin;
-        font-size: 20px;
+        font-size: 15px;
         width: 100px;
         margin-right: 5px;
     }
@@ -4706,7 +4706,7 @@ color: #61492E;
         font-family: 'Cabin';
         font-style: normal;
         font-weight: 400;
-        font-size: 25px;
+        font-size: 20px;
         line-height: 30px;
         color: #44585F;
     }
@@ -4721,7 +4721,7 @@ color: #61492E;
         font-family: 'Cabin';
         font-style: normal;
         font-weight: 400;
-        font-size: 25px;
+        font-size: 20px;
         line-height: 30px;
         color: #44585F;
     }
