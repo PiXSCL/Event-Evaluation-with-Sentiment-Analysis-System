@@ -3444,7 +3444,7 @@ color: #61492E;
         width: 60px;
         height: 60px;
         left: 10px;
-        top: -7px;
+        top: -10px;
         cursor: pointer;
     }
 
@@ -3641,7 +3641,7 @@ color: #61492E;
             }
 
     .data-grid-container {
-        max-height: 64%;
+        max-height: 61%;
         overflow-y: auto;
         overflow-x: hidden;
         display: flex;
