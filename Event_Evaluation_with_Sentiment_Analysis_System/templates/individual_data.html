@@ -56,7 +56,7 @@
             {% if grouped_responses %}
             <div class="response-placeholder"></div>
             {% else %}
-            <div class="response-container">
+            <div class="response-container-1">
                 <h2>No Responses Collected<br>Share the form and Collect Responses</h2>
             </div>
             {% endif %}
@@ -91,7 +91,7 @@
         var responseText = response[1];
 
         var responseContainer = document.createElement('div');
-        responseContainer.classList.add('response-container');
+        responseContainer.classList.add('response-container-1');
 
         var questionDiv = document.createElement('div');
         questionDiv.textContent = questionText;

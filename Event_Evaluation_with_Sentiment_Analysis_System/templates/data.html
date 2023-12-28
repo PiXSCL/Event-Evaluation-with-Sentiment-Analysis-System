@@ -64,7 +64,7 @@
                 <div class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
-                        <h2>Questions with Responses:</h2>
+                        <h2>    Questions with Responses</h2>
                         <ul>
                             {% for question_text, responses in question_responses.items() %}
                                 <li>
@@ -120,7 +120,7 @@
                 <div class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
-                        <h2>Questions with Responses:</h2>
+                        <h2>    Questions with Responses</h2>
                         {% set question_responses = {} %}
                         {% for response, question in responses_with_questions %}
                             {% if question.question_type == 'Multiple Choices' %}
@@ -167,7 +167,7 @@
                 <div class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
-                        <h2>Questions with Responses:</h2>
+                        <h2>    Questions with Responses</h2>
                         {% set question_responses = {} %}
                         {% for response, question in responses_with_questions %}
                             {% if question.question_type == 'CheckBox' %}
