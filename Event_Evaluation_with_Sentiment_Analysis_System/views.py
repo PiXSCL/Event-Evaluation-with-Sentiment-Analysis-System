@@ -26,7 +26,7 @@ from io import BytesIO
 
 nltk.download('vader_lexicon')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:1234AWSpassword@database-1.ciywsfu1yph4.us-west-2.rds.amazonaws.com:3306/eventdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:1234AWSpassword@mysql-rds-production-ruddy-grape-fk36.ciywsfu1yph4.us-west-2.rds.amazonaws.com:3306/capstone'
 app.secret_key = 'secret_key' 
 
 db = SQLAlchemy(app)
