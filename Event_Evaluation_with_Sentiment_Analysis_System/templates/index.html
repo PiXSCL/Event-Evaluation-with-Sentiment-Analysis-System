@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Add your head content here -->
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -65,6 +66,71 @@
             <button type="submit" class="sign-up" onclick="window.location.href = '{{ url_for('signup')}}'">Sign-up</button>
         </div>
     </div>
+    <!-- Add this script to your existing HTML -->
+    <script>
+        // Function to handle sending a new password (you can implement the logic here)
+        function sendNewPassword() {
+            // Get the email input value
+            const emailInput = document.getElementById('email').value;
+
+            // Validate the email address
+            const isValidEmail = validateEmail(emailInput);
+
+            // Display a confirmation dialog only if the email is valid
+            if (isValidEmail) {
+                const userConfirmed = confirm("Do you want to send a new password to your email?");
+
+                // Check the user's response
+                if (userConfirmed) {
+                    // Make an AJAX request to the server to handle forgot password logic
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/forgot_password', true);
+                    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+                    xhr.onload = function () {
+                        try {
+                            if (xhr.status === 200) {
+                                // Successful response from the server
+                                const response = JSON.parse(xhr.responseText);
+                                alert(response.message);
+                            } else {
+                                // Handle specific errors or display an appropriate message
+                                const errorResponse = JSON.parse(xhr.responseText);
+                                if (errorResponse && errorResponse.error) {
+                                    alert(`Error: ${errorResponse.error}`);
+                                } else {
+                                    alert("Failed to send a new password. Please try again later.");
+                                }
+                            }
+                        } catch (e) {
+                            // Log any unexpected errors
+                            console.error("Unexpected error:", e);
+                            alert("An unexpected error occurred. Please try again later.");
+                        }
+                    };
+
+                    // Handle network errors
+                    xhr.onerror = function () {
+                        alert("Network error. Please check your internet connection and try again.");
+                    };
+
+                    // Send the request with the email data
+                    xhr.send(JSON.stringify({ email: emailInput }));
+                }
+            } else {
+                // Show an error message or handle invalid email case
+                alert("Please enter a valid email address.");
+            }
+        }
+
+        // Function to validate an email address
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Event listener for the "Forgot Password?" button
+        document.querySelector('.forgot-password').addEventListener('click', sendNewPassword);
+    </script>
 </body>
 </html>
 

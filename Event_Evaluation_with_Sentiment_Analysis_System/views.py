@@ -23,6 +23,11 @@ from reportlab.graphics import renderPDF
 from reportlab.lib import colors
 from reportlab.graphics.shapes import Drawing
 from io import BytesIO
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import random
+import string
 
 nltk.download('vader_lexicon')
 
@@ -34,6 +39,14 @@ db = SQLAlchemy(app)
 sia = SentimentIntensityAnalyzer()
 
 translator = Translator()
+
+# Your Mail.com SMTP server details
+smtp_server = "smtp.gmail.com"
+smtp_port = 587
+
+# Your Mail.com login credentials
+smtp_username = "robinartb@gmail.com"
+smtp_password = "cfls cjwo rpmv zlxy"
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -146,6 +159,71 @@ def fetch_form_data(user_id):
         })
 
     return form_list
+
+@app.route('/forgot_password', methods=['POST'])
+def forgot_password():
+    try:
+        # Get the email from the request
+        email = request.json.get('email')
+
+        # Generate a random 8-character code
+        random_code = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+
+        # Update the user's password in the database
+        update_user_password(email, random_code)
+
+        # Send the email with the code
+        send_reset_email(email, random_code)
+
+        return jsonify({'message': 'New Password sent via email!! Check your email for your password'}), 200
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'message': 'Failed to reset password. Please try again later.'}), 500
+
+def update_user_password(email, new_password):
+    # Assuming you have a User model with a password field
+    user = User.query.filter_by(email=email).first()
+    if user:
+        # Update the user's password
+        user.password = new_password
+        # Commit the changes to the database
+        db.session.commit()
+
+def send_reset_email(email, random_code):
+    try:
+        # Create the MIME object
+        message = MIMEMultipart()
+        message["From"] = smtp_username
+        message["To"] = email
+        message["Subject"] = "Account Recovery"
+
+        # Email body
+        body = f"""
+                    <div style='background-color: #cea778; padding: 20px; border-radius: 10px;'>
+                        <p style='font-size: 24px; color: #fff;'>FEEDBACK FORMS WITH SENTIMENT ANALYSIS</p>
+                    </div>
+                    <div style='background-color: #f2f2f2; padding: 20px; border-radius: 10px;'>
+                        <p style='font-size: 16px; margin-bottom: 10px;'>Thank you for using this app you can login again using this link: https://event-evaluation-with-sentiment-analysis-system-t-556nkth5jq-as.a.run.app/login</p>
+                        <p style='font-size: 16px; margin-bottom: 10px;'>Your new password is:</p>
+                        <p style='font-size: 24px; color: #333;'>{random_code}</p>
+                    </div>
+                """
+        message.attach(MIMEText(body, "html"))
+
+        # Establish a connection to the SMTP server
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            # Start the TLS connection (for security)
+            server.starttls()
+
+            # Login to your Mail.com account
+            server.login(smtp_username, smtp_password)
+
+            # Send the email
+            server.sendmail(smtp_username, email, message.as_string())
+
+        print("Password reset email sent successfully!")
+    except Exception as e:
+        print(f"Error sending email: {str(e)}")
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
