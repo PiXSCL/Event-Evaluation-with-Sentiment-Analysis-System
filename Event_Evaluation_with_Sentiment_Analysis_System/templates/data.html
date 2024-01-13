@@ -51,6 +51,7 @@
             {% if question_responses %}
             <div class="response-container">
                 <h2>Open Ended Summary</h2>
+                {% if summary %}
                 <div id="piechart" class="overall-piechart"></div>
                 <div class="response-count">
                     <img class="respondent1-img" src="{{ url_for('static', filename='images/user-icon.svg') }}" alt="User">
@@ -100,9 +101,13 @@
                         </ul>
                     </div>
                 </div>
+                {% else %}
+                <h1 style="top: 20px; margin-left:35%;">No Open-Ended Response</h1>
+                {% endif %}
             </div>
             <div class="response-container">
                 <h2>Multiple Choices Summary</h2>
+                {% if choice_summaries %}
                 <div id="barchart" class="overall-barchart"></div>
                 <div class="response-count">
                     <img class="respondent1-img" src="{{ url_for('static', filename='images/user-icon.svg') }}" alt="User">
@@ -149,9 +154,13 @@
                         </ul>
                     </div>
                 </div>
+                {% else %}
+                <h1 style="top: 20px; margin-left:35%;">No Multiple Choice Response</h1>
+                {% endif %}
             </div>
             <div class="response-container">
                 <h2>CheckBox Summary</h2>
+                {% if checkbox_choice_summary_text %}
                 <div id="checkbox_barchart" class="overall-barchart"></div>
                 <div class="response-count">
                     <img class="respondent1-img" src="{{ url_for('static', filename='images/user-icon.svg') }}" alt="User">
@@ -198,6 +207,9 @@
                 </div>
             </div>
         </div>
+        {% else %}
+        <h1 style="top: 20px; margin-left:35%;">No Checkbox Response</h1>
+        {% endif %}
         {% else %}
         <div class="response-container">
             <h2>No Responses Collected<br> Share the Form and Collect Responses</h2>
