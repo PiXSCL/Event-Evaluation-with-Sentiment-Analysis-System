@@ -31,7 +31,7 @@ import string
 
 nltk.download('vader_lexicon')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:1234AWSpassword@mysql-rds-production-ruddy-grape-fk36.ciywsfu1yph4.us-west-2.rds.amazonaws.com:3306/capstone'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:ra05182002@127.0.0.1:3306/eventdb'
 app.secret_key = 'secret_key' 
 
 db = SQLAlchemy(app)
